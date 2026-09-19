@@ -1,1 +1,33 @@
-/* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
+
+html {
+  height: 100%;
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$violet-palette,
+        tertiary: mat.$cyan-palette,
+      ),
+      typography: (
+        // Le nom contient un chiffre : il doit être entre guillemets dans la valeur CSS générée.
+        plain-family: '"Exo 2", sans-serif',
+        brand-family: 'Orbitron, sans-serif',
+      ),
+      density: 0,
+    )
+  );
+}
+
+body {
+  // Thème sombre "espace" : le fond réel est dessiné par la scène THREE.JS.
+  color-scheme: dark;
+  background-color: #02030c;
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+  margin: 0;
+  height: 100%;
+}
+
+.memory-menu {
+  --mat-menu-container-color: rgba(16, 10, 38, 0.92);
+}

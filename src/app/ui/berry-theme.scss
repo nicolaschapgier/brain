@@ -1,0 +1,34 @@
+// Thème « Berry » : les couleurs du blason du Berry (azur, fleurs de lys d'or, bordure de gueules).
+// Utilisation : `@use '../berry-theme' as berry;` puis `@include berry.tokens;` sur le composant à habiller.
+// Pour changer de palette, il suffit de modifier les valeurs ci-dessous.
+
+@mixin tokens {
+  // Azur (le champ du blason)
+  --berry-azure: #1a3f96;
+  --berry-azure-light: #3d6ad6;
+  --berry-azure-deep: #0c1f55;
+
+  // Or (les fleurs de lys)
+  --berry-gold: #f4c531;
+  --berry-gold-light: #fff0a8;
+  --berry-gold-deep: #b98512;
+
+  // Gueules (la bordure)
+  --berry-red: #c8202f;
+  --berry-red-deep: #8e1420;
+
+  // Papier et encre
+  --berry-cream: #fff9e8;
+  --berry-ink: #0c1f55;
+
+  // Dorure métallique, façon autocollant brillant
+  --berry-foil-gold: linear-gradient(
+    135deg,
+    var(--berry-gold-deep) 0%,
+    #ffe680 22%,
+    var(--berry-gold) 45%,
+    var(--berry-gold-light) 60%,
+    #c9931a 80%,
+    var(--berry-gold) 100%
+  );
+}

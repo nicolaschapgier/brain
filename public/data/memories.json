@@ -1,0 +1,63 @@
+[
+  {
+    "id": "ski",
+    "title": "Week-end au ski",
+    "date": "2023-02-11",
+    "description": "Trois jours à la montagne, une seule paire de gants pour quatre, et une descente en luge qui a fini dans la haie. Le chocolat chaud du soir était mérité.",
+    "image": "memories/ski.svg"
+  },
+  {
+    "id": "barbecue",
+    "title": "Le barbecue de l'été",
+    "date": "2022-07-16",
+    "description": "Le jour où personne n'avait pensé au charbon. On a quand même mangé à 22h, à la lueur des téléphones.",
+    "image": "memories/barbecue.svg",
+    "position": [
+      0.7,
+      0.3,
+      0.5
+    ]
+  },
+  {
+    "id": "roadtrip",
+    "title": "Road trip en Bretagne",
+    "date": "2021-08-05",
+    "description": "1 200 km, une playlist imposée par le conducteur et une crêperie découverte par hasard qu'on n'a jamais retrouvée.",
+    "image": "memories/roadtrip.svg"
+  },
+  {
+    "id": "karaoke",
+    "title": "La soirée karaoké",
+    "date": "2023-10-28",
+    "description": "Quelqu'un a chanté trois fois la même chanson. On ne dira pas qui, mais tout le monde connaît les paroles maintenant.",
+    "image": "memories/karaoke.svg"
+  },
+  {
+    "id": "foot",
+    "title": "Le tournoi de foot",
+    "date": "2022-05-21",
+    "description": "Éliminés en quart de finale aux tirs au but, mais vainqueurs du concours du meilleur maillot.",
+    "image": "memories/foot.svg"
+  },
+  {
+    "id": "escape",
+    "title": "Escape game raté",
+    "date": "2024-01-13",
+    "description": "Il restait 4 minutes, on avait trouvé le code… du cadenas d'à côté. Sortis avec 12 secondes de retard.",
+    "image": "memories/escape.svg"
+  },
+  {
+    "id": "festival",
+    "title": "Festival de musique",
+    "date": "2023-06-24",
+    "description": "Trois jours de boue, de concerts et de tente qui fuit. Le meilleur groupe était celui qu'on n'avait pas prévu de voir.",
+    "image": "memories/festival.svg"
+  },
+  {
+    "id": "anniversaire",
+    "title": "Anniversaire surprise",
+    "date": "2024-03-09",
+    "description": "Il a fait semblant d'être surpris avec un talent discutable. Le gâteau, lui, n'a pas survécu 10 minutes.",
+    "image": "memories/anniversaire.svg"
+  }
+]

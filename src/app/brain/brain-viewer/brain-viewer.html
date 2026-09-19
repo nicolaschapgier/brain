@@ -1,0 +1,5 @@
+<canvas #canvas></canvas>
+
+@if (hover(); as h) {
+  <div class="tooltip" [style.left.px]="h.x" [style.top.px]="h.y">{{ hoveredTitle() }}</div>
+}

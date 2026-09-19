@@ -1,0 +1,62 @@
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MemoryStore } from '../../core/memory.store';
+
+/** Inclinaison maximale (en degrés) de l'autocollant quand la souris le survole. */
+const TILT_X = 6;
+const TILT_Y = 5;
+
+@Component({
+  selector: 'app-memory-card',
+  imports: [MatCardModule, MatButtonModule, MatIconModule, MatTooltipModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  templateUrl: './memory-card.html',
+  styleUrl: './memory-card.scss',
+})
+export class MemoryCard {
+  protected readonly store = inject(MemoryStore);
+
+  /** Une liste d'un élément : `@for` recrée la carte (et rejoue son animation) à chaque changement de souvenir. */
+  protected readonly shown = computed(() => {
+    const memory = this.store.selected();
+    return memory ? [memory] : [];
+  });
+
+  protected readonly number = computed(() => this.store.selectedIndex() + 1);
+  protected readonly total = computed(() => this.store.memories().length);
+  protected readonly brokenImage = signal<string | null>(null);
+
+  private readonly reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /** `2023-02-11` devient « 11 février 2023 » ; tout autre texte (« Été 2022 »…) est affiché tel quel. */
+  protected formatDate(value: string): string {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
+    const date = new Date(`${value}T12:00:00`);
+    return Number.isNaN(date.getTime())
+      ? value
+      : date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+  }
+
+  /** Incline l'autocollant vers la souris et déplace le reflet holographique (variables CSS lues par le style). */
+  protected tilt(event: PointerEvent) {
+    if (this.reducedMotion || event.pointerType === 'touch') return;
+    const sticker = event.currentTarget as HTMLElement;
+    const rect = sticker.getBoundingClientRect();
+    const x = (event.clientX - rect.left) / rect.width;
+    const y = (event.clientY - rect.top) / rect.height;
+
+    sticker.style.setProperty('--mx', `${(x * 100).toFixed(1)}%`);
+    sticker.style.setProperty('--my', `${(y * 100).toFixed(1)}%`);
+    sticker.style.setProperty('--tilt-y', `${((x - 0.5) * 2 * TILT_X).toFixed(2)}deg`);
+    sticker.style.setProperty('--tilt-x', `${((0.5 - y) * 2 * TILT_Y).toFixed(2)}deg`);
+    sticker.style.setProperty('--foil', '1');
+  }
+
+  protected resetTilt(event: PointerEvent) {
+    const sticker = event.currentTarget as HTMLElement;
+    for (const name of ['--mx', '--my', '--tilt-x', '--tilt-y', '--foil']) sticker.style.removeProperty(name);
+  }
+}
