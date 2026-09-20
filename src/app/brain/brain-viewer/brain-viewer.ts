@@ -49,9 +49,12 @@ export class BrainViewer {
     });
   }
 
+  /** Titre au survol d'un neurone : celui d'un souvenir inconnu reste secret. */
   protected hoveredTitle() {
     const id = this.hover()?.id;
-    return this.store.memories().find((m) => m.id === id)?.title ?? '';
+    const memory = this.store.memories().find((m) => m.id === id);
+    if (!memory) return '';
+    return this.store.isDiscovered(memory.id) ? memory.title : 'Souvenir à découvrir';
   }
 
   resetView() {

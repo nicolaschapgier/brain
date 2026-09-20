@@ -1,0 +1,15 @@
+<canvas
+  #canvas
+  class="foil"
+  [class.foil--done]="done()"
+  role="img"
+  aria-label="Carte à gratter : gratte pour découvrir le souvenir"
+  (pointerdown)="start($event)"
+  (pointermove)="move($event)"
+  (pointerup)="stop()"
+  (pointercancel)="stop()"
+></canvas>
+
+@if (done()) {
+  <span class="flash" aria-hidden="true"></span>
+}

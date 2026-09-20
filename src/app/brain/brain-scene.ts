@@ -55,8 +55,8 @@ const INSIDE_TARGET = new Vector3(0, -0.2, -1.6).multiplyScalar(BRAIN_SCALE);
 const MOVE_SPEED = 4.5 * BRAIN_SCALE;
 /** Distance entre la caméra et sa cible en vue « première personne » : plus elle est petite, plus la souris pivote sur place. */
 const FIRST_PERSON_DISTANCE = 2;
-/** Avance de la caméra par cran de molette quand on est dans le cerveau. */
-const WHEEL_STEP = 0.004 * BRAIN_SCALE;
+/** Déplacement de la caméra par pixel de molette (un cran vaut environ 100 px) dans le cerveau, en avançant comme en reculant. */
+const WHEEL_STEP = 0.014 * BRAIN_SCALE;
 /** Seuils (avec hystérésis) pour considérer que la caméra est entrée dans / sortie du cerveau. */
 const ENTER_THRESHOLD = 0.6;
 const LEAVE_THRESHOLD = 0.3;

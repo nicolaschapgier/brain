@@ -29,13 +29,18 @@
 </header>
 
 <mat-menu #list="matMenu" class="memory-menu">
-  @for (memory of store.memories(); track memory.id) {
+  @if (store.total() > 0) {
+    <p class="menu-note" role="status">{{ store.discovered().length }} / {{ store.total() }} souvenirs découverts</p>
+  }
+  @for (memory of store.discovered(); track memory.id) {
     <button mat-menu-item (click)="store.select(memory.id)">
       <mat-icon>bubble_chart</mat-icon>
       <span>{{ memory.title }}</span>
     </button>
   } @empty {
-    <button mat-menu-item disabled>Aucun souvenir</button>
+    <p class="menu-note menu-note--hint">
+      {{ store.total() > 0 ? 'Clique sur les neurones du cerveau pour découvrir tes souvenirs.' : 'Aucun souvenir.' }}
+    </p>
   }
 </mat-menu>
 

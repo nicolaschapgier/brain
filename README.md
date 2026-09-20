@@ -41,13 +41,29 @@ Dépose tes photos dans `public/memories/`.
 
 Le placement automatique est déterministe (un souvenir garde sa place d'un chargement à l'autre) et espace les neurones. Ajouter un souvenir **à la fin** de la liste ne déplace pas les précédents.
 
+## Souvenirs découverts
+
+Un souvenir est **inconnu** tant que tu n'as pas gratté sa carte. En cliquant sur son neurone, la carte s'ouvre recouverte d'une pellicule argentée aux fleurs de lys, façon jeu à gratter : gratte-la à la souris ou au doigt. Passé la moitié, le reste disparaît tout seul et le souvenir se dévoile. Il n'existe volontairement aucun moyen de tout révéler d'un clic, et la pellicule ne se gratte qu'à la souris ou au doigt. Fermer la carte sans avoir gratté laisse le souvenir inconnu.
+
+Tant qu'il est inconnu :
+
+- il n'apparaît pas dans la liste des souvenirs (menu en haut à droite), qui affiche seulement un compteur, par exemple « 3 / 8 souvenirs découverts » ;
+- son titre reste secret : au survol de son neurone, l'infobulle indique « Souvenir à découvrir » ;
+- les flèches de la carte ne le montrent pas (elles ne parcourent que les souvenirs connus).
+
+Une fois gratté, un souvenir est **connu pour toujours** : il est retenu dans le `localStorage` du navigateur (clé `brain.discovered`, liste des identifiants). La progression est donc propre à chaque navigateur, et se perd si on vide les données du site. Pour la remettre à zéro, dans la console du navigateur : `localStorage.removeItem('brain.discovered')`.
+
+> Donne un `id` explicite à chaque souvenir dans `memories.json` : sans `id`, il est généré à partir de la position dans la liste (`memory-3`…), et déplacer un souvenir ferait perdre sa progression.
+
+Réglages de la pellicule (`src/app/ui/scratch-cover/scratch-cover.ts`) : `REVEAL_THRESHOLD` (part à gratter, 0.5 par défaut) et `BRUSH_RADIUS` (taille du grattage).
+
 ## Navigation
 
 - **Glisser** : tourner autour du cerveau · **Molette** : avancer / reculer vers le curseur · **Clic droit** : se déplacer
 - **ZQSD / WASD ou flèches** : voler · **Espace / Maj** : monter / descendre
-- **Dans le cerveau**, la vue passe en première personne : glisser fait pivoter la caméra sur place, la molette avance / recule dans la direction du regard, et la rotation automatique se coupe. En ressortant, on retrouve la rotation autour du cerveau.
-- **Clic sur un neurone** : la caméra vole jusqu'à lui et la carte s'ouvre (flèches pour passer au souvenir suivant)
-- Barre en haut à droite : liste des souvenirs, entrer dans le cerveau, vue d'ensemble, rotation automatique
+- **Dans le cerveau**, la vue passe en première personne : glisser fait pivoter la caméra sur place, la molette avance / recule dans la direction du regard, à la même vitesse dans les deux sens, et la rotation automatique se coupe. En ressortant, on retrouve la rotation autour du cerveau.
+- **Clic sur un neurone** : la caméra vole jusqu'à lui et la carte s'ouvre (flèches pour passer au souvenir suivant). La carte se ferme avec la croix en haut à droite, la touche Échap ou le bouton « Fermer »
+- Barre en haut à droite : liste des souvenirs déjà découverts, entrer dans le cerveau, vue d'ensemble, rotation automatique
 
 ## Structure
 

@@ -17,12 +17,60 @@
   --cut: 22px;
 }
 
+// Enveloppe de la carte et de sa croix : la croix dépasse du coin, hors de la zone de défilement de la carte.
+.shell {
+  position: relative;
+  display: flex;
+  width: 100%;
+  max-height: 100%;
+  pointer-events: none;
+}
+
+.close {
+  --mat-icon-button-icon-color: var(--berry-red);
+  --mat-icon-button-state-layer-color: var(--berry-red);
+
+  position: absolute;
+  z-index: 10;
+  top: -14px;
+  right: -14px;
+  width: 40px;
+  height: 40px;
+  padding: 8px;
+  border-radius: 50%;
+  background: #fff;
+  pointer-events: auto;
+  box-shadow:
+    0 0 0 3px var(--berry-gold),
+    0 4px 14px rgba(0, 0, 0, 0.55);
+  transition: transform 140ms ease;
+
+  &:hover,
+  &:focus-visible {
+    transform: scale(1.12) rotate(90deg);
+  }
+}
+
+// Le contenu de la carte (photo, nom, fiche) et la pellicule à gratter qui peut le recouvrir.
+.reveal {
+  position: relative;
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
 // Le contour blanc de l'autocollant, qui s'incline vers la souris.
 .sticker {
   --mat-card-elevated-container-color: #fff;
   --mat-card-elevated-container-shape: 18px;
 
   position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
   width: 100%;
   max-height: 100%;
   overflow: hidden auto;
@@ -301,6 +349,11 @@
 
 // Mobile : l'autocollant devient un bandeau en bas de l'écran, en plus compact.
 @media (max-width: 899px) {
+  .close {
+    top: -12px;
+    right: -6px;
+  }
+
   :host {
     top: auto;
     left: 12px;

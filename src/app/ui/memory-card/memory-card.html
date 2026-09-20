@@ -1,9 +1,10 @@
 @for (memory of shown(); track memory.id) {
+  <div class="shell">
   <mat-card
     class="sticker"
     appearance="raised"
     role="dialog"
-    [attr.aria-label]="memory.title"
+    [attr.aria-label]="coverId() === memory.id ? 'Souvenir à découvrir' : memory.title"
     (pointermove)="tilt($event)"
     (pointerleave)="resetTilt($event)"
   >
@@ -15,41 +16,57 @@
         <span class="crest" aria-hidden="true">⚜</span>
       </header>
 
-      <figure class="window">
-        @if (memory.image && brokenImage() !== memory.image) {
-          <img mat-card-image class="photo" [src]="memory.image" [alt]="memory.title" (error)="brokenImage.set(memory.image)" />
-        } @else {
-          <div class="photo photo--empty" aria-hidden="true">⚜</div>
-        }
-        <span class="foil" aria-hidden="true"></span>
-      </figure>
+      <!-- Tant que le souvenir est inconnu, le contenu est recouvert d'une pellicule à gratter (et inerte pour les lecteurs d'écran). -->
+      <div class="reveal">
+        <div class="reveal__content" [attr.inert]="coverId() === memory.id ? '' : null">
+          <figure class="window">
+            @if (memory.image && brokenImage() !== memory.image) {
+              <img mat-card-image class="photo" [src]="memory.image" [alt]="memory.title" (error)="brokenImage.set(memory.image)" />
+            } @else {
+              <div class="photo photo--empty" aria-hidden="true">⚜</div>
+            }
+            <span class="foil" aria-hidden="true"></span>
+          </figure>
 
-      <div class="nameplate">
-        <mat-card-title class="name">{{ memory.title }}</mat-card-title>
+          <div class="nameplate">
+            <mat-card-title class="name">{{ memory.title }}</mat-card-title>
+          </div>
+
+          <mat-card-content class="sheet">
+            @if (memory.date) {
+              <p class="stat"><span class="label">Date</span> {{ formatDate(memory.date) }}</p>
+            }
+            @if (memory.description) {
+              <p class="description">{{ memory.description }}</p>
+            }
+          </mat-card-content>
+        </div>
+
+        @if (coverId() === memory.id) {
+          <app-scratch-cover (uncovered)="store.reveal(memory.id)" (finished)="coverId.set(null)" />
+        }
       </div>
-
-      <mat-card-content class="sheet">
-        @if (memory.date) {
-          <p class="stat"><span class="label">Date</span> {{ formatDate(memory.date) }}</p>
-        }
-        @if (memory.description) {
-          <p class="description">{{ memory.description }}</p>
-        }
-      </mat-card-content>
 
       <footer class="edition">Édition Berry · Châteauroux</footer>
 
       <mat-card-actions class="actions" align="end">
-        <button mat-icon-button matTooltip="Souvenir précédent" aria-label="Souvenir précédent" (click)="store.previous()">
-          <mat-icon>chevron_left</mat-icon>
-        </button>
-        <button mat-icon-button matTooltip="Souvenir suivant" aria-label="Souvenir suivant" (click)="store.next()">
-          <mat-icon>chevron_right</mat-icon>
-        </button>
+        @if (store.discovered().length > 1) {
+          <button mat-icon-button matTooltip="Souvenir précédent" aria-label="Souvenir précédent" (click)="store.previous()">
+            <mat-icon>chevron_left</mat-icon>
+          </button>
+          <button mat-icon-button matTooltip="Souvenir suivant" aria-label="Souvenir suivant" (click)="store.next()">
+            <mat-icon>chevron_right</mat-icon>
+          </button>
+        }
         <button mat-button (click)="store.select(null)">Fermer</button>
       </mat-card-actions>
     </div>
 
     <span class="foil foil--sticker" aria-hidden="true"></span>
   </mat-card>
+
+  <button mat-icon-button class="close" matTooltip="Fermer (Échap)" aria-label="Fermer la carte" (click)="store.select(null)">
+    <mat-icon>close</mat-icon>
+  </button>
+  </div>
 }
