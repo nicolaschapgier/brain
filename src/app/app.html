@@ -1,6 +1,6 @@
-<app-brain-viewer #viewer [autoRotate]="autoRotate()" />
+<app-brain-viewer #viewer [autoRotate]="autoRotate()" [paused]="albumOpen()" [attr.inert]="albumOpen() ? '' : null" />
 
-<header class="hud">
+<header class="hud" [attr.inert]="albumOpen() ? '' : null">
   <div class="brand">
     <span class="logo">BRAIN</span>
     <span class="tagline">Nos souvenirs, en orbite</span>
@@ -9,6 +9,9 @@
   <nav class="actions">
     <button mat-icon-button matTooltip="Liste des souvenirs" aria-label="Liste des souvenirs" [matMenuTriggerFor]="list">
       <mat-icon>psychology</mat-icon>
+    </button>
+    <button mat-icon-button matTooltip="Album des souvenirs" aria-label="Album des souvenirs" (click)="openAlbum()">
+      <mat-icon>menu_book</mat-icon>
     </button>
     <button mat-icon-button matTooltip="Entrer dans le cerveau" aria-label="Entrer dans le cerveau" (click)="viewer.enterBrain()">
       <mat-icon>rocket_launch</mat-icon>
@@ -45,6 +48,10 @@
 </mat-menu>
 
 <app-memory-card />
+
+@if (albumOpen()) {
+  <app-album (closed)="albumOpen.set(false)" />
+}
 
 @switch (store.status()) {
   @case ('loading') {

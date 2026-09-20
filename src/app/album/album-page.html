@@ -1,0 +1,128 @@
+<ng-template #boardRow let-boards>
+  <div class="boards" aria-hidden="true">
+    @for (board of boards; track board.name) {
+      <span class="board" [class]="'board board--' + board.tone">{{ board.name }}</span>
+    }
+  </div>
+</ng-template>
+
+@switch (side().kind) {
+  @case ('cover') {
+    <section class="cover" [attr.aria-label]="'Couverture de l’album des souvenirs, ' + store.discovered().length + ' souvenirs collés sur ' + store.total()">
+      <div class="cover__plate">
+        <span class="cover__crest" aria-hidden="true">⚜</span>
+        <h2 class="cover__title">Album</h2>
+        <p class="cover__subtitle">des souvenirs</p>
+      </div>
+      <p class="cover__count">
+        <b>{{ store.discovered().length }}</b> / {{ store.total() }} collés
+      </p>
+      <p class="cover__edition">Édition Berrichonne · Châteauroux</p>
+    </section>
+  }
+
+  @case ('intro') {
+    <section class="paper intro">
+      <header class="intro__head">
+        <p class="kicker">Stade Gaston-Petit</p>
+        <h2 class="headline">Bienvenue<br />dans l’album</h2>
+      </header>
+
+      <p class="intro__text">
+        Chaque souvenir trouvé dans le cerveau vient se coller ici. Gratte les cartes pour compléter ta collection !
+      </p>
+
+      <div class="gauge" role="img" [attr.aria-label]="store.discovered().length + ' souvenirs collés sur ' + store.total()">
+        <p class="gauge__score"><b>{{ store.discovered().length }}</b><small>/{{ store.total() }}</small></p>
+        <div class="gauge__bar" aria-hidden="true">
+          @for (found of segments(); track $index) {
+            <i class="gauge__seg" [class.gauge__seg--on]="found"></i>
+          }
+        </div>
+      </div>
+
+      <div class="wall">
+        <p class="wall__title">Merci à nos partenaires</p>
+        <div class="wall__boards" aria-hidden="true">
+          @for (board of wall; track board.name) {
+            <span [class]="'board board--' + board.tone">{{ board.name }}</span>
+          }
+        </div>
+      </div>
+
+      <footer class="folio">{{ pageNumber() }}</footer>
+    </section>
+  }
+
+  @case ('stickers') {
+    @if (stickers(); as page) {
+      <section class="paper stickers">
+        <header class="ribbon">
+          <span class="ribbon__tab">Souvenirs</span>
+          @if (range(); as r) {
+            <span class="ribbon__range">N° {{ r.first }}@if (r.last !== r.first) { – {{ r.last }} }</span>
+          }
+        </header>
+
+        <div class="grid">
+          @for (slot of page.slots; track slot.memory.id) {
+            @if (store.isDiscovered(slot.memory.id)) {
+              <button
+                type="button"
+                class="sticker"
+                [style.--tilt]="tilt(slot.number)"
+                [attr.aria-label]="'Souvenir numéro ' + slot.number + ' : ' + slot.memory.title + '. Ouvrir la carte'"
+                (click)="open.emit(slot.memory.id)"
+              >
+                <span class="sticker__no">N°{{ slot.number }}</span>
+                <span class="sticker__photo">
+                  @if (hasImage(slot.memory.image)) {
+                    <img [src]="slot.memory.image" alt="" draggable="false" (error)="markBroken(slot.memory.image)" />
+                  } @else {
+                    <span class="sticker__fallback" aria-hidden="true">⚜</span>
+                  }
+                </span>
+                <span class="sticker__name">{{ slot.memory.title }}</span>
+                @if (slot.memory.date) {
+                  <span class="sticker__date">{{ formatDate(slot.memory.date) }}</span>
+                }
+              </button>
+            } @else {
+              <div class="slot" role="img" [attr.aria-label]="'Souvenir numéro ' + slot.number + ', pas encore découvert'">
+                <mat-icon class="slot__icon" aria-hidden="true">psychology</mat-icon>
+                <span class="slot__no">{{ slot.number }}</span>
+                <span class="slot__hint">À découvrir</span>
+              </div>
+            }
+          }
+        </div>
+
+        <ng-container [ngTemplateOutlet]="boardRow" [ngTemplateOutletContext]="{ $implicit: boards() }" />
+        <footer class="folio">{{ pageNumber() }}</footer>
+      </section>
+    }
+  }
+
+  @case ('end') {
+    <section class="paper end">
+      <h2 class="headline headline--soft">À suivre…</h2>
+      <div class="end__ghosts" aria-hidden="true">
+        <i></i><i></i><i></i>
+      </div>
+      <p class="intro__text">La place est déjà prête pour les prochains souvenirs.</p>
+      <ng-container [ngTemplateOutlet]="boardRow" [ngTemplateOutletContext]="{ $implicit: boards() }" />
+      <footer class="folio">{{ pageNumber() }}</footer>
+    </section>
+  }
+
+  @case ('back') {
+    <section class="cover cover--back" aria-label="Quatrième de couverture">
+      <div class="cover__plate cover__plate--back">
+        <span class="cover__crest" aria-hidden="true">⚜</span>
+        <p class="cover__subtitle">Fin de l’album</p>
+        <p class="cover__thanks">Merci à toute la bande</p>
+      </div>
+      <ng-container [ngTemplateOutlet]="boardRow" [ngTemplateOutletContext]="{ $implicit: wall.slice(0, 3) }" />
+    </section>
+  }
+}

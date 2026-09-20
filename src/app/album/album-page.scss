@@ -1,0 +1,497 @@
+@use '../ui/berry-theme' as berry;
+
+// Palette de l'album : le bleu et le rouge de la Berrichonne, le blanc du papier, un peu d'argent pour les foils.
+// Toutes les tailles sont en `cqw` (1 % de la largeur de la page) : la page garde ses proportions à toutes les tailles.
+:host {
+  @include berry.tokens;
+
+  --hinge: linear-gradient(90deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.12) 5%, transparent 10%);
+
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  container-type: inline-size;
+  color: var(--berry-ink);
+  font-family: 'Exo 2', sans-serif;
+}
+
+// À gauche (verso), la reliure est du côté droit.
+:host(.verso) {
+  --hinge: linear-gradient(270deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.12) 5%, transparent 10%);
+}
+
+// --- Panneaux publicitaires : bandeaux à LED, comme autour de la pelouse ---------------------------------------------
+
+.boards {
+  display: flex;
+  gap: 1.6cqw;
+  margin-top: 3.5cqw;
+}
+
+.board {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 1.7cqw 1cqw 1.5cqw;
+  overflow: hidden;
+  border-radius: 0.6cqw;
+  font: italic 800 4.4cqw/1 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  letter-spacing: 0.06em;
+  text-align: center;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow:
+    inset 0 0 0 0.35cqw rgba(255, 255, 255, 0.4),
+    0 0.6cqw 0 rgba(0, 0, 0, 0.25);
+
+  // La trame des ampoules.
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(rgba(255, 255, 255, 0.2) 0.28cqw, transparent 0.34cqw) 0 0 / 1.1cqw 1.1cqw;
+  }
+
+  &--blue {
+    background: linear-gradient(180deg, var(--berry-azure-light), var(--berry-azure) 40%, var(--berry-azure-deep));
+    color: #fff;
+  }
+
+  &--red {
+    background: linear-gradient(180deg, #e0404d, var(--berry-red) 40%, var(--berry-red-deep));
+    color: #fff;
+  }
+
+  &--white {
+    background: linear-gradient(180deg, #fff, #e9edf6);
+    color: var(--berry-azure);
+    box-shadow:
+      inset 0 0 0 0.4cqw var(--berry-azure),
+      0 0.6cqw 0 rgba(0, 0, 0, 0.25);
+
+    &::after {
+      background-image: radial-gradient(rgba(26, 63, 150, 0.16) 0.28cqw, transparent 0.34cqw);
+    }
+  }
+}
+
+// --- Pages de papier ------------------------------------------------------------------------------------------------
+
+.paper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 5cqw 6cqw 8cqw 9cqw;
+  // Fines rayures pâles (le maillot en filigrane) sur un papier blanc cassé.
+  background:
+    repeating-linear-gradient(90deg, rgba(26, 63, 150, 0.05) 0 8.33cqw, transparent 8.33cqw 16.66cqw),
+    #fbfaf6;
+
+  // Rond central de la pelouse, en filigrane.
+  &::before {
+    content: '';
+    position: absolute;
+    top: 52%;
+    left: 50%;
+    width: 74cqw;
+    aspect-ratio: 1;
+    translate: -50% -50%;
+    border: 0.8cqw solid rgba(26, 63, 150, 0.07);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  // Ombre de la reliure.
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: var(--hinge);
+  }
+}
+
+:host(.verso) .paper {
+  padding: 5cqw 9cqw 8cqw 6cqw;
+}
+
+.folio {
+  position: absolute;
+  bottom: 2.6cqw;
+  right: 6cqw;
+  color: rgba(12, 31, 85, 0.55);
+  font: italic 700 3.4cqw/1 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  letter-spacing: 0.14em;
+}
+
+:host(.verso) .folio {
+  right: auto;
+  left: 6cqw;
+}
+
+.kicker {
+  display: inline-block;
+  margin: 0;
+  padding: 1cqw 3cqw;
+  background: var(--berry-red);
+  color: #fff;
+  font: italic 700 3.6cqw/1 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  transform: skewX(-12deg);
+}
+
+.headline {
+  margin: 2.5cqw 0 0;
+  color: var(--berry-azure);
+  font: italic 800 14cqw/0.9 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  text-shadow: 0.7cqw 0.7cqw 0 rgba(200, 32, 47, 0.85);
+  text-transform: uppercase;
+
+  &--soft {
+    margin: 0;
+    font-size: 17cqw;
+    text-align: center;
+  }
+}
+
+// --- Accueil --------------------------------------------------------------------------------------------------------
+
+.intro {
+  gap: 4cqw;
+
+  &__head {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  &__text {
+    margin: 0;
+    font-size: 4.1cqw;
+    line-height: 1.5;
+  }
+}
+
+.gauge {
+  padding: 3.5cqw 4cqw;
+  border-left: 1.4cqw solid var(--berry-red);
+  border-radius: 0.8cqw 2cqw 2cqw 0.8cqw;
+  background: #fff;
+  box-shadow:
+    inset 0 0 0 0.3cqw rgba(12, 31, 85, 0.16),
+    0 0.6cqw 0 rgba(12, 31, 85, 0.15);
+
+  &__score {
+    display: flex;
+    align-items: baseline;
+    gap: 1cqw;
+    margin: 0 0 2.5cqw;
+    color: var(--berry-azure);
+    font: italic 800 11cqw/1 'Barlow Condensed', 'Arial Narrow', sans-serif;
+
+    small {
+      font-size: 6cqw;
+      opacity: 0.6;
+    }
+  }
+
+  &__bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1cqw;
+  }
+
+  &__seg {
+    flex: 0 0 5.4cqw;
+    height: 4cqw;
+    border: 0.3cqw solid rgba(26, 63, 150, 0.32);
+    background: rgba(26, 63, 150, 0.08);
+    transform: skewX(-14deg);
+
+    // Une fois collé, chaque souvenir prend tour à tour le bleu et le rouge du maillot.
+    &--on {
+      border-color: transparent;
+      background: var(--berry-azure);
+
+      &:nth-child(even) {
+        background: var(--berry-red);
+      }
+    }
+  }
+}
+
+.wall {
+  margin-top: auto;
+
+  &__title {
+    margin: 0 0 2cqw;
+    color: var(--berry-azure);
+    font: italic 700 3.6cqw/1 'Barlow Condensed', 'Arial Narrow', sans-serif;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  &__boards {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.8cqw;
+
+    // Un nombre impair de panneaux : le dernier prend toute la largeur.
+    .board:last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+    }
+  }
+}
+
+// --- Pages d'autocollants -------------------------------------------------------------------------------------------
+
+.ribbon {
+  display: flex;
+  align-items: center;
+  gap: 3cqw;
+  margin-bottom: 3cqw;
+
+  &__tab {
+    padding: 1.2cqw 4cqw;
+    background: var(--berry-red);
+    color: #fff;
+    font: italic 700 4cqw/1 'Barlow Condensed', 'Arial Narrow', sans-serif;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    transform: skewX(-12deg);
+  }
+
+  &__range {
+    color: var(--berry-azure);
+    font: italic 800 6.4cqw/1 'Barlow Condensed', 'Arial Narrow', sans-serif;
+    letter-spacing: 0.04em;
+  }
+}
+
+.grid {
+  flex: 1 1 0;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  gap: 5.5cqw;
+  padding: 1.6cqw;
+}
+
+// Un souvenir déjà découvert : l'autocollant, collé de travers.
+.sticker {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1cqw;
+  min-height: 0;
+  padding: 1.6cqw;
+  border: 0.7cqw solid var(--berry-red);
+  border-radius: 1.4cqw;
+  background:
+    repeating-linear-gradient(115deg, rgba(255, 255, 255, 0.07) 0 3cqw, transparent 3cqw 6cqw),
+    linear-gradient(160deg, var(--berry-azure) 0%, var(--berry-azure-deep) 100%);
+  color: #fff;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  // Le contour blanc de l'autocollant, puis son ombre sur la page.
+  box-shadow:
+    0 0 0 1.4cqw #fff,
+    0 0 0 1.7cqw rgba(0, 0, 0, 0.22),
+    0 2cqw 3cqw rgba(0, 0, 0, 0.3);
+  transform: rotate(var(--tilt, 0deg));
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease;
+
+  &:hover,
+  &:focus-visible {
+    z-index: 2;
+    outline: none;
+    transform: translateY(-1cqw) rotate(0deg) scale(1.04);
+    box-shadow:
+      0 0 0 1.4cqw #fff,
+      0 0 0 1.7cqw rgba(0, 0, 0, 0.22),
+      0 0 0 3cqw rgba(200, 32, 47, 0.55),
+      0 3cqw 4.5cqw rgba(0, 0, 0, 0.4);
+  }
+
+  &__no {
+    position: absolute;
+    z-index: 2;
+    top: -2.6cqw;
+    left: -2.4cqw;
+    padding: 0.9cqw 2.6cqw 0.9cqw 2.2cqw;
+    background: var(--berry-foil-silver);
+    color: var(--berry-azure-deep);
+    font: italic 800 4.2cqw/1 'Barlow Condensed', 'Arial Narrow', sans-serif;
+    letter-spacing: 0.04em;
+    transform: skewX(-10deg);
+    box-shadow: 0 0.5cqw 0 var(--berry-red-deep);
+  }
+
+  &__photo {
+    position: relative;
+    flex: 1 1 0;
+    min-height: 0;
+    overflow: hidden;
+    border: 0.5cqw solid #fff;
+    background: var(--berry-azure-deep);
+    clip-path: polygon(0 0, calc(100% - 4cqw) 0, 100% 4cqw, 100% 100%, 4cqw 100%, 0 calc(100% - 4cqw));
+
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    // Reflet blanc qui passe sur la photo quand on survole l'autocollant.
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, 0.65) 50%, transparent 60%);
+      transform: translateX(-120%);
+    }
+  }
+
+  &:hover &__photo::after,
+  &:focus-visible &__photo::after {
+    transform: translateX(120%);
+    transition: transform 700ms ease;
+  }
+
+  &__fallback {
+    display: grid;
+    place-items: center;
+    height: 100%;
+    color: #dfe4ee;
+    font: 12cqw/1 'Apple Symbols', 'Segoe UI Symbol', 'Noto Sans Symbols 2', sans-serif;
+    font-variant-emoji: text;
+  }
+
+  &__name {
+    display: block;
+    padding: 0.9cqw 1.6cqw 0.9cqw 2.2cqw;
+    overflow: hidden;
+    border-left: 1cqw solid var(--berry-red);
+    background: #fff;
+    color: var(--berry-azure-deep);
+    font: italic 800 4.4cqw/1.05 'Barlow Condensed', 'Arial Narrow', sans-serif;
+    text-transform: uppercase;
+    // Deux lignes au plus : un titre plus long est coupé avec des points de suspension.
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+
+  &__date {
+    display: block;
+    overflow: hidden;
+    color: rgba(255, 255, 255, 0.9);
+    font: italic 600 3.4cqw/1 'Barlow Condensed', 'Arial Narrow', sans-serif;
+    letter-spacing: 0.06em;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+}
+
+// Un souvenir pas encore découvert : l'emplacement vide, imprimé sur la page, avec son seul numéro.
+.slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5cqw;
+  min-height: 0;
+  border: 0.6cqw dashed rgba(26, 63, 150, 0.38);
+  border-radius: 1.6cqw;
+  background:
+    repeating-linear-gradient(135deg, rgba(26, 63, 150, 0.06) 0 2cqw, transparent 2cqw 4cqw),
+    rgba(255, 255, 255, 0.55);
+  color: rgba(26, 63, 150, 0.45);
+
+  &__icon {
+    width: 9cqw;
+    height: 9cqw;
+    font-size: 9cqw;
+    line-height: 1;
+    color: rgba(200, 32, 47, 0.5);
+  }
+
+  // Le numéro en creux, comme sur les albums à compléter.
+  &__no {
+    color: transparent;
+    font: italic 800 20cqw/0.9 'Barlow Condensed', 'Arial Narrow', sans-serif;
+    -webkit-text-stroke: 0.6cqw rgba(26, 63, 150, 0.45);
+  }
+
+  &__hint {
+    font: italic 700 3.4cqw/1 'Barlow Condensed', 'Arial Narrow', sans-serif;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+}
+
+// --- Page « à suivre » ----------------------------------------------------------------------------------------------
+
+.end {
+  align-items: stretch;
+  justify-content: center;
+  gap: 5cqw;
+
+  .intro__text {
+    text-align: center;
+  }
+
+  &__ghosts {
+    display: flex;
+    justify-content: center;
+    gap: 4cqw;
+    padding: 0 6cqw;
+
+    i {
+      flex: 1;
+      aspect-ratio: 3 / 4;
+      border: 0.6cqw dashed rgba(26, 63, 150, 0.32);
+      border-radius: 2cqw;
+      background: rgba(255, 255, 255, 0.5);
+
+      &:nth-child(1) {
+        rotate: -4deg;
+      }
+
+      &:nth-child(2) {
+        translate: 0 -2cqw;
+        rotate: 2deg;
+      }
+
+      &:nth-child(3) {
+        rotate: -2deg;
+      }
+    }
+  }
+
+  .boards {
+    margin-top: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sticker,
+  .sticker__photo::after {
+    transition: none !important;
+  }
+}

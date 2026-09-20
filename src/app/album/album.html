@@ -1,0 +1,61 @@
+<div class="table" role="dialog" aria-modal="true" aria-label="Album des souvenirs" [style.--flip-ms]="flipMs + 'ms'">
+  <header class="bar">
+    <div class="bar__title">
+      <span class="bar__logo">Album</span>
+      <span class="bar__count" role="status">{{ store.discovered().length }} / {{ store.total() }} souvenirs collés</span>
+    </div>
+
+    <button #closeButton mat-icon-button class="bar__close" matTooltip="Fermer (Échap)" aria-label="Fermer l’album" (click)="closed.emit()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </header>
+
+  <main class="stage">
+    <div class="book" [class.book--compact]="compact()" [style.--shift]="shift()">
+      @if (view().left; as left) {
+        <div class="sheet sheet--left">
+          <app-album-page [side]="left" (open)="openMemory($event)" />
+        </div>
+      }
+      @if (view().right; as right) {
+        <div class="sheet sheet--right">
+          <app-album-page [side]="right" (open)="openMemory($event)" />
+        </div>
+      }
+
+      <!-- La feuille qui se tourne (recto et verso). Elle est décorative : le contenu vient d'être affiché à côté. -->
+      @if (view().leaf; as leaf) {
+        <div class="leaf" [class.leaf--back]="leaf.dir === -1" aria-hidden="true" inert>
+          <div class="leaf__face leaf__face--front">
+            @if (leaf.front; as front) {
+              <app-album-page [side]="front" />
+            }
+          </div>
+          <div class="leaf__face leaf__face--back">
+            @if (leaf.back; as back) {
+              <app-album-page [side]="back" />
+            } @else {
+              <div class="blank"></div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </main>
+
+  <footer class="pager">
+    <button mat-icon-button class="pager__button" matTooltip="Page précédente (←)" aria-label="Page précédente" [disabled]="!canPrevious()" (click)="turnPage(-1)">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+
+    <div class="pager__dots" aria-hidden="true">
+      @for (current of dots(); track $index) {
+        <i class="pager__dot" [class.pager__dot--current]="current"></i>
+      }
+    </div>
+
+    <button mat-icon-button class="pager__button" matTooltip="Page suivante (→)" aria-label="Page suivante" [disabled]="!canNext()" (click)="turnPage(1)">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </footer>
+</div>

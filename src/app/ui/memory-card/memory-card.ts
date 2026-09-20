@@ -3,6 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { formatMemoryDate } from '../../core/memory-date';
 import { MemoryStore } from '../../core/memory.store';
 import { ScratchCover } from '../scratch-cover/scratch-cover';
 
@@ -45,14 +46,7 @@ export class MemoryCard {
 
   private readonly reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /** `2023-02-11` devient « 11 février 2023 » ; tout autre texte (« Été 2022 »…) est affiché tel quel. */
-  protected formatDate(value: string): string {
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
-    const date = new Date(`${value}T12:00:00`);
-    return Number.isNaN(date.getTime())
-      ? value
-      : date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
-  }
+  protected readonly formatDate = formatMemoryDate;
 
   /** Incline l'autocollant vers la souris et déplace le reflet holographique (variables CSS lues par le style). */
   protected tilt(event: PointerEvent) {

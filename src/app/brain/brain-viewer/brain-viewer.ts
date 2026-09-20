@@ -26,6 +26,8 @@ export class BrainViewer {
   private readonly scene = signal<BrainScene | null>(null);
 
   readonly autoRotate = input(true);
+  /** Vrai quand quelque chose recouvre entièrement la scène (l'album) : inutile alors de la dessiner. */
+  readonly paused = input(false);
   protected readonly hover = signal<HoverInfo | null>(null);
 
   constructor() {
@@ -43,6 +45,7 @@ export class BrainViewer {
     // Ordre voulu : les neurones sont recréés avant que la sélection y soit réappliquée.
     effect(() => this.scene()?.setMemories(this.store.memories()));
     effect(() => this.scene()?.setAutoRotate(this.autoRotate()));
+    effect(() => this.scene()?.setPaused(this.paused()));
     effect(() => {
       this.store.memories();
       this.scene()?.focus(this.store.selectedId());

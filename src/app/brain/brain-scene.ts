@@ -103,6 +103,7 @@ export class BrainScene {
   private interior = false;
   private glide = 0;
   private lastTime = 0;
+  private paused = false;
 
   private pointer: { x: number; y: number } | null = null;
   private pointerDown?: { x: number; y: number; time: number };
@@ -168,6 +169,15 @@ export class BrainScene {
     this.field = new NeuronField(memories);
     this.scene.add(this.field.group);
     this.setHovered(null);
+  }
+
+  /** En pause (l'album est ouvert par-dessus), la scène ne dessine plus rien et ignore le clavier. */
+  setPaused(paused: boolean) {
+    if (paused === this.paused) return;
+    this.paused = paused;
+    this.held.clear();
+    this.glide = 0;
+    this.renderer.setAnimationLoop(paused ? null : this.tick);
   }
 
   setAutoRotate(enabled: boolean) {
@@ -462,7 +472,7 @@ export class BrainScene {
 
   private readonly onKeyDown = (event: KeyboardEvent) => {
     const action = MOVE_KEYS[event.code];
-    if (!action || event.ctrlKey || event.metaKey || event.altKey || !this.isKeyboardTarget(event)) return;
+    if (this.paused || !action || event.ctrlKey || event.metaKey || event.altKey || !this.isKeyboardTarget(event)) return;
     event.preventDefault();
     this.held.add(action);
   };

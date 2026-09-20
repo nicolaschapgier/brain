@@ -1,0 +1,165 @@
+// Couvertures de l'album (première et quatrième) : les larges bandes bleues et rouges du maillot, avec la plaque argentée.
+// Mêmes unités que `album-page.scss` : des `cqw`, soit 1 % de la largeur de la page.
+
+.cover {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6cqw;
+  height: 100%;
+  overflow: hidden;
+  color: #fff;
+  text-align: center;
+  // Du dessus au dessous : la reliure, un reflet, les liserés blancs, puis les larges bandes du maillot.
+  background:
+    var(--hinge),
+    linear-gradient(115deg, rgba(255, 255, 255, 0.26) 0, transparent 32%, transparent 62%, rgba(255, 255, 255, 0.14) 100%),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0 calc(100% / 6 - 0.7cqw),
+      rgba(255, 255, 255, 0.9) calc(100% / 6 - 0.7cqw) calc(100% / 6)
+    ),
+    repeating-linear-gradient(90deg, var(--berry-azure) 0 calc(100% / 6), var(--berry-red) calc(100% / 6) calc(100% / 3));
+
+  // Reflet métallique qui traverse la couverture de temps en temps.
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(105deg, transparent 42%, rgba(255, 255, 255, 0.35) 50%, transparent 58%);
+    transform: translateX(-120%);
+    animation: cover-sweep 7s ease-in-out 1s infinite;
+  }
+
+  &__plate {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 76%;
+    padding: 23cqw 4cqw 6cqw;
+    background: var(--berry-foil-silver);
+    clip-path: polygon(0 0, calc(100% - 7cqw) 0, 100% 7cqw, 100% 100%, 7cqw 100%, 0 calc(100% - 7cqw));
+    color: var(--berry-azure-deep);
+
+    // Le fond blanc, à l'intérieur du cadre argenté.
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 1.2cqw;
+      background: linear-gradient(#fff, #edf0f7);
+      clip-path: polygon(0 0, calc(100% - 6cqw) 0, 100% 6cqw, 100% 100%, 6cqw 100%, 0 calc(100% - 6cqw));
+    }
+
+    > :not(.cover__crest) {
+      position: relative;
+    }
+
+    &--back {
+      padding-top: 23cqw;
+    }
+  }
+
+  &__crest {
+    position: absolute;
+    top: 3.5cqw;
+    left: 50%;
+    display: grid;
+    place-items: center;
+    width: 17cqw;
+    height: 17cqw;
+    translate: -50% 0;
+    border: 1cqw solid #fff;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, var(--berry-azure-light), var(--berry-azure-deep));
+    box-shadow:
+      0 0 0 1cqw var(--berry-red),
+      0 1.4cqw 2cqw rgba(0, 0, 0, 0.4);
+    color: #fff;
+    font: 10cqw/1 'Apple Symbols', 'Segoe UI Symbol', 'Noto Sans Symbols 2', sans-serif;
+    font-variant-emoji: text;
+  }
+
+  &__title {
+    margin: 1cqw 0 0;
+    color: var(--berry-red);
+    font: italic 800 27cqw/0.85 'Barlow Condensed', 'Arial Narrow', sans-serif;
+    text-shadow: 1cqw 1cqw 0 var(--berry-azure-deep);
+    text-transform: uppercase;
+  }
+
+  &__subtitle {
+    margin: 2cqw 0 0;
+    padding: 1.4cqw 5cqw;
+    background: var(--berry-azure);
+    color: #fff;
+    font: italic 700 6cqw/1 'Barlow Condensed', 'Arial Narrow', sans-serif;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    transform: skewX(-10deg);
+    box-shadow: 0 0.8cqw 0 var(--berry-red);
+  }
+
+  &__thanks {
+    margin: 4cqw 0 0;
+    font: italic 700 5cqw/1.1 'Barlow Condensed', 'Arial Narrow', sans-serif;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  &__count {
+    margin: 0;
+    padding: 1.4cqw 5cqw;
+    border-radius: 99cqw;
+    background: rgba(12, 31, 85, 0.85);
+    box-shadow: 0 0 0 0.5cqw rgba(255, 255, 255, 0.7);
+    font: italic 700 5.2cqw/1 'Barlow Condensed', 'Arial Narrow', sans-serif;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+
+    b {
+      font-size: 7cqw;
+    }
+  }
+
+  &__edition {
+    margin: 0;
+    padding: 0 6cqw;
+    color: #fff;
+    font: italic 700 3.6cqw/1.2 'Barlow Condensed', 'Arial Narrow', sans-serif;
+    letter-spacing: 0.22em;
+    text-shadow: 0 0.3cqw 1cqw rgba(0, 0, 0, 0.6);
+    text-transform: uppercase;
+  }
+
+  // Quatrième de couverture : reliure à droite et panneaux tout en bas.
+  &--back {
+    --hinge: linear-gradient(270deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.12) 5%, transparent 10%);
+
+    .boards {
+      position: absolute;
+      right: 9cqw;
+      bottom: 7cqw;
+      left: 9cqw;
+    }
+  }
+}
+
+@keyframes cover-sweep {
+  0% {
+    transform: translateX(-120%);
+  }
+  24%,
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cover::after {
+    display: none;
+  }
+}
