@@ -40,15 +40,16 @@ export class BrainModel {
       front: { outside: 0.55, inside: 0.0 },
     });
 
-    this.addOpaque(
+    // Cervelet et tronc dépassent du cerveau : translucides, ils s'effacent dans le décor au lieu de trancher dessus.
+    this.addTranslucent(
       createCerebellumGeometry(),
       { vertexColors: true, roughness: 0.6, emissive: 0x3a0f2e, emissiveIntensity: 0.3 },
-      { outside: 0.92, inside: 0.45 },
+      { outside: 0.3, inside: 0.3 },
     );
-    this.addOpaque(
+    this.addTranslucent(
       createBrainStemGeometry(),
       { color: 0xd98a9c, roughness: 0.6, emissive: 0x3a0f2e, emissiveIntensity: 0.3 },
-      { outside: 0.92, inside: 0.45 },
+      { outside: 0.3, inside: 0.3 },
     );
 
     // L'intensité suit l'agrandissement : la lumière s'atténue avec la distance (exposant 1.6).
@@ -103,12 +104,13 @@ export class BrainModel {
     }
   }
 
-  private addOpaque(
+  /** Une seule passe, sans écriture de profondeur : ce qui est derrière (les neurones) reste visible au travers. */
+  private addTranslucent(
     geometry: ReturnType<typeof createCerebrumGeometry>,
     params: ConstructorParameters<typeof MeshStandardMaterial>[0],
     opacity: Omit<Fade, 'material'>,
   ) {
-    const material = new MeshStandardMaterial({ ...params, transparent: true });
+    const material = new MeshStandardMaterial({ ...params, transparent: true, depthWrite: false });
     const mesh = new Mesh(geometry, material);
     mesh.renderOrder = 3;
     this.fades.push({ material, ...opacity });
