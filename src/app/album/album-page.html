@@ -1,7 +1,18 @@
+<!-- Un panneau : le logo de l'annonceur s'il existe (et se charge), sinon son nom écrit en lettres. -->
+<ng-template #board let-board>
+  @if (board.logo && hasImage(board.logo)) {
+    <span [class]="'board board--logo board--' + board.tone">
+      <img [src]="board.logo" alt="" draggable="false" (error)="markBroken(board.logo)" />
+    </span>
+  } @else {
+    <span [class]="'board board--' + board.tone">{{ board.name }}</span>
+  }
+</ng-template>
+
 <ng-template #boardRow let-boards>
   <div class="boards" aria-hidden="true">
-    @for (board of boards; track board.name) {
-      <span class="board" [class]="'board board--' + board.tone">{{ board.name }}</span>
+    @for (item of boards; track item.name) {
+      <ng-container [ngTemplateOutlet]="board" [ngTemplateOutletContext]="{ $implicit: item }" />
     }
   </div>
 </ng-template>
@@ -54,8 +65,8 @@
       <div class="wall">
         <p class="wall__title">Merci à nos partenaires</p>
         <div class="wall__boards" aria-hidden="true">
-          @for (board of wall; track board.name) {
-            <span [class]="'board board--' + board.tone">{{ board.name }}</span>
+          @for (item of wall; track item.name) {
+            <ng-container [ngTemplateOutlet]="board" [ngTemplateOutletContext]="{ $implicit: item }" />
           }
         </div>
       </div>

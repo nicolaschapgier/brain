@@ -34,15 +34,17 @@
   position: relative;
   flex: 1 1 0;
   min-width: 0;
+  display: grid;
+  place-content: center;
   padding: 1.7cqw 1cqw 1.5cqw;
   overflow: hidden;
   border-radius: 0.6cqw;
   font: italic 800 4.4cqw/1 'Barlow Condensed', 'Arial Narrow', sans-serif;
   letter-spacing: 0.06em;
   text-align: center;
-  text-overflow: ellipsis;
   text-transform: uppercase;
-  white-space: nowrap;
+  // Un nom long (« Conseil général de l'Indre ») passe sur deux lignes ; tous les panneaux d'une rangée ont la même hauteur.
+  text-wrap: balance;
   box-shadow:
     inset 0 0 0 0.35cqw rgba(255, 255, 255, 0.4),
     0 0.6cqw 0 rgba(0, 0, 0, 0.25);
@@ -64,6 +66,23 @@
   &--red {
     background: linear-gradient(180deg, #e0404d, var(--berry-red) 40%, var(--berry-red-deep));
     color: #fff;
+  }
+
+  // Panneau à logo : la plaque garde sa couleur (blanc pour un logo en couleurs, bleu pour un logo blanc), sans la trame
+  // des ampoules qui gênerait la lecture.
+  &--logo {
+    padding: 1cqw 1.6cqw;
+
+    &::after {
+      display: none;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      height: 7.6cqw;
+      object-fit: contain;
+    }
   }
 
   &--white {
@@ -150,7 +169,7 @@
 .headline {
   margin: 2.5cqw 0 0;
   color: var(--berry-azure);
-  font: italic 800 14cqw/0.9 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  font: italic 800 12.5cqw/0.9 'Barlow Condensed', 'Arial Narrow', sans-serif;
   text-shadow: 0.7cqw 0.7cqw 0 rgba(200, 32, 47, 0.85);
   text-transform: uppercase;
 
@@ -164,7 +183,7 @@
 // --- Accueil --------------------------------------------------------------------------------------------------------
 
 .intro {
-  gap: 4cqw;
+  gap: 3cqw;
 
   &__head {
     display: flex;
@@ -180,7 +199,7 @@
 }
 
 .gauge {
-  padding: 3.5cqw 4cqw;
+  padding: 2.6cqw 4cqw;
   border-left: 1.4cqw solid var(--berry-red);
   border-radius: 0.8cqw 2cqw 2cqw 0.8cqw;
   background: #fff;
@@ -192,9 +211,9 @@
     display: flex;
     align-items: baseline;
     gap: 1cqw;
-    margin: 0 0 2.5cqw;
+    margin: 0 0 1.8cqw;
     color: var(--berry-azure);
-    font: italic 800 11cqw/1 'Barlow Condensed', 'Arial Narrow', sans-serif;
+    font: italic 800 10cqw/1 'Barlow Condensed', 'Arial Narrow', sans-serif;
 
     small {
       font-size: 6cqw;
@@ -240,12 +259,22 @@
 
   &__boards {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.8cqw;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.6cqw;
 
-    // Un nombre impair de panneaux : le dernier prend toute la largeur.
-    .board:last-child:nth-child(odd) {
-      grid-column: 1 / -1;
+    // Ici tous les annonceurs à la fois : panneaux plus petits.
+    .board {
+      padding: 1.3cqw 0.8cqw 1.1cqw;
+      font-size: 3.4cqw;
+      letter-spacing: 0.03em;
+
+      &--logo {
+        padding: 1cqw 1.2cqw;
+
+        img {
+          height: 10.5cqw;
+        }
+      }
     }
   }
 }
