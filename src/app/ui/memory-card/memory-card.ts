@@ -6,6 +6,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { formatMemoryDate } from '../../core/memory-date';
 import { MemoryStore } from '../../core/memory.store';
 import { themeFor, yearOf } from '../../core/year-theme';
+import { CardBack } from '../card-back/card-back';
 import { ScratchCover } from '../scratch-cover/scratch-cover';
 
 /** Inclinaison maximale (en degrés) de l'autocollant quand la souris le survole. */
@@ -14,7 +15,7 @@ const TILT_Y = 5;
 
 @Component({
   selector: 'app-memory-card',
-  imports: [MatCardModule, MatButtonModule, MatIconModule, MatTooltipModule, ScratchCover],
+  imports: [MatCardModule, MatButtonModule, MatIconModule, MatTooltipModule, ScratchCover, CardBack],
   changeDetection: ChangeDetectionStrategy.OnPush,
   // Le thème de l'année du souvenir (couleurs, effet rétro) se pose en variables CSS sur la carte.
   host: { '(document:keydown.escape)': 'closeOnEscape($event)', '[style]': 'theme().vars' },

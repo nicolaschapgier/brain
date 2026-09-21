@@ -1,5 +1,7 @@
 <div class="backdrop" (click)="closed.emit()">
   <div class="frame" role="dialog" aria-modal="true" [attr.aria-label]="memory().title" (click)="$event.stopPropagation()">
+    <!-- La modale s'ouvre en se retournant, comme la carte : son dos (le logo du club) est sur la face cachée. -->
+    <div class="flip">
     <article class="sticker">
       <div class="face">
         <header class="top">
@@ -36,6 +38,8 @@
         }
       </div>
     </article>
+    <app-card-back />
+    </div>
 
     <button #closeButton mat-icon-button class="close" matTooltip="Fermer (Échap)" aria-label="Fermer l’image" (click)="closed.emit()">
       <mat-icon>close</mat-icon>

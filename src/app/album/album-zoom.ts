@@ -18,6 +18,7 @@ import { formatMemoryDate } from '../core/memory-date';
 import { Memory } from '../core/memory.model';
 import { MemoryStore } from '../core/memory.store';
 import { themeFor, yearOf } from '../core/year-theme';
+import { CardBack } from '../ui/card-back/card-back';
 
 /**
  * Modale de l'album : un souvenir collé, en grand, par-dessus la page. Elle se ferme avec la croix, un clic à côté ou
@@ -25,7 +26,7 @@ import { themeFor, yearOf } from '../core/year-theme';
  */
 @Component({
   selector: 'app-album-zoom',
-  imports: [MatButtonModule, MatIconModule, MatTooltipModule],
+  imports: [MatButtonModule, MatIconModule, MatTooltipModule, CardBack],
   // Le thème de l'année du souvenir (couleurs, effet rétro) se pose en variables CSS sur la modale.
   host: { '[style]': 'theme().vars' },
   changeDetection: ChangeDetectionStrategy.OnPush,

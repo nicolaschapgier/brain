@@ -1,5 +1,7 @@
 @for (memory of shown(); track memory.id) {
   <div class="shell">
+  <!-- La carte s'ouvre en se retournant : son dos (le logo du club) est sur la face cachée. -->
+  <div class="flip">
   <mat-card
     class="sticker"
     appearance="raised"
@@ -55,6 +57,8 @@
 
     <span class="foil foil--sticker" aria-hidden="true"></span>
   </mat-card>
+  <app-card-back />
+  </div>
 
   <button mat-icon-button class="close" matTooltip="Fermer (Échap)" aria-label="Fermer la carte" (click)="store.select(null)">
     <mat-icon>close</mat-icon>

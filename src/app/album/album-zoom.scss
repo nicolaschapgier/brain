@@ -1,5 +1,6 @@
 @use '../ui/berry-theme' as berry;
 @use '../ui/year-theme' as year;
+@use '../ui/card-flip' as flip;
 
 // La modale reprend l'autocollant de l'album (cadre blanc, fond bleu, filet rouge, argent), en grand.
 :host {
@@ -29,7 +30,19 @@
   display: flex;
   width: min(100%, 640px);
   max-height: 100%;
-  animation: pop-in 320ms cubic-bezier(0.2, 0.9, 0.25, 1.15) both;
+  perspective: 1600px;
+}
+
+// La carte et son dos, dans un même bloc qui se retourne à l'ouverture (dos visible au départ, recto à l'arrivée).
+.flip {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  max-height: 100%;
+  transform-style: preserve-3d;
+  @include flip.animation;
 }
 
 .close {
@@ -49,6 +62,8 @@
     0 0 0 3px var(--berry-red),
     0 4px 14px rgba(0, 0, 0, 0.55);
   transition: transform 140ms ease;
+  // La croix n'apparaît qu'une fois la carte retournée.
+  @include flip.close-appears;
 
   &:hover,
   &:focus-visible {
@@ -68,6 +83,7 @@
   box-shadow:
     0 0 0 1px rgba(0, 0, 0, 0.3),
     0 24px 60px rgba(0, 0, 0, 0.6);
+  backface-visibility: hidden;
 }
 
 .face {
@@ -235,12 +251,7 @@
   }
 }
 
-@keyframes pop-in {
-  from {
-    opacity: 0;
-    transform: translateY(18px) scale(0.92);
-  }
-}
+@include flip.keyframes;
 
 @media (max-width: 899px) {
   :host {
@@ -254,7 +265,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .backdrop,
-  .frame {
+  .flip,
+  .close {
     animation: none;
   }
 }

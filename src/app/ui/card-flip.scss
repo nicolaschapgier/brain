@@ -1,0 +1,76 @@
+@use 'sass:math';
+
+// Ouverture d'une carte (carte du cerveau et modale de l'album) : elle arrive dos visible (le logo du club), reste un
+// instant pour qu'on puisse le distinguer, puis se retourne pour montrer sa face.
+// Aucune opacité dans l'animation du bloc qui se retourne : elle aplatirait la 3D et montrerait le recto à l'envers.
+//
+// Trois temps, à régler ici : l'arrivée, la pause où le logo reste de face, puis le retournement.
+$arrive: 500ms;
+$hold: 300ms;
+$flip: 700ms;
+
+$duration: $arrive + $hold + $flip;
+// La croix n'apparaît que vers la fin du retournement.
+$close-delay: $arrive + $hold + $flip * 0.85;
+
+// Position d'un instant de l'animation, en pourcentage de sa durée.
+@function at($time) {
+  @return math.percentage(math.div($time, $duration));
+}
+
+// Deux animations sur le même bloc : la rotation (`transform`), d'un seul tenant pour que le retournement ne marque
+// aucun arrêt, et l'arrivée / le soulèvement (propriétés `translate` et `scale`, qui se combinent avec la rotation).
+@mixin animation {
+  animation:
+    flip-open $duration linear both,
+    flip-lift $duration linear both;
+}
+
+@mixin close-appears {
+  animation: close-in 260ms ease $close-delay both;
+}
+
+// À inclure une fois par composant (les noms des animations sont propres à chaque composant).
+@mixin keyframes {
+  // Le dos reste de face pendant l'arrivée et la pause, puis un seul mouvement le retourne : départ franc, arrivée douce.
+  @keyframes flip-open {
+    0%,
+    #{at($arrive + $hold)} {
+      transform: rotateY(180deg);
+      animation-timing-function: cubic-bezier(0.3, 0.1, 0.2, 1);
+    }
+    100% {
+      transform: rotateY(0deg);
+    }
+  }
+
+  // La carte monte et grossit en arrivant, reste posée pendant la pause, puis se soulève à mi-retournement.
+  @keyframes flip-lift {
+    0% {
+      translate: 0 28px;
+      scale: 0.82;
+      animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    #{at($arrive)},
+    #{at($arrive + $hold)} {
+      translate: 0 0;
+      scale: 1;
+      animation-timing-function: ease-in-out;
+    }
+    #{at($arrive + $hold + $flip * 0.5)} {
+      translate: 0 -8px;
+      scale: 1.05;
+      animation-timing-function: ease-in-out;
+    }
+    100% {
+      translate: 0 0;
+      scale: 1;
+    }
+  }
+
+  @keyframes close-in {
+    from {
+      opacity: 0;
+    }
+  }
+}
