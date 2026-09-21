@@ -4,6 +4,7 @@ import {
   DestroyRef,
   ElementRef,
   afterNextRender,
+  afterRenderEffect,
   computed,
   inject,
   output,
@@ -17,7 +18,7 @@ import { Memory } from '../core/memory.model';
 import { MemoryStore } from '../core/memory.store';
 import { AlbumPage } from './album-page';
 import { AlbumZoom } from './album-zoom';
-import { Turn, buildSides, nextSide, spreadOf, viewOf } from './album-book';
+import { Turn, YearEntry, buildSides, nextSide, sideForPage, spreadOf, viewOf, visibleYears, yearEntries } from './album-book';
 
 /** Durée d'un tour de page. Elle est transmise au style (`--flip-ms`) : l'animation et le minuteur restent d'accord. */
 const FLIP_MS = 850;
@@ -44,6 +45,7 @@ export class Album {
 
   protected readonly flipMs = FLIP_MS;
 
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly closeButton = viewChild.required<unknown, ElementRef<HTMLElement>>('closeButton', { read: ElementRef });
   private readonly compactQuery = window.matchMedia(COMPACT_QUERY);
   private readonly reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -58,6 +60,11 @@ export class Album {
   protected readonly zoomed = signal<Memory | null>(null);
 
   protected readonly view = computed(() => viewOf(this.sides(), this.side(), this.compact(), this.turn()));
+
+  /** Les années du livre, pour le raccourci « aller à l'année ». */
+  protected readonly years = computed(() => yearEntries(this.sides()));
+  /** Les années dont une page est à l'écran (la puce de l'année est alors mise en avant). */
+  protected readonly shownYears = computed(() => visibleYears(this.sides(), this.side(), this.compact()));
 
   protected readonly canPrevious = computed(() => this.step(-1) !== this.side());
   protected readonly canNext = computed(() => this.step(1) !== this.side());
@@ -91,6 +98,14 @@ export class Album {
 
     afterNextRender(() => this.closeButton().nativeElement.focus());
 
+    // Sur un petit écran la rangée d'années défile : la puce de l'année affichée reste en vue, même si on feuillette.
+    afterRenderEffect(() => {
+      this.shownYears();
+      this.host.nativeElement
+        .querySelector('.years__chip--current')
+        ?.scrollIntoView({ block: 'nearest', inline: 'center', behavior: this.reducedMotion ? 'auto' : 'smooth' });
+    });
+
     destroyRef.onDestroy(() => {
       this.compactQuery.removeEventListener('change', onChange);
       clearTimeout(this.timer);
@@ -100,13 +115,24 @@ export class Album {
 
   protected turnPage(dir: 1 | -1) {
     if (this.turn()) return;
+    this.moveTo(this.step(dir));
+  }
+
+  /** Raccourci : ouvre le livre à la première page de l'année (un tour de page si elle est voisine, sinon d'un coup). */
+  protected goToYear(entry: YearEntry) {
+    this.abortTurn();
+    this.moveTo(sideForPage(this.sides().length, entry.page, this.compact()));
+  }
+
+  /** Va à une face. Le tour de page ne s'anime que d'une page (ou double page) à la fois : au-delà, la feuille montrerait le mauvais verso. */
+  private moveTo(to: number) {
     const from = this.side();
-    const to = this.step(dir);
     if (to === from) return;
 
     this.side.set(to);
-    if (this.reducedMotion) return;
-    this.turn.set({ dir, from });
+    const distance = this.compact() ? Math.abs(to - from) : Math.abs(spreadOf(to) - spreadOf(from));
+    if (this.reducedMotion || distance !== 1) return;
+    this.turn.set({ dir: to > from ? 1 : -1, from });
     this.timer = setTimeout(() => this.turn.set(null), FLIP_MS);
   }
 

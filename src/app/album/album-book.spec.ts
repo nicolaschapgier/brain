@@ -1,5 +1,5 @@
 import { Memory } from '../core/memory.model';
-import { AlbumSide, buildSides, nextSide, spreadOf, viewOf } from './album-book';
+import { AlbumSide, buildSides, nextSide, sideForPage, spreadOf, viewOf, visibleYears, yearEntries } from './album-book';
 import { allBoards, boardsFrom } from './album-sponsors';
 
 const memories = (count: number): Memory[] =>
@@ -206,5 +206,72 @@ describe('panneaux publicitaires', () => {
   it('accepte une liste vide et un départ négatif', () => {
     expect(boardsFrom(0, 3, [])).toEqual([]);
     expect(boardsFrom(-1, 2, sponsors).map((b) => b.name)).toEqual(['D', 'A']);
+  });
+});
+
+describe('raccourci vers une année', () => {
+  const dated = (dates: (string | undefined)[]): Memory[] =>
+    dates.map((date, i) => ({ id: `m${i + 1}`, title: `Souvenir ${i + 1}`, description: '', image: '', date }));
+
+  // Pages : 0 couverture, 1 accueil, 2 « 2015 », 3 « 2016 », 4 « 2016 » (suite), 5 « Sans date », 6 « à suivre », 7 dos.
+  const sides = buildSides(dated(['2015-03-01', '2016-01-01', '2016-02-01', '2016-03-01', '2016-04-01', '2016-05-01', undefined]));
+
+  describe('yearEntries', () => {
+    it('donne une entrée par année, avec sa première page et son nombre de souvenirs', () => {
+      expect(yearEntries(sides)).toEqual([
+        { year: 2015, page: 2, count: 1 },
+        { year: 2016, page: 3, count: 5 },
+        { year: null, page: 5, count: 1 },
+      ]);
+    });
+
+    it('n’a aucune année quand il n’y a aucun souvenir', () => {
+      expect(yearEntries(buildSides([]))).toEqual([]);
+    });
+  });
+
+  describe('sideForPage', () => {
+    it('en mode compact, la face est la page elle-même', () => {
+      expect(sideForPage(sides.length, 3, true)).toBe(3);
+    });
+
+    it('en double page, la face est celle de droite de la double page qui contient la page', () => {
+      expect(sideForPage(sides.length, 3, false)).toBe(4);
+      expect(sideForPage(sides.length, 4, false)).toBe(4);
+      expect(sideForPage(sides.length, 2, false)).toBe(2);
+    });
+
+    it('reste dans le livre', () => {
+      expect(sideForPage(sides.length, 99, true)).toBe(sides.length - 1);
+      expect(sideForPage(sides.length, 99, false)).toBe(sides.length - 1);
+    });
+
+    it('montre bien la page demandée', () => {
+      const side = sideForPage(sides.length, 3, false);
+      const view = viewOf(sides, side, false, null);
+      expect([view.left?.index, view.right?.index]).toContain(3);
+    });
+  });
+
+  describe('visibleYears', () => {
+    it('en mode compact, seule l’année de la page affichée compte', () => {
+      expect([...visibleYears(sides, 2, true)]).toEqual([2015]);
+      expect([...visibleYears(sides, 0, true)]).toEqual([]);
+    });
+
+    it('en double page, les deux pages comptent : deux années peuvent être en vue', () => {
+      // Face 2 : double page « accueil | 2015 ». Face 4 : « 2016 | 2016 (suite) » (une seule année, citée une fois).
+      expect([...visibleYears(sides, 2, false)]).toEqual([2015]);
+      expect([...visibleYears(sides, 4, false)]).toEqual([2016]);
+    });
+
+    it('ne compte ni la couverture, ni l’accueil, ni la page « à suivre »', () => {
+      expect(visibleYears(sides, 0, false).size).toBe(0);
+      expect(visibleYears(sides, sides.length - 1, false).size).toBe(0);
+    });
+
+    it('cite l’année « sans date » comme une année à part', () => {
+      expect(visibleYears(sides, 5, true).has(null)).toBe(true);
+    });
   });
 });

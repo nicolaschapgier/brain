@@ -10,6 +10,29 @@
     </button>
   </header>
 
+  <!-- Raccourci : une puce par année, pour ouvrir le livre directement à sa page. -->
+  @if (years().length) {
+    <nav class="years" aria-label="Aller à une année" [attr.inert]="zoomed() ? '' : null">
+      <ul class="years__list">
+        <li class="years__label" aria-hidden="true">Aller à</li>
+        @for (entry of years(); track entry.year) {
+          <li>
+            <button
+              type="button"
+              class="years__chip"
+              [class.years__chip--current]="shownYears().has(entry.year)"
+              [attr.aria-current]="shownYears().has(entry.year) ? 'page' : null"
+              [attr.aria-label]="(entry.year ?? 'Sans date') + ', ' + entry.count + (entry.count > 1 ? ' souvenirs' : ' souvenir')"
+              (click)="goToYear(entry)"
+            >
+              {{ entry.year ?? 'Sans date' }}
+            </button>
+          </li>
+        }
+      </ul>
+    </nav>
+  }
+
   <main class="stage" [attr.inert]="zoomed() ? '' : null">
     <div class="book" [class.book--compact]="compact()" [style.--shift]="shift()">
       @if (view().left; as left) {

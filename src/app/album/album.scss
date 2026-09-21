@@ -14,7 +14,7 @@
 .table {
   // Taille d'une page : elle garde le rapport 3:4 et tient dans la fenêtre, entre la barre du haut et la barre du bas.
   --page-ratio: 0.75;
-  --pw: min(calc((100vw - 48px) / 2), calc((100dvh - 200px) * var(--page-ratio)), 560px);
+  --pw: min(calc((100vw - 48px) / 2), calc((100dvh - 246px) * var(--page-ratio)), 560px);
 
   position: absolute;
   inset: 0;
@@ -86,6 +86,81 @@
     &:focus-visible {
       transform: scale(1.1) rotate(90deg);
     }
+  }
+}
+
+// --- Raccourci vers une année ---------------------------------------------------------------------------------------
+
+// La rangée défile sur un petit écran ; les marges automatiques de la liste la centrent quand tout tient.
+.years {
+  display: flex;
+  flex: none;
+  overflow-x: auto;
+  padding: 0 24px 8px;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  &__list {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 auto;
+    padding: 4px 0;
+    list-style: none;
+  }
+
+  &__label {
+    flex: none;
+    padding-right: 4px;
+    color: rgba(255, 255, 255, 0.7);
+    font: italic 700 0.9rem/1 'Barlow Condensed', 'Arial Narrow', sans-serif;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  &__chip {
+    flex: none;
+    min-width: 56px;
+    min-height: 36px;
+    padding: 0 14px;
+    border: 2px solid rgba(255, 255, 255, 0.55);
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    cursor: pointer;
+    font: italic 800 1.05rem/1 'Barlow Condensed', 'Arial Narrow', sans-serif;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+    transform: skewX(-10deg);
+    transition:
+      background 160ms ease,
+      border-color 160ms ease,
+      transform 160ms ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    &:focus-visible {
+      outline: 3px solid #fff;
+      outline-offset: 2px;
+    }
+
+    &--current {
+      border-color: #fff;
+      background: var(--berry-red);
+      box-shadow: 0 3px 0 rgba(0, 0, 0, 0.35);
+      transform: skewX(-10deg) translateY(-1px);
+    }
+  }
+}
+
+@media (max-width: 899px) {
+  .years {
+    padding: 0 16px 6px;
   }
 }
 
@@ -317,7 +392,7 @@
 // Petit écran : moins de marge, et un livre d'une seule page, aussi grande que possible.
 @media (max-width: 899px) {
   .table {
-    --pw: min(calc(100vw - 32px), calc((100dvh - 190px) * var(--page-ratio)));
+    --pw: min(calc(100vw - 32px), calc((100dvh - 236px) * var(--page-ratio)));
   }
 
   .bar {
@@ -344,7 +419,8 @@
   }
 
   .book,
-  .pager__dot {
+  .pager__dot,
+  .years__chip {
     transition: none;
   }
 }

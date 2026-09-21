@@ -63,6 +63,45 @@ export function buildSides(memories: readonly Memory[]): AlbumSide[] {
   return sides.map((side, index) => ({ ...side, index }));
 }
 
+/** Une année du livre : la première page où elle apparaît, et le nombre de souvenirs qu'elle réunit. */
+export interface YearEntry {
+  /** L'année, ou `null` pour les souvenirs sans date. */
+  year: number | null;
+  page: number;
+  count: number;
+}
+
+/** Les années du livre dans l'ordre des pages, chacune avec sa première page (une année peut en occuper plusieurs). */
+export function yearEntries(sides: readonly AlbumSide[]): YearEntry[] {
+  const entries: YearEntry[] = [];
+  for (const side of sides) {
+    if (side.kind !== 'stickers') continue;
+    const entry = entries.find((e) => e.year === side.year);
+    if (entry) entry.count += side.slots.length;
+    else entries.push({ year: side.year, page: side.index, count: side.slots.length });
+  }
+  return entries;
+}
+
+/**
+ * La face courante qui met une page à l'écran : la page elle-même en mode compact, sa double page sinon (dont la face
+ * courante est celle de droite, voir `spreadOf`).
+ */
+export function sideForPage(count: number, page: number, compact: boolean): number {
+  if (compact) return Math.max(0, Math.min(count - 1, page));
+  const spread = spreadOf(page);
+  return spread === 0 ? 0 : Math.min(count - 1, 2 * spread);
+}
+
+/** Les années dont une page est à l'écran : une seule en mode compact, jusqu'à deux en double page. */
+export function visibleYears(sides: readonly AlbumSide[], side: number, compact: boolean): ReadonlySet<number | null> {
+  const spread = spreadOf(side);
+  const shown = compact ? [sides[side]] : [sides[2 * spread - 1], sides[2 * spread]];
+  const years = new Set<number | null>();
+  for (const page of shown) if (page?.kind === 'stickers') years.add(page.year);
+  return years;
+}
+
 /** Un tour de page en cours : sens (1 = vers l'avant) et face affichée avant le tour. */
 export interface Turn {
   dir: 1 | -1;
