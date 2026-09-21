@@ -1,0 +1,134 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" width="100%" height="100%" role="img" aria-label="Le Club des Cerveaux, depuis 2013 : à tous moments, ça part !">
+  <title>Le Club des Cerveaux</title>
+
+  <defs>
+    <!-- Vichy rouge et blanc du bob -->
+    <pattern id="gingham" width="12" height="12" patternUnits="userSpaceOnUse">
+      <rect width="12" height="12" fill="#ffffff" />
+      <rect width="6" height="12" fill="#d8323f" fill-opacity="0.62" />
+      <rect width="12" height="6" fill="#d8323f" fill-opacity="0.62" />
+    </pattern>
+  </defs>
+
+  <!-- Disque noir et liseré de points -->
+  <circle cx="320" cy="320" r="316" fill="#0b0b0c" />
+  <circle cx="320" cy="320" r="304" fill="none" stroke="#ffffff" stroke-opacity="0.4" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="0.1 9" />
+
+  <!-- Textes : lettres tracées (capitales à trait rond), posées sur les arcs. Aucune police n'est utilisée : le rendu
+       est le même partout. -->
+  <g fill="none" stroke="#ffffff" stroke-width="0.13" stroke-linecap="round" stroke-linejoin="round">
+    <path transform="translate(108.05 207.41) rotate(-62.02) scale(30) translate(-0.29 -1)" d="M0 0 V1 H.58" />
+    <path transform="translate(120.85 186.07) rotate(-56.08) scale(30) translate(-0.28 -1)" d="M.56 0 H0 V1 H.56 M0 .5 H.46" />
+    <path transform="translate(155.09 145.63) rotate(-43.4) scale(30) translate(-0.47 -1)" d="M.802 .146 A.47 .5 0 1 0 .802 .854" />
+    <path transform="translate(178.61 126.07) rotate(-36.1) scale(30) translate(-0.29 -1)" d="M0 0 V1 H.58" />
+    <path transform="translate(201.27 111.43) rotate(-29.65) scale(30) translate(-0.35 -1)" d="M0 0 V.62 A.35 .38 0 0 0 .7 .62 V0" />
+    <path transform="translate(226.26 99.06) rotate(-22.99) scale(30) translate(-0.32 -1)" d="M0 0 V1 M0 0 H.36 A.27 .25 0 0 1 .36 .5 H0 M.36 .5 A.29 .25 0 0 1 .36 1 H0" />
+    <path transform="translate(274.97 84.26) rotate(-10.81) scale(30) translate(-0.36 -1)" d="M0 0 V1 H.28 A.44 .5 0 0 0 .28 0 Z" />
+    <path transform="translate(301.72 80.7) rotate(-4.37) scale(30) translate(-0.28 -1)" d="M.56 0 H0 V1 H.56 M0 .5 H.46" />
+    <path transform="translate(327.2 80.11) rotate(1.72) scale(30) translate(-0.31 -1)" d="M.58 .17 C.5 -.02 .06 -.04 .05 .25 C.04 .5 .58 .46 .58 .74 C.58 1.04 .1 1.02 .02 .84" />
+    <path transform="translate(380.54 87.76) rotate(14.61) scale(30) translate(-0.47 -1)" d="M.802 .146 A.47 .5 0 1 0 .802 .854" />
+    <path transform="translate(409.3 97.23) rotate(21.84) scale(30) translate(-0.28 -1)" d="M.56 0 H0 V1 H.56 M0 .5 H.46" />
+    <path transform="translate(432.69 108.1) rotate(28) scale(30) translate(-0.32 -1)" d="M0 1 V0 H.36 A.27 .26 0 0 1 .36 .52 H0 M.3 .52 L.62 1" />
+    <path transform="translate(456.75 122.77) rotate(34.74) scale(30) translate(-0.36 -1)" d="M0 0 L.36 1 L.72 0" />
+    <path transform="translate(478.03 139.37) rotate(41.18) scale(30) translate(-0.28 -1)" d="M.56 0 H0 V1 H.56 M0 .5 H.46" />
+    <path transform="translate(497.51 158.47) rotate(47.7) scale(30) translate(-0.37 -1)" d="M0 1 L.37 0 L.74 1 M.13 .68 H.61" />
+    <path transform="translate(515.92 181.37) rotate(54.72) scale(30) translate(-0.35 -1)" d="M0 0 V.62 A.35 .38 0 0 0 .7 .62 V0" />
+    <path transform="translate(531.1 205.82) rotate(61.59) scale(30) translate(-0.35 -1)" d="M0 0 L.7 1 M.7 0 L0 1" />
+    <path transform="translate(66.98 439.92) rotate(-295.36) scale(30) translate(-0.37 -1)" d="M0 1 L.37 0 L.74 1 M.13 .68 H.61" />
+    <path transform="translate(93.59 484.74) rotate(-306.04) scale(30) translate(-0.35 -1)" d="M0 0 H.7 M.35 0 V1" />
+    <path transform="translate(112.3 507.78) rotate(-312.12) scale(30) translate(-0.38 -1)" d="M.38 0 A.38 .5 0 1 0 .38 1 A.38 .5 0 1 0 .38 0" />
+    <path transform="translate(133.35 528.72) rotate(-318.19) scale(30) translate(-0.35 -1)" d="M0 0 V.62 A.35 .38 0 0 0 .7 .62 V0" />
+    <path transform="translate(154.8 546.07) rotate(-323.84) scale(30) translate(-0.31 -1)" d="M.58 .17 C.5 -.02 .06 -.04 .05 .25 C.04 .5 .58 .46 .58 .74 C.58 1.04 .1 1.02 .02 .84" />
+    <path transform="translate(200.1 573.03) rotate(-334.65) scale(30) translate(-0.43 -1)" d="M0 1 V0 L.43 .64 L.86 0 V1" />
+    <path transform="translate(229.84 585.09) rotate(-341.22) scale(30) translate(-0.38 -1)" d="M.38 0 A.38 .5 0 1 0 .38 1 A.38 .5 0 1 0 .38 0" />
+    <path transform="translate(260.75 593.66) rotate(-347.78) scale(30) translate(-0.43 -1)" d="M0 1 V0 L.43 .64 L.86 0 V1" />
+    <path transform="translate(289.46 598.33) rotate(-353.74) scale(30) translate(-0.28 -1)" d="M.56 0 H0 V1 H.56 M0 .5 H.46" />
+    <path transform="translate(315.5 599.96) rotate(-359.08) scale(30) translate(-0.33 -1)" d="M0 1 V0 L.66 1 V0" />
+    <path transform="translate(343.67 599) rotate(-364.85) scale(30) translate(-0.35 -1)" d="M0 0 H.7 M.35 0 V1" />
+    <path transform="translate(371.01 595.31) rotate(-370.5) scale(30) translate(-0.31 -1)" d="M.58 .17 C.5 -.02 .06 -.04 .05 .25 C.04 .5 .58 .46 .58 .74 C.58 1.04 .1 1.02 .02 .84" />
+    <path transform="translate(389.18 591.32) rotate(-374.3) scale(30) translate(-0.05 -1)" d="M.05 .9 Q.06 1.08 -.04 1.16" />
+    <path transform="translate(432.8 576.27) rotate(-383.76) scale(30) translate(-0.47 -1)" d="M.802 .146 A.47 .5 0 1 0 .802 .854 M.47 1 V1.07 Q.47 1.17 .35 1.17" />
+    <path transform="translate(462.15 561.23) rotate(-390.51) scale(30) translate(-0.37 -1)" d="M0 1 L.37 0 L.74 1 M.13 .68 H.61" />
+    <path transform="translate(503.5 531.49) rotate(-400.95) scale(30) translate(-0.31 -1)" d="M0 1 V0 H.34 A.28 .26 0 0 1 .34 .52 H0" />
+    <path transform="translate(523.83 511.97) rotate(-406.72) scale(30) translate(-0.37 -1)" d="M0 1 L.37 0 L.74 1 M.13 .68 H.61" />
+    <path transform="translate(542.28 490.27) rotate(-412.55) scale(30) translate(-0.32 -1)" d="M0 1 V0 H.36 A.27 .26 0 0 1 .36 .52 H0 M.3 .52 L.62 1" />
+    <path transform="translate(558.12 467.31) rotate(-418.26) scale(30) translate(-0.35 -1)" d="M0 0 H.7 M.35 0 V1" />
+    <path transform="translate(577.34 430.35) rotate(-426.79) scale(30) translate(-0.02 -1)" d="M.02 0 V.66 M.02 .94 V.95" />
+    <path transform="translate(34.46 334.5) rotate(0) scale(17) translate(-0.31 -1)" d="M.58 .17 C.5 -.02 .06 -.04 .05 .25 C.04 .5 .58 .46 .58 .74 C.58 1.04 .1 1.02 .02 .84" />
+    <path transform="translate(44.49 334.5) rotate(0) scale(17) translate(-0.02 -1)" d="M.02 0 V1" />
+    <path transform="translate(54.86 334.5) rotate(0) scale(17) translate(-0.33 -1)" d="M0 1 V0 L.66 1 V0" />
+    <path transform="translate(72.88 334.5) rotate(0) scale(17) translate(-0.47 -1)" d="M.802 .146 A.47 .5 0 1 0 .802 .854" />
+    <path transform="translate(90.05 334.5) rotate(0) scale(17) translate(-0.28 -1)" d="M.56 0 H0 V1 H.56 M0 .5 H.46" />
+    <path transform="translate(558.28 334.5) rotate(0) scale(17) translate(-0.31 -1)" d="M.03 .2 C.03 -.08 .6 -.08 .6 .24 C.6 .5 .04 .72 .02 1 H.64" />
+    <path transform="translate(572.9 334.5) rotate(0) scale(17) translate(-0.29 -1)" d="M.29 0 A.29 .5 0 1 0 .29 1 A.29 .5 0 1 0 .29 0" />
+    <path transform="translate(585.14 334.5) rotate(0) scale(17) translate(-0.17 -1)" d="M.02 .22 L.3 0 V1" />
+    <path transform="translate(597.72 334.5) rotate(0) scale(17) translate(-0.31 -1)" d="M.04 .14 C.14 -.04 .6 -.04 .58 .24 C.56 .44 .3 .48 .22 .48 C.5 .48 .64 .64 .6 .8 C.54 1.05 .12 1.04 0 .86" />
+  </g>
+
+  <!-- Cercle intérieur et croix en diagonale -->
+  <circle cx="320" cy="320" r="215" fill="none" stroke="#ffffff" stroke-width="3" />
+  <g stroke="#ffffff" stroke-width="3" stroke-linecap="round" fill="none">
+    <path d="M366.7 273.3 L469.9 170.1" />
+    <path d="M366.7 366.7 L469.9 469.9" />
+    <path d="M273.3 366.7 L170.1 469.9" />
+    <path d="M273.3 273.3 L170.1 170.1" />
+  </g>
+
+  <!-- Au centre : le cerveau -->
+  <circle cx="320" cy="320" r="46" fill="#0b0b0c" stroke="#ffffff" stroke-width="4" />
+  <g transform="translate(320 320)" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M-2.5 -28 C-14 -32 -30 -25 -31 -11 C-36 -3 -33 12 -24 17 C-20 27 -9 30 -2.5 26 Z" fill="#eea4ae" />
+    <path d="M2.5 -28 C14 -32 30 -25 31 -11 C36 -3 33 12 24 17 C20 27 9 30 2.5 26 Z" fill="#f4b4bc" />
+    <g fill="none" stroke="#b5606f" stroke-width="2">
+      <path d="M-23 -15 q6 -7 12 0 t10 -2" />
+      <path d="M-27 -3 q7 -6 13 1 t12 -1" />
+      <path d="M-24 10 q7 -6 12 0 t9 0" />
+      <path d="M23 -15 q-6 -7 -12 0 t-10 -2" />
+      <path d="M27 -3 q-7 -6 -13 1 t-12 -1" />
+      <path d="M24 10 q-7 -6 -12 0 t-9 0" />
+    </g>
+  </g>
+
+  <!-- En haut : le bob à carreaux -->
+  <g transform="translate(320 148)" stroke="#8f1f2b" stroke-width="2" stroke-linejoin="round">
+    <path d="M-50 12 C-52 -20 -30 -42 0 -42 C30 -42 52 -20 50 12 Z" fill="url(#gingham)" />
+    <path d="M-62 12 Q0 36 62 12 Q58 26 0 32 Q-58 26 -62 12 Z" fill="url(#gingham)" />
+    <rect x="-20" y="-14" width="40" height="11" rx="5" fill="#f08a24" stroke="none" />
+  </g>
+
+  <!-- À gauche : un petit oiseau bleu sur le dos, l'œil en croix -->
+  <g transform="translate(168 322) rotate(-12)" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M-36 6 L-60 -6 L-52 16 Z" fill="#2f74b8" />
+    <ellipse cx="0" cy="4" rx="38" ry="20" fill="#3d8fdc" />
+    <circle cx="34" cy="-2" r="14" fill="#3d8fdc" />
+    <path d="M46 -3 L62 2 L46 8 Z" fill="#f4b73a" />
+    <path d="M-20 5 Q-4 17 14 5" fill="none" stroke="#2f74b8" stroke-width="3" />
+    <path d="M-6 -14 l-3 -15 M8 -15 l4 -14" fill="none" stroke="#f4b73a" stroke-width="3.5" />
+    <path d="M28 -8 l8 8 m0 -8 l-8 8" fill="none" stroke="#123a66" stroke-width="2.6" />
+  </g>
+
+  <!-- À droite : la vache -->
+  <g transform="translate(450 320)" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M-38 18 v24 M-20 18 v24 M14 18 v24 M30 18 v24" fill="none" stroke="#f4efe6" stroke-width="7" />
+    <path d="M-46 -12 Q-58 -2 -54 18" fill="none" stroke="#7b4a2b" stroke-width="3" />
+    <rect x="-46" y="-22" width="86" height="42" rx="11" fill="#f7f2ea" />
+    <path d="M-34 -22 h24 l-4 20 q-10 8 -20 0 z" fill="#7b4a2b" />
+    <path d="M12 -22 h20 q6 0 8 8 v10 q-14 6 -22 -2 z" fill="#7b4a2b" />
+    <path d="M38 -20 L60 -12 V10 H42 L38 -6 Z" fill="#7b4a2b" />
+    <rect x="50" y="4" width="14" height="10" rx="4" fill="#f0c6b2" />
+    <path d="M42 -22 l-4 -10 M52 -18 l6 -10" fill="none" stroke="#f4efe6" stroke-width="3.5" />
+    <circle cx="52" cy="-6" r="2" fill="#0b0b0c" />
+  </g>
+
+  <!-- En bas : la chope -->
+  <g transform="translate(320 448)" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M26 -14 h14 q9 0 9 9 v18 q0 9 -9 9 h-14" fill="none" stroke="#e9a022" stroke-width="7" />
+    <rect x="-26" y="-32" width="52" height="66" rx="7" fill="#f6b52e" stroke="#e08f1a" stroke-width="2.5" />
+    <path d="M-10 -22 v46 M4 -22 v46" stroke="#ffd06a" stroke-width="4" opacity="0.8" />
+    <g fill="#ffffff" stroke="#e6e0d2" stroke-width="1.5">
+      <circle cx="-15" cy="-36" r="9" />
+      <circle cx="0" cy="-41" r="10" />
+      <circle cx="15" cy="-36" r="9" />
+    </g>
+  </g>
+</svg>
