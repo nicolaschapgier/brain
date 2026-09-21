@@ -34,7 +34,7 @@ Tout est dans [`public/data/memories.json`](public/data/memories.json), un table
 | `title`       | oui         | Titre de la carte. Une entrée sans titre est ignorée (warning en console). |
 | `description` | non         | Texte de la carte. |
 | `image`       | non         | Chemin relatif à `public/` (ex. `memories/ski.jpg`) ou URL complète. |
-| `date`        | non         | Texte libre affiché sous le titre (`2023-02-11`, `Été 2022`…). |
+| `date`        | non         | Texte affiché sous le titre. `2023-02-11` s'affiche « 11 février 2023 », `2023-02` « février 2023 », `2023` tel quel ; un texte libre (`Été 2022`) aussi. L'année (4 chiffres) range le souvenir dans l'album et règle le vieillissement de la carte. |
 | `id`          | non         | Identifiant unique. Généré (`memory-N`) s'il manque ou est en double. |
 | `position`    | non         | `[x, y, z]` entre -1 et 1 : x gauche(-)/droite(+), y bas(-)/haut(+), z arrière(-)/avant(+). Sans ce champ, le neurone est placé automatiquement. |
 | `focus`       | non         | Cadrage de la photo là où elle est recadrée (carte, autocollants de l'album) : `[x, y]` en pourcentage, le point à garder au centre (`[0, 0]` haut gauche, `[100, 100]` bas droite). La photo n'est pas modifiée. Défaut : `[50, 35]`, un peu au-dessus du milieu, là où sont les visages d'une photo en portrait. La modale de l'album montre toujours la photo entière. |
