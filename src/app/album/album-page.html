@@ -6,18 +6,28 @@
   </div>
 </ng-template>
 
+<ng-template #sparks>
+  <i class="cover__spark" aria-hidden="true"></i>
+  <i class="cover__spark" aria-hidden="true"></i>
+  <i class="cover__spark" aria-hidden="true"></i>
+  <i class="cover__spark" aria-hidden="true"></i>
+</ng-template>
+
 @switch (side().kind) {
   @case ('cover') {
-    <section class="cover" [attr.aria-label]="'Couverture de l’album des souvenirs, ' + store.discovered().length + ' souvenirs collés sur ' + store.total()">
+    <section class="cover" [attr.aria-label]="'Album Panini, Édition Club des Cerveaux, ' + store.discovered().length + ' souvenirs collés sur ' + store.total()">
+      <ng-container [ngTemplateOutlet]="sparks" />
       <div class="cover__plate">
         <span class="cover__crest" aria-hidden="true">⚜</span>
-        <h2 class="cover__title">Album</h2>
-        <p class="cover__subtitle">des souvenirs</p>
+        <h2 class="cover__title" data-text="Album">Album</h2>
+        <p class="cover__subtitle">panini</p>
       </div>
       <p class="cover__count">
-        <b>{{ store.discovered().length }}</b> / {{ store.total() }} collés
+        <b>{{ store.discovered().length }}</b>
+        <span>/ {{ store.total() }}</span>
+        <em>collés</em>
       </p>
-      <p class="cover__edition">Édition Berrichonne · Châteauroux</p>
+      <p class="cover__edition">Édition Club des Cerveaux</p>
     </section>
   }
 
@@ -117,6 +127,7 @@
 
   @case ('back') {
     <section class="cover cover--back" aria-label="Quatrième de couverture">
+      <ng-container [ngTemplateOutlet]="sparks" />
       <div class="cover__plate cover__plate--back">
         <span class="cover__crest" aria-hidden="true">⚜</span>
         <p class="cover__subtitle">Fin de l’album</p>

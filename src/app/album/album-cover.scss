@@ -1,5 +1,15 @@
-// Couvertures de l'album (première et quatrième) : les larges bandes bleues et rouges du maillot, avec la plaque argentée.
+// Couvertures de l'album (première et quatrième), dans le style des albums de football du début des années 2000 :
+// bandes du maillot, reflet vitré, arcs blancs, trame de points, titre chromé, pastilles « gel », étincelles, foil holographique.
 // Mêmes unités que `album-page.scss` : des `cqw`, soit 1 % de la largeur de la page.
+
+// Étoile à douze branches (le badge du compteur) et étincelle à quatre branches.
+$burst: polygon(
+  50% 0%, 60.6% 10.4%, 75% 6.7%, 79% 21%, 93.3% 25%, 89.6% 39.4%, 100% 50%, 89.6% 60.6%, 93.3% 75%, 79% 79%, 75% 93.3%,
+  60.6% 89.6%, 50% 100%, 39.4% 89.6%, 25% 93.3%, 21% 79%, 6.7% 75%, 10.4% 60.6%, 0% 50%, 10.4% 39.4%, 6.7% 25%, 21% 21%,
+  25% 6.7%, 39.4% 10.4%
+);
+$sparkle: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%);
+$plate-cut: polygon(0 0, calc(100% - 7cqw) 0, 100% 7cqw, 100% 100%, 7cqw 100%, 0 calc(100% - 7cqw));
 
 .cover {
   position: relative;
@@ -7,15 +17,26 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6cqw;
   height: 100%;
+  box-sizing: border-box;
+  padding-bottom: 14cqw;
   overflow: hidden;
   color: #fff;
   text-align: center;
-  // Du dessus au dessous : la reliure, un reflet, les liserés blancs, puis les larges bandes du maillot.
+  // Du dessus au dessous : la reliure, le reflet vitré en haut, deux arcs blancs, la trame de points, les liserés blancs,
+  // puis les larges bandes bleues et rouges du maillot.
   background:
     var(--hinge),
-    linear-gradient(115deg, rgba(255, 255, 255, 0.26) 0, transparent 32%, transparent 62%, rgba(255, 255, 255, 0.14) 100%),
+    radial-gradient(135% 52% at 18% -10%, rgba(255, 255, 255, 0.4) 0 62%, transparent 63%),
+    radial-gradient(
+      95% 62% at 100% 100%,
+      transparent 0 57%,
+      rgba(255, 255, 255, 0.55) 57.4% 58.8%,
+      transparent 59.2% 63%,
+      rgba(255, 255, 255, 0.3) 63.3% 64.2%,
+      transparent 64.6%
+    ),
+    radial-gradient(rgba(255, 255, 255, 0.2) 0.3cqw, transparent 0.38cqw) 0 0 / 2cqw 2cqw,
     repeating-linear-gradient(
       90deg,
       transparent 0 calc(100% / 6 - 0.7cqw),
@@ -28,29 +49,71 @@
     content: '';
     position: absolute;
     inset: 0;
+    z-index: 4;
     pointer-events: none;
     background: linear-gradient(105deg, transparent 42%, rgba(255, 255, 255, 0.35) 50%, transparent 58%);
     transform: translateX(-120%);
     animation: cover-sweep 7s ease-in-out 1s infinite;
   }
 
+  // Les étincelles : des étoiles blanches à quatre branches qui scintillent chacune à son tour.
+  &__spark {
+    position: absolute;
+    z-index: 3;
+    width: var(--size, 6cqw);
+    aspect-ratio: 1;
+    background: #fff;
+    clip-path: $sparkle;
+    opacity: 0.9;
+    animation: twinkle 3.2s ease-in-out var(--delay, 0s) infinite;
+
+    &:nth-of-type(1) {
+      --size: 8cqw;
+      top: 7cqw;
+      left: 8cqw;
+    }
+
+    &:nth-of-type(2) {
+      --size: 5cqw;
+      --delay: 0.9s;
+      top: 15cqw;
+      right: 8cqw;
+    }
+
+    &:nth-of-type(3) {
+      --size: 6cqw;
+      --delay: 1.7s;
+      bottom: 30cqw;
+      left: 5cqw;
+    }
+
+    &:nth-of-type(4) {
+      --size: 4cqw;
+      --delay: 2.3s;
+      top: 40cqw;
+      right: 4cqw;
+    }
+  }
+
+  // La plaque : un cadre chromé autour d'un fond bleu vitré (dégradé, reflet arrondi en haut, lueur en bas).
   &__plate {
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 76%;
-    padding: 23cqw 4cqw 6cqw;
+    padding: 23cqw 4cqw 7cqw;
     background: var(--berry-foil-silver);
-    clip-path: polygon(0 0, calc(100% - 7cqw) 0, 100% 7cqw, 100% 100%, 7cqw 100%, 0 calc(100% - 7cqw));
-    color: var(--berry-azure-deep);
+    clip-path: $plate-cut;
 
-    // Le fond blanc, à l'intérieur du cadre argenté.
     &::before {
       content: '';
       position: absolute;
-      inset: 1.2cqw;
-      background: linear-gradient(#fff, #edf0f7);
+      inset: 1.4cqw;
+      background:
+        radial-gradient(140% 70% at 50% -30%, rgba(255, 255, 255, 0.6) 0 60%, transparent 61%),
+        radial-gradient(80% 45% at 50% 112%, rgba(92, 225, 255, 0.6), transparent 70%),
+        linear-gradient(180deg, var(--berry-azure-light) 0%, var(--berry-azure) 42%, var(--berry-azure-deep) 100%);
       clip-path: polygon(0 0, calc(100% - 6cqw) 0, 100% 6cqw, 100% 100%, 6cqw 100%, 0 calc(100% - 6cqw));
     }
 
@@ -63,6 +126,7 @@
     }
   }
 
+  // Le médaillon : une bille de verre avec son reflet, cerclée de chrome et de rouge.
   &__crest {
     position: absolute;
     top: 3.5cqw;
@@ -74,65 +138,151 @@
     translate: -50% 0;
     border: 1cqw solid #fff;
     border-radius: 50%;
-    background: radial-gradient(circle at 35% 30%, var(--berry-azure-light), var(--berry-azure-deep));
+    background: radial-gradient(circle at 35% 28%, var(--berry-azure-light), var(--berry-azure-deep) 75%);
     box-shadow:
       0 0 0 1cqw var(--berry-red),
-      0 1.4cqw 2cqw rgba(0, 0, 0, 0.4);
+      0 0 0 1.7cqw #fff,
+      0 1.4cqw 2cqw rgba(0, 0, 0, 0.45);
     color: #fff;
     font: 10cqw/1 'Apple Symbols', 'Segoe UI Symbol', 'Noto Sans Symbols 2', sans-serif;
     font-variant-emoji: text;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 6%;
+      left: 14%;
+      width: 72%;
+      height: 42%;
+      border-radius: 50%;
+      background: linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0));
+    }
   }
 
+  // Le titre chromé : dégradé métal avec sa ligne d'horizon, cerné de rouge, lueur bleue autour.
+  // Le trait rouge est celui du titre lui-même ; le métal est un double par-dessus (`data-text`).
   &__title {
+    position: relative;
     margin: 1cqw 0 0;
     color: var(--berry-red);
     font: italic 800 27cqw/0.85 'Barlow Condensed', 'Arial Narrow', sans-serif;
-    text-shadow: 1cqw 1cqw 0 var(--berry-azure-deep);
     text-transform: uppercase;
+    -webkit-text-stroke: 2.4cqw var(--berry-red);
+    paint-order: stroke fill;
+    filter: drop-shadow(0 1cqw 0 var(--berry-red-deep)) drop-shadow(0 0 2.4cqw rgba(92, 225, 255, 0.7));
+
+    &::after {
+      content: attr(data-text);
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, #fff 0%, #dbe4f7 34%, #6f82ad 49%, #eef2fb 52%, #fff 68%, #a8b7dc 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      -webkit-text-stroke: 0;
+    }
   }
 
+  // Pastille « gel » rouge, avec son reflet blanc sur la moitié haute.
   &__subtitle {
-    margin: 2cqw 0 0;
-    padding: 1.4cqw 5cqw;
-    background: var(--berry-azure);
+    position: relative;
+    margin: 3cqw 0 0;
+    padding: 1.4cqw 7cqw;
+    border: 0.6cqw solid #fff;
+    border-radius: 99cqw;
+    background: linear-gradient(180deg, #ff6e7a 0%, #d5202f 48%, #a3121f 52%, #c8202f 100%);
+    box-shadow:
+      0 0 2cqw rgba(255, 90, 105, 0.7),
+      0 1cqw 1.6cqw rgba(0, 0, 0, 0.4);
     color: #fff;
-    font: italic 700 6cqw/1 'Barlow Condensed', 'Arial Narrow', sans-serif;
-    letter-spacing: 0.24em;
+    font: italic 800 6.4cqw/1 'Barlow Condensed', 'Arial Narrow', sans-serif;
+    letter-spacing: 0.26em;
+    text-shadow: 0 0.4cqw 0.8cqw rgba(60, 0, 8, 0.7);
     text-transform: uppercase;
-    transform: skewX(-10deg);
-    box-shadow: 0 0.8cqw 0 var(--berry-red);
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 6% 5% 50%;
+      border-radius: 99cqw;
+      background: linear-gradient(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.05));
+    }
   }
 
   &__thanks {
     margin: 4cqw 0 0;
     font: italic 700 5cqw/1.1 'Barlow Condensed', 'Arial Narrow', sans-serif;
     letter-spacing: 0.06em;
+    text-shadow: 0 0.4cqw 0.8cqw rgba(0, 10, 50, 0.7);
     text-transform: uppercase;
   }
 
+  // Le compteur, en badge étoilé rouge cerclé de blanc, légèrement penché, comme les macarons « nouveau ! ».
   &__count {
+    position: absolute;
+    z-index: 2;
+    right: 4cqw;
+    bottom: 19cqw;
+    display: grid;
+    place-content: center;
+    width: 27cqw;
+    aspect-ratio: 1;
     margin: 0;
-    padding: 1.4cqw 5cqw;
-    border-radius: 99cqw;
-    background: rgba(12, 31, 85, 0.85);
-    box-shadow: 0 0 0 0.5cqw rgba(255, 255, 255, 0.7);
-    font: italic 700 5.2cqw/1 'Barlow Condensed', 'Arial Narrow', sans-serif;
-    letter-spacing: 0.08em;
+    rotate: 9deg;
+    background: #fff;
+    clip-path: $burst;
+    line-height: 1;
     text-transform: uppercase;
 
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 1.1cqw;
+      background: radial-gradient(circle at 35% 25%, #ff6e7a, var(--berry-red) 50%, var(--berry-red-deep));
+      clip-path: $burst;
+    }
+
+    > * {
+      position: relative;
+      display: block;
+      text-shadow: 0 0.4cqw 0.6cqw rgba(60, 0, 8, 0.6);
+    }
+
     b {
-      font-size: 7cqw;
+      font: italic 800 9.5cqw/0.9 'Barlow Condensed', 'Arial Narrow', sans-serif;
+    }
+
+    span {
+      font: italic 800 5cqw/1 'Barlow Condensed', 'Arial Narrow', sans-serif;
+    }
+
+    em {
+      margin-top: 0.4cqw;
+      font: italic 700 3.2cqw/1 'Barlow Condensed', 'Arial Narrow', sans-serif;
+      letter-spacing: 0.14em;
     }
   }
 
+  // Bandeau holographique en bas de couverture : dégradé arc-en-ciel pastel, reflet blanc, texte bleu marine.
   &__edition {
+    position: absolute;
+    z-index: 2;
+    right: -3cqw;
+    bottom: 6cqw;
+    left: -3cqw;
     margin: 0;
-    padding: 0 6cqw;
-    color: #fff;
-    font: italic 700 3.6cqw/1.2 'Barlow Condensed', 'Arial Narrow', sans-serif;
-    letter-spacing: 0.22em;
-    text-shadow: 0 0.3cqw 1cqw rgba(0, 0, 0, 0.6);
+    padding: 2cqw 6cqw;
+    border-block: 0.5cqw solid #fff;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0) 55%),
+      linear-gradient(90deg, #ff9ad5, #ffe27a 20%, #9dffb5 40%, #8fe3ff 60%, #b39bff 80%, #ff9ad5);
+    box-shadow: 0 1cqw 1.6cqw rgba(0, 0, 0, 0.4);
+    color: var(--berry-azure-deep);
+    font: italic 800 4.2cqw/1.2 'Barlow Condensed', 'Arial Narrow', sans-serif;
+    letter-spacing: 0.2em;
+    text-shadow: 0 0.3cqw 0 rgba(255, 255, 255, 0.8);
     text-transform: uppercase;
+    rotate: -2deg;
   }
 
   // Quatrième de couverture : reliure à droite et panneaux tout en bas.
@@ -141,6 +291,7 @@
 
     .boards {
       position: absolute;
+      z-index: 2;
       right: 9cqw;
       bottom: 7cqw;
       left: 9cqw;
@@ -158,8 +309,24 @@
   }
 }
 
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(0.55) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15) rotate(20deg);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .cover::after {
     display: none;
+  }
+
+  .cover__spark {
+    animation: none;
   }
 }
