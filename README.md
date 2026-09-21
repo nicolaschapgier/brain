@@ -47,9 +47,8 @@ Un souvenir est **inconnu** tant que tu n'as pas gratté sa carte. En cliquant s
 
 Tant qu'il est inconnu :
 
-- il n'apparaît pas dans la liste des souvenirs (menu en haut à droite), qui affiche seulement un compteur, par exemple « 3 / 8 souvenirs découverts » ;
-- son titre reste secret : au survol de son neurone, l'infobulle indique « Souvenir à découvrir » ;
-- les flèches de la carte ne le montrent pas (elles ne parcourent que les souvenirs connus).
+- il n'apparaît pas dans l'album, où sa place reste un emplacement vide (le compteur, par exemple « 3 / 8 souvenirs collés », se lit en haut de l'album) ;
+- son titre reste secret : au survol de son neurone, l'infobulle indique « Souvenir à découvrir ».
 
 Une fois gratté, un souvenir est **connu pour toujours** : il est retenu dans le `localStorage` du navigateur (clé `brain.discovered`, liste des identifiants). La progression est donc propre à chaque navigateur, et se perd si on vide les données du site. Pour la remettre à zéro, dans la console du navigateur : `localStorage.removeItem('brain.discovered')`.
 
@@ -61,21 +60,22 @@ Réglages de la pellicule (`src/app/ui/scratch-cover/scratch-cover.ts`) : `REVEA
 
 Le bouton en forme de livre (barre en haut à droite) ouvre l'**album des souvenirs**, un album d'autocollants à feuilleter : couverture, page d'accueil avec la jauge de collection, puis les souvenirs par quatre (2 × 2), dans l'ordre du JSON, avec le même numéro que sur leur carte.
 
-- **Souvenir découvert** : son autocollant est collé sur la page (photo, titre, date). Un clic dessus referme l'album et ouvre sa carte dans le cerveau.
+- **Souvenir découvert** : son autocollant est collé sur la page (photo, titre, date). Un clic dessus l'affiche en grand dans une **modale**, par-dessus la page de l'album (image entière, titre, date et description) ; elle se ferme avec la croix, un clic à côté ou Échap, et l'album reste ouvert derrière.
 - **Souvenir inconnu** : un emplacement vide pointillé, avec son seul numéro et « À découvrir ». Rien n'est révélé (ni titre, ni image) avant le grattage.
 - **Tourner les pages** : boutons en bas, flèches ← → du clavier ; Échap ou la croix pour fermer. Sur grand écran le livre s'ouvre en double page (la couverture et le dos se centrent quand il est fermé) ; sur téléphone, une page à la fois. Avec « réduire les animations » activé dans le système, les pages changent sans s'animer.
+- **Couvertures rétro années 2000** : bandes du maillot avec reflet vitré, arcs blancs et trame de points, titre « ALBUM » chromé, pastille « gel » rouge, badge étoilé pour le compteur, étincelles qui scintillent et bandeau holographique « Édition Club des Cerveaux ». Les textes sont dans `album-page.html`, le style dans `album-cover.scss`.
 - **Thème** : le bleu et le rouge de la Berrichonne (rayures verticales du maillot) sur du papier blanc, avec des foils argentés, et des panneaux publicitaires à LED au pied des pages, comme autour de la pelouse du stade Gaston-Petit.
 - Le livre s'agrandit tout seul : il y a autant de pages que nécessaire (4 souvenirs par page), et une page « À suivre… » comble le dernier verso si besoin.
 
-Les annonceurs des panneaux sont dans [`src/app/album/album-sponsors.ts`](src/app/album/album-sponsors.ts) : une simple liste de noms (Pitch, Fenioux, Le Seyec, La Halle, E.Leclerc), sans logos, à compléter ou à corriger. Chaque page en montre trois, en tournant dans la liste. Les couleurs viennent de `berry-theme.scss`, la mise en page des pages de `album-page.scss` (couvertures dans `album-cover.scss`) ; le nombre de souvenirs par page est `SLOTS_PER_PAGE` dans `album-book.ts`.
+Les annonceurs des panneaux sont dans [`src/app/album/album-sponsors.ts`](src/app/album/album-sponsors.ts) : Pitch, Fenioux, Le Seyec, La Halle aux vêtements, RTL et le Conseil général de l'Indre. Pitch et Fenioux viennent de tes souvenirs ; les autres sont cités dans la section « Sponsors et équipementiers » de la page Wikipédia de la Berrichonne. Leurs logos sont dans `public/sponsors/` (celui du Seyec est blanc, donc posé sur une plaque bleue avec `tone: 'blue'`). Pour ajouter un annonceur, ajoute une ligne à la liste : sans `logo`, le panneau affiche son nom en lettres ; avec `logo: 'sponsors/mon-logo.png'`, il devient une plaque blanche avec le logo dedans. Chaque page en montre trois, en tournant dans la liste. Les couleurs viennent de `berry-theme.scss`, la mise en page des pages de `album-page.scss` (couvertures dans `album-cover.scss`) ; le nombre de souvenirs par page est `SLOTS_PER_PAGE` dans `album-book.ts`.
 
 ## Navigation
 
 - **Glisser** : tourner autour du cerveau · **Molette** : avancer / reculer vers le curseur · **Clic droit** : se déplacer
 - **ZQSD / WASD ou flèches** : voler · **Espace / Maj** : monter / descendre
 - **Dans le cerveau**, la vue passe en première personne : glisser fait pivoter la caméra sur place, la molette avance / recule dans la direction du regard, à la même vitesse dans les deux sens, et la rotation automatique se coupe. En ressortant, on retrouve la rotation autour du cerveau.
-- **Clic sur un neurone** : la caméra vole jusqu'à lui et la carte s'ouvre (flèches pour passer au souvenir suivant). La carte se ferme avec la croix en haut à droite, la touche Échap ou le bouton « Fermer »
-- Barre en haut à droite : liste des souvenirs déjà découverts, album, entrer dans le cerveau, vue d'ensemble, rotation automatique
+- **Clic sur un neurone** : la caméra vole jusqu'à lui et la carte s'ouvre. Elle se ferme avec la croix en haut à droite ou la touche Échap
+- Barre en haut à droite : album, vue d'ensemble, rotation automatique. On entre dans le cerveau en avançant à la molette ou au clavier
 
 ## Structure
 
