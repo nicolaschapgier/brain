@@ -49,7 +49,7 @@ Le bouton appareil photo de la barre du haut ouvre un formulaire : photo, cadrag
 
 **Version de test** : le souvenir est enregistré **sur l'appareil** (IndexedDB), personne d'autre ne le voit. Le bouton « Supprimer mes ajouts de test » du formulaire les efface. Le code qui enregistre est isolé dans [`core/local-memories.ts`](src/app/core/local-memories.ts) : c'est ce service que remplacera un envoi à un serveur.
 
-La photo est pensée pour les iPhone ([`core/photo-import.ts`](src/app/core/photo-import.ts)) :
+La photo est pensée pour les iPhone ([`features/memory-form/photo-import.ts`](src/app/features/memory-form/photo-import.ts)) :
 
 - **Réduite** à 1600 px sur le grand côté et ré-encodée en JPEG : plus légère à envoyer et à afficher dans l'album.
 - **Redressée** d'après l'orientation EXIF, puis débarrassée de toutes les métadonnées, **position GPS comprise**.
@@ -70,7 +70,7 @@ Une fois gratté, un souvenir est **connu pour toujours** : il est retenu dans l
 
 > Donne un `id` explicite à chaque souvenir dans `memories.json` : sans `id`, il est généré à partir de la position dans la liste (`memory-3`…), et déplacer un souvenir ferait perdre sa progression.
 
-Réglages de la pellicule (`src/app/ui/scratch-cover/scratch-cover.ts`) : `REVEAL_THRESHOLD` (part à gratter, 0.5 par défaut) et `BRUSH_RADIUS` (taille du grattage).
+Réglages de la pellicule (`src/app/features/memory-card/scratch-cover/scratch-cover.ts`) : `REVEAL_THRESHOLD` (part à gratter, 0.5 par défaut) et `BRUSH_RADIUS` (taille du grattage).
 
 ## L'album
 
@@ -84,7 +84,7 @@ Le bouton en forme de livre (barre en haut à droite) ouvre l'**album des souven
 - **Thème** : le bleu et le rouge de la Berrichonne (rayures verticales du maillot) sur du papier blanc, avec des foils argentés, et les logos des annonceurs au pied des pages, en clin d'œil aux panneaux publicitaires de la pelouse du stade Gaston-Petit.
 - Le livre s'agrandit tout seul : il y a autant de pages que nécessaire (4 souvenirs par page), et une page « À suivre… » comble le dernier verso si besoin.
 
-Les annonceurs sont dans [`src/app/album/album-sponsors.ts`](src/app/album/album-sponsors.ts) : Pitch, Fenioux, Le Seyec, La Halle aux vêtements, RTL et le Conseil général de l'Indre. Pitch et Fenioux viennent de tes souvenirs ; les autres sont cités dans la section « Sponsors et équipementiers » de la page Wikipédia de la Berrichonne. Chacun s'affiche par son **logo, posé directement sur la page, sans cadre** (les fonds blancs des images se fondent dans le papier). Les logos sont dans `public/sponsors/` ; ceux de Fenioux, de La Halle et du Seyec sont des SVG refaits à la main (version simplifiée, en polices standard). Pour ajouter un annonceur, ajoute une ligne à la liste : avec `logo: 'sponsors/mon-logo.png'` il s'affiche par son logo, sans logo (ou si l'image ne se charge pas) par son nom en lettres. Sur la quatrième de couverture, les logos sont posés sur un bandeau blanc pleine largeur, pour rester lisibles sur les rayures. Chaque page en montre trois, en tournant dans la liste. Les couleurs viennent de `berry-theme.scss`, la mise en page des pages de `album-page.scss` (couvertures dans `album-cover.scss`) ; le nombre de souvenirs par page est `SLOTS_PER_PAGE` dans `album-book.ts`.
+Les annonceurs sont dans [`src/app/pages/album/album-sponsors.ts`](src/app/pages/album/album-sponsors.ts) : Pitch, Fenioux, Le Seyec, La Halle aux vêtements, RTL et le Conseil général de l'Indre. Pitch et Fenioux viennent de tes souvenirs ; les autres sont cités dans la section « Sponsors et équipementiers » de la page Wikipédia de la Berrichonne. Chacun s'affiche par son **logo, posé directement sur la page, sans cadre** (les fonds blancs des images se fondent dans le papier). Les logos sont dans `public/sponsors/` ; ceux de Fenioux, de La Halle et du Seyec sont des SVG refaits à la main (version simplifiée, en polices standard). Pour ajouter un annonceur, ajoute une ligne à la liste : avec `logo: 'sponsors/mon-logo.png'` il s'affiche par son logo, sans logo (ou si l'image ne se charge pas) par son nom en lettres. Sur la quatrième de couverture, les logos sont posés sur un bandeau blanc pleine largeur, pour rester lisibles sur les rayures. Chaque page en montre trois, en tournant dans la liste. Les couleurs viennent de `berry-theme.scss`, la mise en page des pages de `album-page.scss` (couvertures dans `album-cover.scss`) ; le nombre de souvenirs par page est `SLOTS_PER_PAGE` dans `album-book.ts`.
 
 ## Navigation
 
@@ -96,24 +96,47 @@ Les annonceurs sont dans [`src/app/album/album-sponsors.ts`](src/app/album/album
 
 ## Structure
 
+Le code est rangé par **rôle**. Chaque dossier répond à une question :
+
 ```
 src/app/
-  core/            modèle Memory, parsing du JSON, store (signals) + chargement HTTP
-  brain/
-    brain-geometry.ts   cerveau procédural (cortex, cervelet, tronc) — bon point de départ pour apprendre THREE.JS
-    brain-model.ts      matériaux, transparence, éclairage intérieur
-    neuron-field.ts     neurones, dendrites, synapses animées, étincelles, picking
-    neuron-placement.ts placement automatique des neurones
-    space-backdrop.ts   nébuleuse et étoiles (shaders GLSL)
-    brain-scene.ts      renderer, caméra, contrôles, vol vers un neurone, post-traitement (bloom)
-    brain-viewer/       composant Angular qui héberge le canvas
-  album/           album d'autocollants : pagination pure (album-book), pages, livre et annonceurs
-  ui/memory-card/  carte du souvenir (Angular Material)
-  ui/scratch-cover/ pellicule à gratter des cartes inconnues
-  ui/card-back/    dos des cartes (logo du club) pour l'ouverture en flip
+  app.ts              racine : affiche la page d'accueil
+  core/               les données et la logique, sans écran
+  pages/              les écrans
+    home/               le cerveau en 3D, la barre d'actions, la carte ouverte
+    album/              l'album d'autocollants (livre, pages, zoom, annonceurs)
+  features/           les fonctionnalités, chacune avec son composant et sa logique
+    brain/              le cerveau 3D (composant + scène THREE.JS)
+    memory-card/        la carte d'un souvenir (+ la pellicule à gratter)
+    memory-form/        le formulaire d'ajout (+ import de photo, cadrage)
+  shared/             ce qui sert à plusieurs fonctionnalités
+    ui/                 composants (dos des cartes)
+    styles/             thèmes SCSS (Berry, vieillissement, flip)
+tests/                les tests, à part, avec la même arborescence que src/app
 ```
 
-`brain-scene.ts` et ses voisins sont du TypeScript pur, sans Angular : le composant `BrainViewer` crée la scène, lui passe les souvenirs et relaie la sélection au store.
+Les règles :
+
+- **`core`** : aucune dépendance à un écran. Modèle `Memory`, store (signals), chargement du JSON, enregistrement local, dates, thème par année.
+- **`pages`** : un écran = un dossier. Une page assemble des fonctionnalités et ne contient pas leur logique.
+- **`features`** : tout ce qui sert *une* fonctionnalité reste dans son dossier (le cadrage de la photo est dans `memory-form`, la pellicule dans `memory-card`). Quand un second endroit en a besoin, ça monte dans `shared`.
+- **`shared`** : utilisé par au moins deux fonctionnalités ou pages.
+- **`tests`** : `tests/features/memory-form/photo-import.spec.ts` teste `src/app/features/memory-form/photo-import.ts`.
+
+Les imports utilisent des alias (`@core/…`, `@pages/…`, `@features/…`, `@shared/…`, définis dans `tsconfig.json`), sauf à l'intérieur d'un même dossier de page ou de fonctionnalité, où ils restent relatifs. Les partiels SCSS de `shared/styles` s'appellent directement : `@use 'berry-theme' as berry;`.
+
+Le cerveau 3D, dans `features/brain/scene/` :
+
+```
+brain-geometry.ts    cerveau procédural (cortex, cervelet, tronc) — bon point de départ pour apprendre THREE.JS
+brain-model.ts       matériaux, transparence, éclairage intérieur
+neuron-field.ts      neurones, dendrites, synapses animées, étincelles, picking
+neuron-placement.ts  placement automatique des neurones
+space-backdrop.ts    nébuleuse et étoiles (shaders GLSL)
+brain-scene.ts       renderer, caméra, contrôles, vol vers un neurone, post-traitement (bloom)
+```
+
+Ces fichiers sont du TypeScript pur, sans Angular : le composant `brain-viewer/` crée la scène, lui passe les souvenirs et relaie la sélection au store.
 
 ## À savoir
 
@@ -125,26 +148,26 @@ src/app/
 
 | Ce que tu veux changer | Où |
 | --- | --- |
-| Taille du cerveau (donc la place à l'intérieur) | `BRAIN_SCALE` dans `brain-geometry.ts` |
-| Taille des neurones, de leur halo et de leurs dendrites | `CORE_RADIUS`, `HALO_SIZE`, `DENDRITE_SIZE` dans `neuron-field.ts` |
-| Nombre de particules blanches dans le cerveau | `DUST_COUNT` dans `neuron-field.ts` |
-| Éclat des neurones (même luminosité pour toutes les couleurs) et leur palette | `NEURON_LUMINANCE` et `PALETTE` dans `neuron-field.ts` |
-| Vitesse de déplacement au clavier / à la molette | `MOVE_SPEED`, `WHEEL_STEP` dans `brain-scene.ts` |
+| Taille du cerveau (donc la place à l'intérieur) | `BRAIN_SCALE` dans `features/brain/scene/brain-geometry.ts` |
+| Taille des neurones, de leur halo et de leurs dendrites | `CORE_RADIUS`, `HALO_SIZE`, `DENDRITE_SIZE` dans `features/brain/scene/neuron-field.ts` |
+| Nombre de particules blanches dans le cerveau | `DUST_COUNT` dans `features/brain/scene/neuron-field.ts` |
+| Éclat des neurones (même luminosité pour toutes les couleurs) et leur palette | `NEURON_LUMINANCE` et `PALETTE` dans `features/brain/scene/neuron-field.ts` |
+| Vitesse de déplacement au clavier / à la molette | `MOVE_SPEED`, `WHEEL_STEP` dans `features/brain/scene/brain-scene.ts` |
 
 ## Thème Berry et cartes « autocollant »
 
 Les cartes de souvenir reprennent les couleurs du blason du Berry (azur, or, rouge) avec un style d'autocollant de football des années 2000 : cadre blanc, coins coupés dorés, bandeau de nom incliné, numérotation `N° 3/8`, médaillon à fleur de lys et reflet holographique qui suit la souris.
 
-- Les couleurs sont dans [`src/app/ui/berry-theme.scss`](src/app/ui/berry-theme.scss) (une seule palette à modifier).
-- Le style de la carte est dans `src/app/ui/memory-card/`.
+- Les couleurs sont dans [`src/app/shared/styles/berry-theme.scss`](src/app/shared/styles/berry-theme.scss) (une seule palette à modifier).
+- Le style de la carte est dans `src/app/features/memory-card/`.
 - La date est mise en forme automatiquement si elle est au format `2023-02-11` ; tout autre texte est affiché tel quel.
 - Le pied de carte (« Édition Berry · Châteauroux ») est dans `memory-card.html`.
 
 ## Années, vieillissement et ouverture en flip
 
 - **L'année** d'un souvenir est lue dans son champ `date` (`2019-06-15`, ou un texte libre comme `Été 2019`). Elle s'affiche dans un cartouche sur la carte, sur l'autocollant de l'album et dans la modale ; le pied de la carte indique « Édition 2019 ». Sans année dans la date, le souvenir reste sans année (carte neuve, page « Sans date » à la fin de l'album).
-- **Un seul thème, qui vieillit** : toutes les cartes gardent le thème Berry (azur, or, rouge). Plus le souvenir est ancien, plus sa carte a l'air vieille : l'intensité (`--retro`) va de **1 en 2015 à 0 en 2026**, et règle une teinte sépia, des couleurs moins vives, un dégradé chaud, du grain de pellicule, une photo ternie avec vignette et un papier de fiche jauni. Les bornes (`FIRST_YEAR`, `LAST_YEAR`) sont dans [`src/app/core/year-theme.ts`](src/app/core/year-theme.ts), les effets dans [`src/app/ui/year-theme.scss`](src/app/ui/year-theme.scss).
-- **Ouverture en flip** : la carte d'un neurone et la modale de l'album arrivent **dos visible**, le logo du Club des Cerveaux ([`public/club-des-cerveaux.svg`](public/club-des-cerveaux.svg)), restent une demi-seconde pour qu'on le distingue, puis se retournent. Le déroulé (environ 1,9 s en tout) est réglé dans [`src/app/ui/card-flip.scss`](src/app/ui/card-flip.scss) : durée de l'arrivée, de la pause (`$hold`) et du retournement. Avec « réduire les animations » activé dans le système, la carte apparaît sans se retourner.
+- **Un seul thème, qui vieillit** : toutes les cartes gardent le thème Berry (azur, or, rouge). Plus le souvenir est ancien, plus sa carte a l'air vieille : l'intensité (`--retro`) va de **1 en 2015 à 0 en 2026**, et règle une teinte sépia, des couleurs moins vives, un dégradé chaud, du grain de pellicule, une photo ternie avec vignette et un papier de fiche jauni. Les bornes (`FIRST_YEAR`, `LAST_YEAR`) sont dans [`src/app/core/year-theme.ts`](src/app/core/year-theme.ts), les effets dans [`src/app/shared/styles/year-theme.scss`](src/app/shared/styles/year-theme.scss).
+- **Ouverture en flip** : la carte d'un neurone et la modale de l'album arrivent **dos visible**, le logo du Club des Cerveaux ([`public/club-des-cerveaux.svg`](public/club-des-cerveaux.svg)), restent une demi-seconde pour qu'on le distingue, puis se retournent. Le déroulé (environ 1,9 s en tout) est réglé dans [`src/app/shared/styles/card-flip.scss`](src/app/shared/styles/card-flip.scss) : durée de l'arrivée, de la pause (`$hold`) et du retournement. Avec « réduire les animations » activé dans le système, la carte apparaît sans se retourner.
 - Le logo est un SVG dessiné à la main : les lettres sont des tracés (pas de police), donc le rendu est identique partout ; les pictogrammes (bob, oiseau, vache, chope, cerveau) sont des dessins simplifiés.
 - **Souvenirs de démonstration** : `public/data/memories.json` contient 12 souvenirs, un par année de 2015 à 2026, pour voir tout le dégradé de vieillissement et les pages de l'album.
 

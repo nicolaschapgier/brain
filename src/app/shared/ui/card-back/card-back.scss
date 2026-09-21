@@ -1,0 +1,60 @@
+@use 'year-theme' as year;
+
+// Même contour blanc que le recto, retourné de moitié : il n'est visible que pendant que la carte se retourne.
+// Pas de jetons ici : les couleurs (`--berry-*`) viennent de la carte, donc du thème de son année.
+:host {
+  position: absolute;
+  inset: 0;
+  display: block;
+  box-sizing: border-box;
+  padding: 10px;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.3),
+    0 20px 50px rgba(0, 0, 0, 0.55);
+  transform: rotateY(180deg);
+  backface-visibility: hidden;
+  pointer-events: none;
+  // Le dos apparaît en fondu (sur lui seul : l'opacité du bloc qui se retourne aplatirait la 3D).
+  animation: back-in 200ms ease both;
+}
+
+.face {
+  display: grid;
+  place-items: center;
+  // Bordure comprise dans les 100 % : sinon elle déborde en bas et mange le rebord blanc.
+  box-sizing: border-box;
+  height: 100%;
+  border: 5px solid var(--berry-red);
+  border-radius: 12px;
+  box-shadow: inset 0 0 0 2px var(--berry-gold);
+  background:
+    repeating-linear-gradient(115deg, rgba(255, 255, 255, 0.07) 0 14px, transparent 14px 28px),
+    radial-gradient(120% 60% at 0% 0%, var(--berry-azure-light), transparent 62%),
+    linear-gradient(160deg, var(--berry-azure) 0%, var(--berry-azure-deep) 100%);
+  @include year.aged-face;
+}
+
+img {
+  position: relative;
+  z-index: 3;
+  width: 82%;
+  height: auto;
+  max-height: 82%;
+  aspect-ratio: 1;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.55));
+}
+
+@keyframes back-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host {
+    animation: none;
+  }
+}

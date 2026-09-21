@@ -1,0 +1,426 @@
+@use 'berry-theme' as berry;
+
+// L'album est posé sur une table bleu nuit rayée, aux couleurs de la Berrichonne : bleu, rouge, blanc.
+:host {
+  @include berry.tokens;
+
+  position: absolute;
+  z-index: 6;
+  inset: 0;
+  display: block;
+  animation: table-in 320ms ease both;
+}
+
+.table {
+  // Taille d'une page : elle garde le rapport 3:4 et tient dans la fenêtre, entre la barre du haut et la barre du bas.
+  --page-ratio: 0.75;
+  --pw: min(calc((100vw - 48px) / 2), calc((100dvh - 246px) * var(--page-ratio)), 560px);
+
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  color: #fff;
+  background:
+    radial-gradient(90% 70% at 50% 42%, rgba(61, 106, 214, 0.5), transparent 70%),
+    radial-gradient(60% 45% at 100% 100%, rgba(200, 32, 47, 0.3), transparent 70%),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.035) 0 64px, transparent 64px 128px),
+    linear-gradient(180deg, var(--berry-azure-deep), #050d2b);
+}
+
+// --- Barre du haut --------------------------------------------------------------------------------------------------
+
+.bar {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 24px;
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+  }
+
+  &__logo {
+    padding: 6px 18px 6px 14px;
+    background: var(--berry-red);
+    color: #fff;
+    font: italic 800 1.5rem/1 'Barlow Condensed', 'Arial Narrow', sans-serif;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    transform: skewX(-12deg);
+    box-shadow: 4px 0 0 #fff;
+  }
+
+  &__count {
+    overflow: hidden;
+    color: rgba(255, 255, 255, 0.85);
+    font: italic 700 1rem/1 'Barlow Condensed', 'Arial Narrow', sans-serif;
+    letter-spacing: 0.14em;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  &__close {
+    --mat-icon-button-icon-color: var(--berry-red);
+    --mat-icon-button-state-layer-color: var(--berry-red);
+
+    flex: none;
+    width: 44px;
+    height: 44px;
+    padding: 10px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow:
+      0 0 0 3px var(--berry-red),
+      0 4px 14px rgba(0, 0, 0, 0.5);
+    transition: transform 140ms ease;
+
+    &:hover,
+    &:focus-visible {
+      transform: scale(1.1) rotate(90deg);
+    }
+  }
+}
+
+// --- Raccourci vers une année ---------------------------------------------------------------------------------------
+
+// La rangée défile sur un petit écran ; les marges automatiques de la liste la centrent quand tout tient.
+.years {
+  display: flex;
+  flex: none;
+  overflow-x: auto;
+  padding: 0 24px 8px;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  &__list {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 auto;
+    padding: 4px 0;
+    list-style: none;
+  }
+
+  &__label {
+    flex: none;
+    padding-right: 4px;
+    color: rgba(255, 255, 255, 0.7);
+    font: italic 700 0.9rem/1 'Barlow Condensed', 'Arial Narrow', sans-serif;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  &__chip {
+    flex: none;
+    min-width: 56px;
+    min-height: 36px;
+    padding: 0 14px;
+    border: 2px solid rgba(255, 255, 255, 0.55);
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    cursor: pointer;
+    font: italic 800 1.05rem/1 'Barlow Condensed', 'Arial Narrow', sans-serif;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+    transform: skewX(-10deg);
+    transition:
+      background 160ms ease,
+      border-color 160ms ease,
+      transform 160ms ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    &:focus-visible {
+      outline: 3px solid #fff;
+      outline-offset: 2px;
+    }
+
+    &--current {
+      border-color: #fff;
+      background: var(--berry-red);
+      box-shadow: 0 3px 0 rgba(0, 0, 0, 0.35);
+      transform: skewX(-10deg) translateY(-1px);
+    }
+  }
+}
+
+@media (max-width: 899px) {
+  .years {
+    padding: 0 16px 6px;
+  }
+}
+
+// --- Le livre -------------------------------------------------------------------------------------------------------
+
+.stage {
+  position: relative;
+  display: grid;
+  flex: 1 1 0;
+  min-height: 0;
+  place-items: center;
+}
+
+.book {
+  --page-height: calc(var(--pw) / var(--page-ratio));
+
+  position: relative;
+  width: calc(var(--pw) * 2);
+  height: var(--page-height);
+  perspective: 2600px;
+  // Fermé, le livre se recentre : la couverture (à droite) ou le dos (à gauche) glisse au milieu de l'écran.
+  transform: translateX(calc(var(--shift, 0) * var(--pw)));
+  transition: transform var(--flip-ms, 850ms) ease-in-out;
+  animation: book-in 520ms cubic-bezier(0.2, 0.9, 0.25, 1.1) both;
+}
+
+.sheet,
+.leaf {
+  position: absolute;
+  top: 0;
+  width: var(--pw);
+  height: 100%;
+}
+
+.sheet {
+  // Tranche des feuilles, juste visible sur le bord extérieur.
+  &--left {
+    left: 0;
+    border-radius: 8px 0 0 8px;
+    box-shadow:
+      -3px 2px 0 -1px #dfe3ec,
+      -6px 4px 0 -2px #c3c9d8,
+      0 26px 36px -10px rgba(0, 0, 0, 0.6);
+  }
+
+  &--right {
+    left: var(--pw);
+    border-radius: 0 8px 8px 0;
+    box-shadow:
+      3px 2px 0 -1px #dfe3ec,
+      6px 4px 0 -2px #c3c9d8,
+      0 26px 36px -10px rgba(0, 0, 0, 0.6);
+  }
+
+  overflow: visible;
+
+  app-album-page {
+    overflow: hidden;
+  }
+
+  &--left app-album-page {
+    border-radius: 8px 0 0 8px;
+  }
+
+  &--right app-album-page {
+    border-radius: 0 8px 8px 0;
+  }
+}
+
+// La feuille qui se tourne : elle pivote autour de la reliure (bord gauche de la page de droite).
+.leaf {
+  left: var(--pw);
+  z-index: 3;
+  transform-origin: left center;
+  transform-style: preserve-3d;
+  animation: flip-forward var(--flip-ms, 850ms) ease-in-out both;
+
+  &--back {
+    animation-name: flip-backward;
+  }
+
+  &__face {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    backface-visibility: hidden;
+
+    // Ombre qui passe sur la feuille au moment où elle se lève, puis retombe.
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      pointer-events: none;
+      background: linear-gradient(90deg, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.05));
+      animation: flip-shade var(--flip-ms, 850ms) ease-in-out both;
+    }
+
+    &--front {
+      border-radius: 0 8px 8px 0;
+    }
+
+    &--back {
+      border-radius: 8px 0 0 8px;
+      transform: rotateY(180deg);
+
+      &::after {
+        background: linear-gradient(270deg, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.05));
+      }
+    }
+  }
+}
+
+// Le verso d'une feuille de page seule (mode compact) : du papier blanc, sans rien d'imprimé.
+.blank {
+  width: 100%;
+  height: 100%;
+  background: #f1f0ea;
+}
+
+// Mode compact : une seule page, la feuille se tourne au même endroit.
+.book--compact {
+  width: var(--pw);
+
+  .sheet--right,
+  .leaf {
+    left: 0;
+  }
+}
+
+// --- Barre du bas ---------------------------------------------------------------------------------------------------
+
+.pager {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 12px 24px 18px;
+
+  &__button {
+    --mat-icon-button-icon-color: #fff;
+    --mat-icon-button-state-layer-color: #fff;
+    --mat-icon-button-disabled-icon-color: rgba(255, 255, 255, 0.3);
+
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--berry-red);
+    box-shadow:
+      0 0 0 2px #fff,
+      0 4px 12px rgba(0, 0, 0, 0.45);
+
+    &[disabled] {
+      background: rgba(255, 255, 255, 0.12);
+      box-shadow: none;
+    }
+  }
+
+  // Le livre a une page par année : les pastilles rétrécissent pour tenir entre les deux boutons.
+  &__dots {
+    display: flex;
+    flex: 0 1 auto;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  &__dot {
+    flex: 0 1 22px;
+    min-width: 4px;
+    height: 8px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.28);
+    transform: skewX(-14deg);
+    transition:
+      background 250ms,
+      flex-basis 250ms;
+
+    &--current {
+      flex-basis: 36px;
+      background: #fff;
+      box-shadow: 0 2px 0 var(--berry-red);
+    }
+  }
+}
+
+@keyframes flip-forward {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(-180deg);
+  }
+}
+
+@keyframes flip-backward {
+  from {
+    transform: rotateY(-180deg);
+  }
+  to {
+    transform: rotateY(0deg);
+  }
+}
+
+@keyframes flip-shade {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes table-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes book-in {
+  from {
+    opacity: 0;
+    scale: 0.9;
+  }
+}
+
+// Petit écran : moins de marge, et un livre d'une seule page, aussi grande que possible.
+@media (max-width: 899px) {
+  .table {
+    --pw: min(calc(100vw - 32px), calc((100dvh - 236px) * var(--page-ratio)));
+  }
+
+  .bar {
+    padding: 10px 16px;
+
+    &__logo {
+      font-size: 1.2rem;
+    }
+
+    &__count {
+      font-size: 0.85rem;
+    }
+  }
+
+  .pager {
+    padding: 8px 16px 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host,
+  .book {
+    animation: none;
+  }
+
+  .book,
+  .pager__dot,
+  .years__chip {
+    transition: none;
+  }
+}

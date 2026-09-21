@@ -3,7 +3,7 @@
  * est ancien, plus sa carte a l'air vieille (dégradé chaud, grain de pellicule, teinte sépia, photo passée).
  *
  * L'intensité (`--retro`, de 0 à 1) se pose en variable CSS sur la carte, l'autocollant ou la modale ; les effets sont
- * dans `ui/year-theme.scss`.
+ * dans `shared/styles/year-theme.scss`.
  */
 
 export interface YearTheme {

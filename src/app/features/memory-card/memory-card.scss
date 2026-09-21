@@ -1,0 +1,405 @@
+@use 'berry-theme' as berry;
+@use 'year-theme' as year;
+@use 'card-flip' as flip;
+
+:host {
+  @include berry.tokens;
+
+  position: absolute;
+  z-index: 2;
+  right: 24px;
+  top: 88px;
+  bottom: 24px;
+  width: min(400px, calc(100vw - 48px));
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+
+  // Angle des coins coupés, comme sur les autocollants de football.
+  --cut: 22px;
+}
+
+// Enveloppe de la carte et de sa croix : la croix dépasse du coin, hors de la zone de défilement de la carte.
+.shell {
+  position: relative;
+  display: flex;
+  width: 100%;
+  max-height: 100%;
+  perspective: 1600px;
+  pointer-events: none;
+}
+
+// La carte et son dos, dans un même bloc qui se retourne à l'ouverture (dos visible au départ, recto à l'arrivée).
+.flip {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  max-height: 100%;
+  transform-style: preserve-3d;
+  pointer-events: none;
+  @include flip.animation;
+}
+
+.close {
+  --mat-icon-button-icon-color: var(--berry-red);
+  --mat-icon-button-state-layer-color: var(--berry-red);
+
+  position: absolute;
+  z-index: 10;
+  top: -14px;
+  right: -14px;
+  width: 40px;
+  height: 40px;
+  padding: 8px;
+  border-radius: 50%;
+  background: #fff;
+  pointer-events: auto;
+  box-shadow:
+    0 0 0 3px var(--berry-gold),
+    0 4px 14px rgba(0, 0, 0, 0.55);
+  transition: transform 140ms ease;
+  // La croix n'apparaît qu'une fois la carte retournée.
+  @include flip.close-appears;
+
+  &:hover,
+  &:focus-visible {
+    transform: scale(1.12) rotate(90deg);
+  }
+}
+
+// Le contenu de la carte (photo, nom, fiche) et la pellicule à gratter qui peut le recouvrir.
+.reveal {
+  position: relative;
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+// Le contour blanc de l'autocollant, qui s'incline vers la souris.
+.sticker {
+  --mat-card-elevated-container-color: #fff;
+  --mat-card-elevated-container-shape: 18px;
+
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+  max-height: 100%;
+  overflow: hidden auto;
+  padding: 9px;
+  border-radius: 18px;
+  background: #fff;
+  color: var(--berry-ink);
+  pointer-events: auto;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.3),
+    0 20px 50px rgba(0, 0, 0, 0.55),
+    0 0 44px rgba(244, 197, 49, 0.28);
+  transform: perspective(900px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+  transition: transform 160ms ease-out;
+  backface-visibility: hidden;
+}
+
+// Le fond azur rayé, avec la bordure rouge et le filet d'or du blason.
+.face {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 10px 8px;
+  border: 5px solid var(--berry-red);
+  border-radius: 11px;
+  box-shadow: inset 0 0 0 2px var(--berry-gold);
+  background:
+    repeating-linear-gradient(115deg, rgba(255, 255, 255, 0.07) 0 14px, transparent 14px 28px),
+    radial-gradient(120% 60% at 0% 0%, var(--berry-azure-light), transparent 62%),
+    linear-gradient(160deg, var(--berry-azure) 0%, var(--berry-azure-deep) 100%);
+  @include year.aged-face;
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 2px -2px;
+}
+
+// L'année du souvenir, entre le numéro et le médaillon.
+.year {
+  @include year.year-badge(1.5rem);
+}
+
+.number {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+  padding: 3px 12px 3px 9px;
+  border-radius: 3px;
+  background: var(--berry-foil-gold);
+  color: var(--berry-azure-deep);
+  font: italic 800 1rem/1 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  letter-spacing: 0.04em;
+  transform: skewX(-10deg);
+  box-shadow: 0 2px 0 var(--berry-red-deep);
+
+  b {
+    font-size: 1.55rem;
+  }
+
+  small {
+    font-size: 0.85rem;
+    opacity: 0.75;
+  }
+}
+
+.crest {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 3px solid var(--berry-gold);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--berry-azure-light), var(--berry-azure-deep));
+  box-shadow:
+    0 0 0 3px var(--berry-red),
+    0 4px 8px rgba(0, 0, 0, 0.4);
+  color: var(--berry-gold);
+  font: 2.1rem/1 'Apple Symbols', 'Segoe UI Symbol', 'Noto Sans Symbols 2', sans-serif;
+  font-variant-emoji: text;
+}
+
+// La photo, dans un cadre doré aux coins coupés.
+.window {
+  --frame: 4px;
+
+  position: relative;
+  margin: 0 2px;
+  padding: var(--frame);
+  background: var(--berry-foil-gold);
+  clip-path: polygon(
+    0 0,
+    calc(100% - var(--cut)) 0,
+    100% var(--cut),
+    100% 100%,
+    var(--cut) 100%,
+    0 calc(100% - var(--cut))
+  );
+
+  @include year.vignette(var(--frame));
+
+  // Reflet blanc qui balaie la photo de temps en temps.
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, 0.7) 50%, transparent 60%);
+    transform: translateX(-120%);
+    animation: sweep 6s ease-in-out 700ms infinite;
+  }
+}
+
+.photo {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  @include year.photo-aged;
+  clip-path: polygon(
+    0 0,
+    calc(100% - var(--cut) + var(--frame)) 0,
+    100% calc(var(--cut) - var(--frame)),
+    100% 100%,
+    calc(var(--cut) - var(--frame)) 100%,
+    0 calc(100% - var(--cut) + var(--frame))
+  );
+
+  &--empty {
+    display: grid;
+    place-items: center;
+    background: linear-gradient(160deg, var(--berry-azure-light), var(--berry-azure-deep));
+    color: var(--berry-gold);
+    font: 4rem/1 'Apple Symbols', 'Segoe UI Symbol', 'Noto Sans Symbols 2', sans-serif;
+    font-variant-emoji: text;
+  }
+}
+
+// Reflet holographique : il suit la souris (variables --mx / --my posées par le composant).
+.foil {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 18%,
+    rgba(255, 110, 200, 0.8) 32%,
+    rgba(110, 220, 255, 0.8) 46%,
+    rgba(255, 240, 120, 0.8) 60%,
+    rgba(140, 255, 170, 0.6) 72%,
+    transparent 86%
+  );
+  background-size: 260% 260%;
+  background-position: var(--mx, 30%) var(--my, 40%);
+  mix-blend-mode: screen;
+  opacity: calc(0.3 + 0.5 * var(--foil, 0));
+  transition: opacity 200ms;
+
+  // Éclat blanc sur toute la carte, au point survolé.
+  &--sticker {
+    border-radius: inherit;
+    background: radial-gradient(circle at var(--mx, 50%) var(--my, 0%), rgba(255, 255, 255, 0.6), transparent 48%);
+    mix-blend-mode: soft-light;
+    opacity: calc(0.2 + 0.5 * var(--foil, 0));
+  }
+}
+
+// Le bandeau du nom, incliné comme sur les cartes de joueurs.
+.nameplate {
+  position: relative;
+  z-index: 1;
+  margin: -18px 10px 0 -4px;
+  padding: 6px 18px 6px 22px;
+  border-left: 8px solid var(--berry-red);
+  background: var(--berry-foil-gold);
+  transform: skewX(-12deg);
+  box-shadow:
+    0 4px 0 var(--berry-azure-deep),
+    0 7px 12px rgba(0, 0, 0, 0.35);
+}
+
+.face .name {
+  display: block;
+  padding: 0;
+  color: var(--berry-azure-deep);
+  font: italic 800 1.65rem/1.05 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  letter-spacing: 0.01em;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  transform: skewX(12deg);
+}
+
+// La « fiche » : date et description sur papier crème.
+.face .sheet {
+  margin-top: 6px;
+  padding: 10px 14px 12px;
+  border-left: 6px solid var(--berry-red);
+  border-radius: 4px 8px 8px 4px;
+  background: var(--berry-cream);
+  color: #1b2a55;
+  box-shadow:
+    inset 0 0 0 1px rgba(12, 31, 85, 0.14),
+    0 3px 0 rgba(0, 0, 0, 0.25);
+}
+
+.stat {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0 0 6px;
+  font: 600 1rem/1.2 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  color: var(--berry-ink);
+}
+
+.label {
+  padding: 1px 8px;
+  border-radius: 2px;
+  background: var(--berry-red);
+  color: #fff;
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transform: skewX(-10deg);
+}
+
+.description {
+  margin: 0;
+  font: 400 0.92rem/1.55 'Exo 2', sans-serif;
+}
+
+.edition {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+  color: var(--berry-gold);
+  font: italic 700 0.7rem/1 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  letter-spacing: 0.22em;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+  text-transform: uppercase;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--berry-gold));
+  }
+
+  &::after {
+    transform: scaleX(-1);
+  }
+}
+
+@include flip.keyframes;
+
+@keyframes sweep {
+  0% {
+    transform: translateX(-120%);
+  }
+  22%,
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+// Mobile : l'autocollant devient un bandeau en bas de l'écran, en plus compact.
+@media (max-width: 899px) {
+  .close {
+    top: -12px;
+    right: -6px;
+  }
+
+  :host {
+    top: auto;
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    width: auto;
+    max-height: 56vh;
+    --cut: 16px;
+  }
+
+  .photo {
+    aspect-ratio: 16 / 8;
+  }
+
+  .face .name {
+    font-size: 1.35rem;
+  }
+
+  .description {
+    font-size: 0.85rem;
+  }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flip,
+  .close {
+    animation: none;
+  }
+
+  .sticker {
+    transition: none;
+  }
+
+  .window::after {
+    display: none;
+  }
+}
