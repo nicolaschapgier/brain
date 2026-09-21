@@ -17,21 +17,6 @@
     <clipPath id="cow-body">
       <path d="M102 132 L128 118 L332 118 L470 124 L548 112 L566 104 L588 136 L622 190 Q628 212 604 220 L548 216 L502 252 L474 266 L452 300 Q360 318 216 304 Q150 300 108 302 Z" />
     </clipPath>
-    <!-- Un hémisphère du cerveau vu de dessus (l'autre est son reflet) -->
-    <g id="hemisphere">
-      <path d="M-2 -32 C-14 -34 -26 -28 -30 -16 C-34 -6 -33 8 -29 16 C-25 26 -14 33 -2 32 Z" fill="#331d22" />
-      <ellipse cx="-21" cy="-3" rx="5.5" ry="8" fill="#f2707c" fill-opacity="0.32" />
-      <ellipse cx="-7" cy="14" rx="2.4" ry="3.6" fill="#f2707c" fill-opacity="0.32" />
-      <g fill="none" stroke="#f3cfd3" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M-6 -28 q-8 -2 -13 3 q-3 5 2 7 q6 1 8 -4" />
-        <path d="M-10 -17 q-9 -1 -13 4 q-2 6 4 8 q6 1 8 -3" />
-        <path d="M-4 -10 q-5 -2 -8 3 q-1 5 4 6" />
-        <path d="M-27 -3 q-3 6 2 10 q6 3 10 -1 q4 -5 -1 -9" />
-        <path d="M-11 5 q-5 2 -4 7 q2 5 8 3 q4 -3 1 -7" />
-        <path d="M-25 15 q2 6 8 7 q6 0 8 -5 q0 -5 -6 -4" />
-        <path d="M-8 20 q-3 4 1 8 q4 2 6 -2" />
-      </g>
-    </g>
   </defs>
 
   <!-- Disque noir et liseré de points -->
@@ -98,11 +83,19 @@
     <path d="M271.9 271.9 L181.4 181.4" />
   </g>
 
-  <!-- Au centre : le cerveau, vu de dessus -->
-  <circle cx="320" cy="320" r="43" fill="#0d0d0e" stroke="#ffffff" stroke-width="3.5" />
-  <g transform="translate(320 320)">
-    <use href="#hemisphere" />
-    <use href="#hemisphere" transform="scale(-1 1)" />
+  <!-- Au centre : le cerveau -->
+  <circle cx="320" cy="320" r="46" fill="#0b0b0c" stroke="#ffffff" stroke-width="4" />
+  <g transform="translate(320 320)" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M-2.5 -28 C-14 -32 -30 -25 -31 -11 C-36 -3 -33 12 -24 17 C-20 27 -9 30 -2.5 26 Z" fill="#eea4ae" />
+    <path d="M2.5 -28 C14 -32 30 -25 31 -11 C36 -3 33 12 24 17 C20 27 9 30 2.5 26 Z" fill="#f4b4bc" />
+    <g fill="none" stroke="#b5606f" stroke-width="2">
+      <path d="M-23 -15 q6 -7 12 0 t10 -2" />
+      <path d="M-27 -3 q7 -6 13 1 t12 -1" />
+      <path d="M-24 10 q7 -6 12 0 t9 0" />
+      <path d="M23 -15 q-6 -7 -12 0 t-10 -2" />
+      <path d="M27 -3 q-7 -6 -13 1 t-12 -1" />
+      <path d="M24 10 q-7 -6 -12 0 t-9 0" />
+    </g>
   </g>
 
   <!-- En haut : le bob à carreaux, avec sa petite étiquette orange -->
