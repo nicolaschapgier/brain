@@ -22,9 +22,6 @@ export const SPONSORS: readonly Sponsor[] = [
   // Logo blanc (détouré d'une photo du maillot) : il lui faut une plaque bleue.
   { name: 'Le Seyec', logo: 'sponsors/le-seyec.png', tone: 'blue' },
   { name: 'La Halle', logo: 'sponsors/la-halle.png' },
-  // Sponsor maillot 2007-2009 (source : historique des maillots sur footballkitarchive.com). Pas encore de logo : le panneau
-  // affiche le nom ; ajoute `logo: 'sponsors/triangle-interim.png'` une fois le fichier déposé dans `public/sponsors/`.
-  { name: 'Triangle Intérim' },
   { name: 'RTL', logo: 'sponsors/RTL_logo.svg.webp' },
   { name: "Conseil général de l'Indre", logo: 'sponsors/conseil_general.png' },
 ];
