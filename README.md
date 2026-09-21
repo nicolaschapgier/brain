@@ -153,3 +153,4 @@ Les cartes de souvenir reprennent les couleurs du blason du Berry (azur, or, rou
 - Formulaire d'ajout de souvenir (écrire dans le store, puis un backend ou le `localStorage`)
 - Regrouper les neurones par catégorie / région du cerveau
 - Remplacer le cerveau procédural par un modèle glTF (`GLTFLoader`) si tu veux plus de réalisme
+- Envoi et partage de photos entre amis avec Supabase : suis le plan de formation [`docs/plan-formation-supabase.md`](docs/plan-formation-supabase.md)
