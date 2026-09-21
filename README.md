@@ -64,10 +64,10 @@ Le bouton en forme de livre (barre en haut à droite) ouvre l'**album des souven
 - **Souvenir inconnu** : un emplacement vide pointillé, avec son seul numéro et « À découvrir ». Rien n'est révélé (ni titre, ni image) avant le grattage.
 - **Tourner les pages** : boutons en bas, flèches ← → du clavier ; Échap ou la croix pour fermer. Sur grand écran le livre s'ouvre en double page (la couverture et le dos se centrent quand il est fermé) ; sur téléphone, une page à la fois. Avec « réduire les animations » activé dans le système, les pages changent sans s'animer.
 - **Couvertures rétro années 2000** : bandes du maillot avec reflet vitré, arcs blancs et trame de points, titre « ALBUM » chromé, pastille « gel » rouge, badge étoilé pour le compteur, étincelles qui scintillent et bandeau holographique « Édition Club des Cerveaux ». Les textes sont dans `album-page.html`, le style dans `album-cover.scss`.
-- **Thème** : le bleu et le rouge de la Berrichonne (rayures verticales du maillot) sur du papier blanc, avec des foils argentés, et des panneaux publicitaires à LED au pied des pages, comme autour de la pelouse du stade Gaston-Petit.
+- **Thème** : le bleu et le rouge de la Berrichonne (rayures verticales du maillot) sur du papier blanc, avec des foils argentés, et les logos des annonceurs au pied des pages, en clin d'œil aux panneaux publicitaires de la pelouse du stade Gaston-Petit.
 - Le livre s'agrandit tout seul : il y a autant de pages que nécessaire (4 souvenirs par page), et une page « À suivre… » comble le dernier verso si besoin.
 
-Les annonceurs des panneaux sont dans [`src/app/album/album-sponsors.ts`](src/app/album/album-sponsors.ts) : Pitch, Fenioux, Le Seyec, La Halle aux vêtements, RTL et le Conseil général de l'Indre. Pitch et Fenioux viennent de tes souvenirs ; les autres sont cités dans la section « Sponsors et équipementiers » de la page Wikipédia de la Berrichonne. Leurs logos sont dans `public/sponsors/` (celui du Seyec est blanc, donc posé sur une plaque bleue avec `tone: 'blue'`). Pour ajouter un annonceur, ajoute une ligne à la liste : sans `logo`, le panneau affiche son nom en lettres ; avec `logo: 'sponsors/mon-logo.png'`, il devient une plaque blanche avec le logo dedans. Chaque page en montre trois, en tournant dans la liste. Les couleurs viennent de `berry-theme.scss`, la mise en page des pages de `album-page.scss` (couvertures dans `album-cover.scss`) ; le nombre de souvenirs par page est `SLOTS_PER_PAGE` dans `album-book.ts`.
+Les annonceurs sont dans [`src/app/album/album-sponsors.ts`](src/app/album/album-sponsors.ts) : Pitch, Fenioux, Le Seyec, La Halle aux vêtements, RTL et le Conseil général de l'Indre. Pitch et Fenioux viennent de tes souvenirs ; les autres sont cités dans la section « Sponsors et équipementiers » de la page Wikipédia de la Berrichonne. Chacun s'affiche par son **logo, posé directement sur la page, sans cadre** (les fonds blancs des images se fondent dans le papier). Les logos sont dans `public/sponsors/` ; ceux de Fenioux, de La Halle et du Seyec sont des SVG refaits à la main (version simplifiée, en polices standard). Pour ajouter un annonceur, ajoute une ligne à la liste : avec `logo: 'sponsors/mon-logo.png'` il s'affiche par son logo, sans logo (ou si l'image ne se charge pas) par son nom en lettres. Sur la quatrième de couverture, les logos sont posés sur un bandeau blanc pleine largeur, pour rester lisibles sur les rayures. Chaque page en montre trois, en tournant dans la liste. Les couleurs viennent de `berry-theme.scss`, la mise en page des pages de `album-page.scss` (couvertures dans `album-cover.scss`) ; le nombre de souvenirs par page est `SLOTS_PER_PAGE` dans `album-book.ts`.
 
 ## Navigation
 
@@ -90,7 +90,7 @@ src/app/
     space-backdrop.ts   nébuleuse et étoiles (shaders GLSL)
     brain-scene.ts      renderer, caméra, contrôles, vol vers un neurone, post-traitement (bloom)
     brain-viewer/       composant Angular qui héberge le canvas
-  album/           album d'autocollants : pagination pure (album-book), pages, livre et panneaux publicitaires
+  album/           album d'autocollants : pagination pure (album-book), pages, livre et annonceurs
   ui/memory-card/  carte du souvenir (Angular Material)
   ui/scratch-cover/ pellicule à gratter des cartes inconnues
 ```

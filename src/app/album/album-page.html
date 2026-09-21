@@ -1,11 +1,9 @@
-<!-- Un panneau : le logo de l'annonceur s'il existe (et se charge), sinon son nom écrit en lettres. -->
+<!-- Un annonceur : son logo s'il existe (et se charge), sinon son nom écrit en lettres. Aucun cadre. -->
 <ng-template #board let-board>
   @if (board.logo && hasImage(board.logo)) {
-    <span [class]="'board board--logo board--' + board.tone">
-      <img [src]="board.logo" alt="" draggable="false" (error)="markBroken(board.logo)" />
-    </span>
+    <img class="board board--logo" [src]="board.logo" alt="" draggable="false" (error)="markBroken(board.logo)" />
   } @else {
-    <span [class]="'board board--' + board.tone">{{ board.name }}</span>
+    <span class="board board--text">{{ board.name }}</span>
   }
 </ng-template>
 
@@ -63,7 +61,6 @@
       </div>
 
       <div class="wall">
-        <p class="wall__title">Merci à nos partenaires</p>
         <div class="wall__boards" aria-hidden="true">
           @for (item of wall; track item.name) {
             <ng-container [ngTemplateOutlet]="board" [ngTemplateOutletContext]="{ $implicit: item }" />

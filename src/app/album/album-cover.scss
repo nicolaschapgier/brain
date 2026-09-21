@@ -289,12 +289,17 @@ $plate-cut: polygon(0 0, calc(100% - 7cqw) 0, 100% 7cqw, 100% 100%, 7cqw 100%, 0
   &--back {
     --hinge: linear-gradient(270deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.12) 5%, transparent 10%);
 
+    // Les logos sur un bandeau blanc pleine largeur : les rayures de la couverture les rendraient illisibles.
     .boards {
       position: absolute;
       z-index: 2;
-      right: 9cqw;
+      right: 0;
       bottom: 7cqw;
-      left: 9cqw;
+      left: 0;
+      margin: 0;
+      padding: 2cqw 9cqw;
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 1cqw 1.6cqw rgba(0, 0, 0, 0.35);
     }
   }
 }

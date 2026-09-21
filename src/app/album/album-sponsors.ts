@@ -1,13 +1,12 @@
 /**
- * Les panneaux publicitaires du stade, en clin d'œil aux annonceurs d'époque. Ce sont de simples noms, écrits dans le
- * style de l'album. Pour en ajouter, en retirer ou les réordonner, il suffit de modifier cette liste.
- * `tone` force la couleur du panneau ; sans lui, elles alternent bleu, rouge, blanc (et un logo est posé sur du blanc).
+ * Les annonceurs du stade, en clin d'œil aux panneaux publicitaires d'époque. Chacun s'affiche par son logo, posé
+ * directement sur la page (sans cadre) ; sans logo, ou si l'image ne se charge pas, par son nom en lettres.
+ * Pour en ajouter, en retirer ou les réordonner, il suffit de modifier la liste ci-dessous.
  */
 export interface Sponsor {
   name: string;
-  /** Chemin du logo, relatif à `public/` (ex. `sponsors/leclerc.svg`). Sans logo, le panneau affiche le nom. */
+  /** Chemin du logo, relatif à `public/` (ex. `sponsors/leclerc.svg`). */
   logo?: string;
-  tone?: 'blue' | 'red' | 'white';
 }
 
 /**
@@ -19,41 +18,28 @@ export interface Sponsor {
 export const SPONSORS: readonly Sponsor[] = [
   { name: 'Pitch', logo: 'sponsors/Logo_Pitch_brioche_Pasquier.png' },
   { name: 'Fenioux', logo: 'sponsors/fenioux.svg' },
-  // Logo blanc, sans fond : il lui faut une plaque bleue.
-  { name: 'Le Seyec', logo: 'sponsors/le-seyec.svg', tone: 'blue' },
+  { name: 'Le Seyec', logo: 'sponsors/le-seyec.svg' },
   { name: 'La Halle', logo: 'sponsors/la-halle.svg' },
   { name: 'RTL', logo: 'sponsors/RTL_logo.svg.webp' },
   { name: "Conseil général de l'Indre", logo: 'sponsors/conseil_general.png' },
 ];
 
-const TONES = ['blue', 'red', 'white'] as const;
-
 export interface Board {
   name: string;
   logo?: string;
-  tone: 'blue' | 'red' | 'white';
 }
 
-/** Panneau d'un annonceur, avec sa couleur (imposée ou alternée selon sa place dans la liste). */
-function boardOf(sponsor: Sponsor, position: number): Board {
-  return { name: sponsor.name, logo: sponsor.logo, tone: sponsor.tone ?? (sponsor.logo ? 'white' : TONES[position % TONES.length]) };
-}
-
-/** Tous les panneaux, dans l'ordre. */
+/** Tous les annonceurs, dans l'ordre. */
 export function allBoards(sponsors: readonly Sponsor[] = SPONSORS): Board[] {
-  return sponsors.map(boardOf);
+  return sponsors.map(({ name, logo }) => ({ name, logo }));
 }
 
 /**
- * `count` panneaux qui se suivent à partir d'un point de départ, en reprenant au début de la liste : chaque page en
- * montre d'autres que la précédente, comme le tour des panneaux d'un stade.
+ * `count` annonceurs qui se suivent à partir d'un point de départ, en reprenant au début de la liste : chaque page
+ * en montre d'autres que la précédente, comme le tour des panneaux d'un stade.
  */
 export function boardsFrom(start: number, count: number, sponsors: readonly Sponsor[] = SPONSORS): Board[] {
-  if (!sponsors.length) return [];
-  const boards: Board[] = [];
-  for (let i = 0; i < Math.min(count, sponsors.length); i++) {
-    const position = (((start + i) % sponsors.length) + sponsors.length) % sponsors.length;
-    boards.push(boardOf(sponsors[position], position));
-  }
-  return boards;
+  const boards = allBoards(sponsors);
+  if (!boards.length) return [];
+  return Array.from({ length: Math.min(count, boards.length) }, (_, i) => boards[(((start + i) % boards.length) + boards.length) % boards.length]);
 }

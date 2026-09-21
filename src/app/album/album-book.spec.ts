@@ -149,12 +149,10 @@ describe('panneaux publicitaires', () => {
     expect(boardsFrom(0, 10, sponsors).map((b) => b.name)).toEqual(['A', 'B', 'C', 'D']);
   });
 
-  it('garde à chaque annonceur sa couleur d’une page à l’autre, et respecte celle imposée', () => {
-    const list = [{ name: 'A' }, { name: 'B', tone: 'white' as const }, { name: 'C' }];
-    const tone = (from: number) => Object.fromEntries(boardsFrom(from, 3, list).map((b) => [b.name, b.tone]));
-    expect(tone(0)).toEqual(tone(1));
-    expect(tone(0)['B']).toBe('white');
-    expect(allBoards(list).map((b) => b.tone)).toEqual(['blue', 'white', 'white']);
+  it('transmet le logo de chaque annonceur, sans en inventer aux autres', () => {
+    const list = [{ name: 'A', logo: 'sponsors/a.svg' }, { name: 'B' }];
+    expect(allBoards(list)).toEqual([{ name: 'A', logo: 'sponsors/a.svg' }, { name: 'B', logo: undefined }]);
+    expect(boardsFrom(1, 2, list).map((b) => b.logo)).toEqual([undefined, 'sponsors/a.svg']);
   });
 
   it('accepte une liste vide et un départ négatif', () => {
