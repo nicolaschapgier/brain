@@ -1,4 +1,5 @@
 import { Memory } from '../core/memory.model';
+import { yearOf } from '../core/year-theme';
 
 /** Nombre d'emplacements sur une page de souvenirs (deux colonnes, deux rangées). */
 export const SLOTS_PER_PAGE = 4;
@@ -16,7 +17,9 @@ export interface AlbumSlot {
 type SideContent =
   | { kind: 'cover' }
   | { kind: 'intro' }
-  | { kind: 'stickers'; slots: AlbumSlot[] }
+  // `year` : l'année de la page (`null` : souvenirs sans année) ; `part` / `parts` : une année de plus de quatre souvenirs
+  // occupe plusieurs pages.
+  | { kind: 'stickers'; year: number | null; part: number; parts: number; slots: AlbumSlot[] }
   | { kind: 'end' }
   | { kind: 'back' };
 
@@ -27,13 +30,30 @@ export type StickerSide = Extract<AlbumSide, { kind: 'stickers' }>;
 /**
  * Toutes les faces du livre, dans l'ordre : couverture, page d'accueil, pages de souvenirs, (une page « à suivre » si
  * besoin), quatrième de couverture. Leur nombre est toujours pair, pour que chaque feuille ait ses deux faces.
+ *
+ * Les souvenirs sont classés par année (les plus anciennes d'abord, ceux sans année à la fin), puis par date. Chaque année
+ * a sa page, ou ses pages si elle compte plus de quatre souvenirs. Un souvenir garde son numéro d'origine (sa place dans
+ * le JSON, le même que sur sa carte), même si le classement change l'ordre d'affichage.
  */
 export function buildSides(memories: readonly Memory[]): AlbumSide[] {
   const sides: SideContent[] = [{ kind: 'cover' }, { kind: 'intro' }];
 
-  for (let start = 0; start < memories.length; start += SLOTS_PER_PAGE) {
-    const slots = memories.slice(start, start + SLOTS_PER_PAGE).map((memory, i) => ({ number: start + i + 1, memory }));
-    sides.push({ kind: 'stickers', slots });
+  const entries = memories
+    .map((memory, i) => ({ memory, number: i + 1, year: yearOf(memory.date) }))
+    .sort((a, b) => (a.year ?? Infinity) - (b.year ?? Infinity) || (a.memory.date ?? '').localeCompare(b.memory.date ?? '') || a.number - b.number);
+
+  for (let start = 0; start < entries.length; ) {
+    const { year } = entries[start];
+    let end = start;
+    while (end < entries.length && entries[end].year === year) end++;
+
+    const group = entries.slice(start, end);
+    const parts = Math.ceil(group.length / SLOTS_PER_PAGE);
+    for (let part = 0; part < parts; part++) {
+      const slots = group.slice(part * SLOTS_PER_PAGE, (part + 1) * SLOTS_PER_PAGE).map(({ memory, number }) => ({ number, memory }));
+      sides.push({ kind: 'stickers', year, part: part + 1, parts, slots });
+    }
+    start = end;
   }
 
   // La quatrième de couverture doit tomber sur un verso : on comble si la dernière face est un recto.

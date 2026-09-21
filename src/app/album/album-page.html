@@ -48,7 +48,7 @@
       </header>
 
       <p class="intro__text">
-        Chaque souvenir trouvé dans le cerveau vient se coller ici. Gratte les cartes pour compléter ta collection !
+        Chaque souvenir trouvé dans le cerveau vient se coller à la page de son année. Gratte les cartes pour compléter ta collection !
       </p>
 
       <div class="gauge" role="img" [attr.aria-label]="store.discovered().length + ' souvenirs collés sur ' + store.total()">
@@ -76,13 +76,11 @@
     @if (stickers(); as page) {
       <section class="paper stickers">
         <header class="ribbon">
-          <span class="ribbon__tab">Souvenirs</span>
-          @if (range(); as r) {
-            <span class="ribbon__range">N° {{ r.first }}@if (r.last !== r.first) { – {{ r.last }} }</span>
-          }
+          <span class="ribbon__tab">{{ page.year ?? 'Sans date' }}</span>
+          <span class="ribbon__range">{{ caption() }}</span>
         </header>
 
-        <div class="grid">
+        <div class="grid" [attr.data-count]="page.slots.length">
           @for (slot of page.slots; track slot.memory.id) {
             @if (store.isDiscovered(slot.memory.id)) {
               <button
@@ -110,7 +108,7 @@
               </button>
             } @else {
               <div class="slot" role="img" [attr.aria-label]="'Souvenir numéro ' + slot.number + ', pas encore découvert'">
-                <mat-icon class="slot__icon" aria-hidden="true">psychology</mat-icon>
+                <img class="slot__logo" src="club-des-cerveaux.svg" alt="" draggable="false" />
                 <span class="slot__no">{{ slot.number }}</span>
                 <span class="slot__hint">À découvrir</span>
               </div>

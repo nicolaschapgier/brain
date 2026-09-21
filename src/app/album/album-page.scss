@@ -232,19 +232,20 @@
   margin-bottom: 3cqw;
 
   &__tab {
-    padding: 1.2cqw 4cqw;
+    padding: 1cqw 4.4cqw;
     background: var(--berry-red);
     color: #fff;
-    font: italic 700 4cqw/1 'Barlow Condensed', 'Arial Narrow', sans-serif;
-    letter-spacing: 0.18em;
+    font: italic 800 6.2cqw/1 'Barlow Condensed', 'Arial Narrow', sans-serif;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     transform: skewX(-12deg);
   }
 
   &__range {
     color: var(--berry-azure);
-    font: italic 800 6.4cqw/1 'Barlow Condensed', 'Arial Narrow', sans-serif;
-    letter-spacing: 0.04em;
+    font: italic 700 3.8cqw/1 'Barlow Condensed', 'Arial Narrow', sans-serif;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
   }
 }
 
@@ -256,6 +257,18 @@
   grid-template-rows: repeat(2, minmax(0, 1fr));
   gap: 5.5cqw;
   padding: 1.6cqw;
+}
+
+// Une année de un ou deux souvenirs : ils restent de la taille des autres, centrés sur la page au lieu d'être collés en haut.
+.grid[data-count='1'],
+.grid[data-count='2'] {
+  grid-template-rows: minmax(0, calc(50% - 2.75cqw));
+  align-content: center;
+}
+
+.grid[data-count='1'] {
+  grid-template-columns: minmax(0, 46cqw);
+  justify-content: center;
 }
 
 // Un souvenir déjà découvert : l'autocollant, collé de travers.
@@ -415,12 +428,11 @@
     rgba(255, 255, 255, 0.55);
   color: rgba(26, 63, 150, 0.45);
 
-  &__icon {
-    width: 9cqw;
-    height: 9cqw;
-    font-size: 9cqw;
-    line-height: 1;
-    color: rgba(200, 32, 47, 0.5);
+  // Le logo du club, un peu estompé comme le reste de l'emplacement imprimé.
+  &__logo {
+    width: 13cqw;
+    height: 13cqw;
+    opacity: 0.72;
   }
 
   // Le numéro en creux, comme sur les albums à compléter.

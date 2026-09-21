@@ -1,6 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
-import { MatIconModule } from '@angular/material/icon';
 import { formatMemoryDate } from '../core/memory-date';
 import { Memory } from '../core/memory.model';
 import { MemoryStore } from '../core/memory.store';
@@ -17,7 +16,7 @@ const BOARDS_PER_PAGE = 3;
 /** Une face du livre : la couverture, l'accueil, une page d'autocollants, la page « à suivre » ou le dos. */
 @Component({
   selector: 'app-album-page',
-  imports: [MatIconModule, NgTemplateOutlet],
+  imports: [NgTemplateOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
   // Le verso (page de gauche) a sa reliure à droite : le style en tient compte.
   host: { '[class.verso]': 'side().index % 2 === 1' },
@@ -36,9 +35,12 @@ export class AlbumPage {
     return side.kind === 'stickers' ? side : null;
   });
 
-  protected readonly range = computed(() => {
-    const slots = this.stickers()?.slots ?? [];
-    return slots.length ? { first: slots[0].number, last: slots[slots.length - 1].number } : null;
+  /** Sous l'année : le nombre de souvenirs de la page, et « 1/2 » quand l'année occupe plusieurs pages. */
+  protected readonly caption = computed(() => {
+    const page = this.stickers();
+    if (!page) return '';
+    const count = `${page.slots.length} souvenir${page.slots.length > 1 ? 's' : ''}`;
+    return page.parts > 1 ? `${count} · ${page.part}/${page.parts}` : count;
   });
 
   protected readonly pageNumber = computed(() => this.side().index + 1);

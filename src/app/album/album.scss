@@ -245,24 +245,28 @@
     }
   }
 
+  // Le livre a une page par année : les pastilles rétrécissent pour tenir entre les deux boutons.
   &__dots {
     display: flex;
+    flex: 0 1 auto;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
+    min-width: 0;
   }
 
   &__dot {
-    width: 22px;
+    flex: 0 1 22px;
+    min-width: 4px;
     height: 8px;
     border-radius: 2px;
     background: rgba(255, 255, 255, 0.28);
     transform: skewX(-14deg);
     transition:
       background 250ms,
-      width 250ms;
+      flex-basis 250ms;
 
     &--current {
-      width: 36px;
+      flex-basis: 36px;
       background: #fff;
       box-shadow: 0 2px 0 var(--berry-red);
     }

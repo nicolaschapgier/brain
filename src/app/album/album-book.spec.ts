@@ -38,6 +38,54 @@ describe('buildSides', () => {
   });
 });
 
+describe('buildSides : classement par année', () => {
+  const dated = (dates: (string | undefined)[]): Memory[] =>
+    dates.map((date, i) => ({ id: `m${i + 1}`, title: `Souvenir ${i + 1}`, description: '', image: '', date }));
+  const pages = (list: Memory[]) => buildSides(list).filter((side) => side.kind === 'stickers');
+
+  it('donne une page à chaque année, de la plus ancienne à la plus récente', () => {
+    const result = pages(dated(['2019-06-01', '2015-02-07', '2017-07-16']));
+    expect(result.map((page) => page.year)).toEqual([2015, 2017, 2019]);
+  });
+
+  it('garde à chaque souvenir son numéro d’origine, même quand le classement change l’ordre', () => {
+    const result = pages(dated(['2019-06-01', '2015-02-07', '2019-01-10', '2017-07-16']));
+    expect(result.map((page) => page.slots.map((slot) => slot.number))).toEqual([[2], [4], [3, 1]]);
+  });
+
+  it('classe par date à l’intérieur d’une année, puis dans l’ordre du JSON à date égale', () => {
+    const result = pages(dated(['2020-09-01', '2020-02-01', '2020-02-01']));
+    expect(result[0].slots.map((slot) => slot.memory.id)).toEqual(['m2', 'm3', 'm1']);
+  });
+
+  it('lit l’année dans un texte libre', () => {
+    expect(pages(dated(['Été 2016', '2015-01-01'])).map((page) => page.year)).toEqual([2015, 2016]);
+  });
+
+  it('coupe une année de plus de quatre souvenirs en plusieurs pages, numérotées', () => {
+    const result = pages(dated(Array(6).fill('2020-05-05')));
+    expect(result.map((page) => [page.year, page.part, page.parts, page.slots.length])).toEqual([
+      [2020, 1, 2, 4],
+      [2020, 2, 2, 2],
+    ]);
+  });
+
+  it('met à la fin les souvenirs sans année', () => {
+    const result = pages(dated([undefined, '2018-03-03', 'Un soir d’été']));
+    expect(result.map((page) => page.year)).toEqual([2018, null]);
+    expect(result[1].slots.map((slot) => slot.number)).toEqual([1, 3]);
+  });
+
+  it('garde un nombre pair de faces, avec une page par année', () => {
+    for (let years = 0; years <= 12; years++) {
+      const list = dated(Array.from({ length: years }, (_, i) => `${2015 + i}-06-01`));
+      const sides = buildSides(list);
+      expect(sides.length % 2).toBe(0);
+      expect(sides.filter((side) => side.kind === 'stickers').length).toBe(years);
+    }
+  });
+});
+
 describe('nextSide en double page', () => {
   // 6 faces : couverture | accueil-p1 | p2-fin | dos, soit 4 doubles pages (0 à 3 ; 3 = dos seul).
   const count = 6;
