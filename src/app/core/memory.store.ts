@@ -21,7 +21,7 @@ export class MemoryStore {
   /** Position du souvenir sélectionné dans la liste (-1 si aucun). */
   readonly selectedIndex = computed(() => this.memories().findIndex((m) => m.id === this.selectedId()));
 
-  /** Les souvenirs connus (déjà grattés), dans l'ordre du JSON. Les autres restent cachés (liste, titre au survol, flèches de la carte). */
+  /** Les souvenirs connus (déjà grattés), dans l'ordre du JSON. Les autres restent cachés (album, titre au survol). */
   readonly discovered = computed(() => this.memories().filter((m) => this.discoveredIds().has(m.id)));
   readonly total = computed(() => this.memories().length);
 
@@ -68,23 +68,6 @@ export class MemoryStore {
     } catch {
       // Stockage indisponible (navigation privée, données bloquées) : la progression vaut pour cette session seulement.
     }
-  }
-
-  next() {
-    this.step(1);
-  }
-
-  previous() {
-    this.step(-1);
-  }
-
-  /** Passe au souvenir connu suivant ou précédent : parcourir les autres en révélerait le titre et l'image. */
-  private step(direction: 1 | -1) {
-    const list = this.discovered();
-    if (!list.length) return;
-    const from = list.findIndex((m) => m.id === this.selectedId());
-    const index = from < 0 ? 0 : (from + direction + list.length) % list.length;
-    this.select(list[index].id);
   }
 
   private restoreDiscovered(): ReadonlySet<string> {

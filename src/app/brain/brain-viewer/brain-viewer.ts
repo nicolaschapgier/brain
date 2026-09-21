@@ -64,9 +64,4 @@ export class BrainViewer {
     this.store.select(null);
     this.scene()?.resetView();
   }
-
-  enterBrain() {
-    this.store.select(null);
-    this.scene()?.enterBrain();
-  }
 }

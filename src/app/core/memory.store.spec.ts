@@ -102,29 +102,4 @@ describe('MemoryStore : souvenirs connus et inconnus', () => {
     expect(() => store.reveal('a')).not.toThrow();
     expect(store.isDiscovered('a')).toBe(true); // valable pour cette session
   });
-
-  describe('flèches de la carte', () => {
-    it('ne parcourent que les souvenirs connus', () => {
-      const store = createStore();
-      store.reveal('a');
-      store.reveal('c');
-
-      store.select('a');
-      store.next();
-      expect(store.selectedId()).toBe('c'); // saute b, encore inconnu
-      store.next();
-      expect(store.selectedId()).toBe('a'); // reboucle
-      store.previous();
-      expect(store.selectedId()).toBe('c');
-    });
-
-    it('ne révèlent jamais un souvenir inconnu', () => {
-      const store = createStore();
-      store.reveal('b');
-      store.select('b');
-      for (let i = 0; i < 6; i++) store.next();
-      expect(store.discovered().map((m) => m.id)).toEqual(['b']);
-      expect(store.isDiscovered('a')).toBe(false);
-    });
-  });
 });

@@ -48,18 +48,6 @@
       </div>
 
       <footer class="edition">Édition Berry · Châteauroux</footer>
-
-      <mat-card-actions class="actions" align="end">
-        @if (store.discovered().length > 1) {
-          <button mat-icon-button matTooltip="Souvenir précédent" aria-label="Souvenir précédent" (click)="store.previous()">
-            <mat-icon>chevron_left</mat-icon>
-          </button>
-          <button mat-icon-button matTooltip="Souvenir suivant" aria-label="Souvenir suivant" (click)="store.next()">
-            <mat-icon>chevron_right</mat-icon>
-          </button>
-        }
-        <button mat-button (click)="store.select(null)">Fermer</button>
-      </mat-card-actions>
     </div>
 
     <span class="foil foil--sticker" aria-hidden="true"></span>

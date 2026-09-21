@@ -7,14 +7,8 @@
   </div>
 
   <nav class="actions">
-    <button mat-icon-button matTooltip="Liste des souvenirs" aria-label="Liste des souvenirs" [matMenuTriggerFor]="list">
-      <mat-icon>psychology</mat-icon>
-    </button>
     <button mat-icon-button matTooltip="Album des souvenirs" aria-label="Album des souvenirs" (click)="openAlbum()">
       <mat-icon>menu_book</mat-icon>
-    </button>
-    <button mat-icon-button matTooltip="Entrer dans le cerveau" aria-label="Entrer dans le cerveau" (click)="viewer.enterBrain()">
-      <mat-icon>rocket_launch</mat-icon>
     </button>
     <button mat-icon-button matTooltip="Vue d'ensemble" aria-label="Vue d'ensemble" (click)="viewer.resetView()">
       <mat-icon>center_focus_strong</mat-icon>
@@ -30,22 +24,6 @@
     </button>
   </nav>
 </header>
-
-<mat-menu #list="matMenu" class="memory-menu">
-  @if (store.total() > 0) {
-    <p class="menu-note" role="status">{{ store.discovered().length }} / {{ store.total() }} souvenirs découverts</p>
-  }
-  @for (memory of store.discovered(); track memory.id) {
-    <button mat-menu-item (click)="store.select(memory.id)">
-      <mat-icon>bubble_chart</mat-icon>
-      <span>{{ memory.title }}</span>
-    </button>
-  } @empty {
-    <p class="menu-note menu-note--hint">
-      {{ store.total() > 0 ? 'Clique sur les neurones du cerveau pour découvrir tes souvenirs.' : 'Aucun souvenir.' }}
-    </p>
-  }
-</mat-menu>
 
 <app-memory-card />
 

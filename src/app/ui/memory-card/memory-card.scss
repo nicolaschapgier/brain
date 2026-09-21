@@ -318,18 +318,6 @@
   }
 }
 
-.face .actions {
-  --mat-icon-button-icon-color: var(--berry-gold-light);
-  --mat-icon-button-state-layer-color: #fff;
-  --mat-button-text-label-text-color: var(--berry-gold-light);
-  --mat-button-text-state-layer-color: #fff;
-  --mat-text-button-label-text-color: var(--berry-gold-light);
-
-  min-height: 44px;
-  padding: 2px 0 0;
-  gap: 2px;
-}
-
 @keyframes sticker-in {
   from {
     opacity: 0;

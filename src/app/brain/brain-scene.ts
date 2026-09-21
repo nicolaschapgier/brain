@@ -40,8 +40,6 @@ interface Flight {
   toTarget: Vector3;
   start: number;
   duration: number;
-  /** À l'arrivée, passe en vue « première personne » (la souris pivote sur place). */
-  firstPersonAtEnd: boolean;
 }
 
 // Les poses sont réglées pour un cerveau à l'échelle 1, puis multipliées par BRAIN_SCALE.
@@ -49,8 +47,6 @@ const OVERVIEW_POSITION = new Vector3(12.5, 3.8, 6.5).multiplyScalar(BRAIN_SCALE
 const OVERVIEW_TARGET = new Vector3(0, -0.4, 0).multiplyScalar(BRAIN_SCALE);
 /** Format (largeur / hauteur) pour lequel la vue d'ensemble a été réglée ; en dessous, on recule. */
 const OVERVIEW_ASPECT = 1.33;
-const INSIDE_POSITION = new Vector3(0.4, 0.2, 2.6).multiplyScalar(BRAIN_SCALE);
-const INSIDE_TARGET = new Vector3(0, -0.2, -1.6).multiplyScalar(BRAIN_SCALE);
 
 const MOVE_SPEED = 4.5 * BRAIN_SCALE;
 /** Distance entre la caméra et sa cible en vue « première personne » : plus elle est petite, plus la souris pivote sur place. */
@@ -218,10 +214,6 @@ export class BrainScene {
     this.flyTo(position, target, 2.2);
   }
 
-  enterBrain() {
-    this.flyTo(INSIDE_POSITION, INSIDE_TARGET, 2.2, true);
-  }
-
   dispose() {
     const { canvas } = this.options;
     this.renderer.setAnimationLoop(null);
@@ -284,7 +276,7 @@ export class BrainScene {
     this.controls.autoRotate = this.autoRotate && !this.focused && !this.interior;
   }
 
-  private flyTo(position: Vector3, target: Vector3, seconds = 1.6, firstPersonAtEnd = false) {
+  private flyTo(position: Vector3, target: Vector3, seconds = 1.6) {
     this.flight = {
       fromPosition: this.camera.position.clone(),
       fromTarget: this.controls.target.clone(),
@@ -292,7 +284,6 @@ export class BrainScene {
       toTarget: target.clone(),
       start: performance.now(),
       duration: seconds * 1000,
-      firstPersonAtEnd,
     };
     this.controls.enabled = false;
   }
@@ -329,7 +320,6 @@ export class BrainScene {
     if (progress >= 1) {
       this.flight = undefined;
       this.controls.enabled = true;
-      if (flight.firstPersonAtEnd) this.aimTargetAhead();
     }
   }
 
