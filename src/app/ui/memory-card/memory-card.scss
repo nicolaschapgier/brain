@@ -1,4 +1,5 @@
 @use '../berry-theme' as berry;
+@use '../year-theme' as year;
 
 :host {
   @include berry.tokens;
@@ -101,6 +102,7 @@
     repeating-linear-gradient(115deg, rgba(255, 255, 255, 0.07) 0 14px, transparent 14px 28px),
     radial-gradient(120% 60% at 0% 0%, var(--berry-azure-light), transparent 62%),
     linear-gradient(160deg, var(--berry-azure) 0%, var(--berry-azure-deep) 100%);
+  @include year.aged-face;
 }
 
 .top {
@@ -108,6 +110,11 @@
   align-items: center;
   justify-content: space-between;
   margin: 0 2px -2px;
+}
+
+// L'année du souvenir, entre le numéro et le médaillon.
+.year {
+  @include year.year-badge(1.5rem);
 }
 
 .number {
@@ -166,6 +173,8 @@
     0 calc(100% - var(--cut))
   );
 
+  @include year.vignette(var(--frame));
+
   // Reflet blanc qui balaie la photo de temps en temps.
   &::after {
     content: '';
@@ -183,6 +192,7 @@
   width: 100%;
   aspect-ratio: 16 / 10;
   object-fit: cover;
+  @include year.photo-aged;
   clip-path: polygon(
     0 0,
     calc(100% - var(--cut) + var(--frame)) 0,

@@ -1,0 +1,73 @@
+// Effet « rétro » des souvenirs anciens. Son intensité vient de la variable `--retro` (0 : rien, 1 : très ancien), posée
+// avec le reste du thème de l'année (voir `core/year-theme.ts`) : les mixins ne font rien tant qu'elle vaut 0.
+
+// Grain de pellicule : un bruit fractal, en image SVG intégrée.
+$grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+
+// Teinte d'ensemble d'une carte qui a vieilli : un peu de sépia, des couleurs moins vives (azur, or et rouge restent
+// reconnaissables, mais passés). À poser sur la face de la carte ou sur l'autocollant.
+@mixin aged-tint {
+  filter: sepia(calc(var(--retro, 0) * 0.34)) saturate(calc(1 - var(--retro, 0) * 0.18));
+}
+
+// Photo passée : sépia, couleurs un peu ternes, contraste léger (en plus de la teinte d'ensemble).
+@mixin photo-aged {
+  filter: sepia(calc(var(--retro, 0) * 0.45)) saturate(calc(1 - var(--retro, 0) * 0.2)) contrast(calc(1 + var(--retro, 0) * 0.08));
+}
+
+// Bords assombris, comme un vieux tirage. À poser sur un élément positionné qui contient la photo.
+@mixin vignette($inset: 0) {
+  &::before {
+    content: '';
+    position: absolute;
+    inset: $inset;
+    z-index: 1;
+    pointer-events: none;
+    background: radial-gradient(ellipse at center, transparent 48%, rgb(60 30 10 / calc(var(--retro, 0) * 0.55)) 100%);
+  }
+}
+
+// Toute la carte : un dégradé chaud (lumière dorée en haut, brun en bas) et le grain par-dessus. La pellicule à gratter
+// (z-index 4) reste au-dessus, on ne la patine pas.
+@mixin aged-face {
+  position: relative;
+  isolation: isolate;
+  @include aged-tint;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  &::before {
+    z-index: 1;
+    background: linear-gradient(
+      180deg,
+      rgb(255 190 120 / calc(var(--retro, 0) * 0.3)) 0%,
+      transparent 45%,
+      rgb(90 40 20 / calc(var(--retro, 0) * 0.38)) 100%
+    );
+  }
+
+  &::after {
+    z-index: 2;
+    background: $grain;
+    mix-blend-mode: overlay;
+    opacity: calc(var(--retro, 0) * 0.5);
+  }
+}
+
+// Étiquette de l'année : un cartouche doré, à côté du numéro.
+@mixin year-badge($size: 1.6rem) {
+  padding: 3px 12px;
+  background: var(--berry-foil-gold);
+  color: var(--berry-azure-deep);
+  font: italic 800 #{$size}/1 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  letter-spacing: 0.06em;
+  transform: skewX(-10deg);
+  box-shadow: 0 2px 0 var(--berry-red-deep);
+}

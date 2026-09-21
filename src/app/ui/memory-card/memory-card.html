@@ -13,6 +13,9 @@
         <span class="number" [attr.aria-label]="'Souvenir numéro ' + number() + ' sur ' + total()">
           N°<b>{{ number() }}</b><small>/{{ total() }}</small>
         </span>
+        @if (year(); as y) {
+          <span class="year" [attr.aria-label]="'Année ' + y">{{ y }}</span>
+        }
         <span class="crest" aria-hidden="true">⚜</span>
       </header>
 
@@ -47,7 +50,7 @@
         }
       </div>
 
-      <footer class="edition">Édition Berry · Châteauroux</footer>
+      <footer class="edition">{{ year() ? 'Édition ' + year() : 'Édition Berry · Châteauroux' }}</footer>
     </div>
 
     <span class="foil foil--sticker" aria-hidden="true"></span>

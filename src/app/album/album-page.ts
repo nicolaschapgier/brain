@@ -2,7 +2,9 @@ import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { formatMemoryDate } from '../core/memory-date';
+import { Memory } from '../core/memory.model';
 import { MemoryStore } from '../core/memory.store';
+import { themeFor, yearOf } from '../core/year-theme';
 import { AlbumSide, StickerSide } from './album-book';
 import { allBoards, boardsFrom } from './album-sponsors';
 
@@ -55,6 +57,13 @@ export class AlbumPage {
   protected markBroken(image: string) {
     this.brokenImages.update((set) => new Set(set).add(image));
   }
+
+  /** Style d'un autocollant : son inclinaison, et les couleurs et l'effet rétro du thème de son année. */
+  protected stickerStyle(memory: Memory, number: number): Record<string, string> {
+    return { ...themeFor(yearOf(memory.date)).vars, '--tilt': this.tilt(number) };
+  }
+
+  protected yearOf = yearOf;
 
   protected tilt(number: number): string {
     return `${TILTS[(number - 1) % TILTS.length]}deg`;

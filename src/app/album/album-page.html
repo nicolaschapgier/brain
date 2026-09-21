@@ -88,11 +88,14 @@
               <button
                 type="button"
                 class="sticker"
-                [style.--tilt]="tilt(slot.number)"
+                [style]="stickerStyle(slot.memory, slot.number)"
                 [attr.aria-label]="'Souvenir numéro ' + slot.number + ' : ' + slot.memory.title + '. Agrandir'"
                 (click)="open.emit(slot.memory.id)"
               >
                 <span class="sticker__no">N°{{ slot.number }}</span>
+                @if (yearOf(slot.memory.date); as y) {
+                  <span class="sticker__year">{{ y }}</span>
+                }
                 <span class="sticker__photo">
                   @if (hasImage(slot.memory.image)) {
                     <img [src]="slot.memory.image" alt="" draggable="false" (error)="markBroken(slot.memory.image)" />

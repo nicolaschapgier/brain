@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { formatMemoryDate } from '../../core/memory-date';
 import { MemoryStore } from '../../core/memory.store';
+import { themeFor, yearOf } from '../../core/year-theme';
 import { ScratchCover } from '../scratch-cover/scratch-cover';
 
 /** Inclinaison maximale (en degrés) de l'autocollant quand la souris le survole. */
@@ -15,7 +16,8 @@ const TILT_Y = 5;
   selector: 'app-memory-card',
   imports: [MatCardModule, MatButtonModule, MatIconModule, MatTooltipModule, ScratchCover],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { '(document:keydown.escape)': 'closeOnEscape($event)' },
+  // Le thème de l'année du souvenir (couleurs, effet rétro) se pose en variables CSS sur la carte.
+  host: { '(document:keydown.escape)': 'closeOnEscape($event)', '[style]': 'theme().vars' },
   templateUrl: './memory-card.html',
   styleUrl: './memory-card.scss',
 })
@@ -27,6 +29,9 @@ export class MemoryCard {
     const memory = this.store.selected();
     return memory ? [memory] : [];
   });
+
+  protected readonly year = computed(() => yearOf(this.store.selected()?.date));
+  protected readonly theme = computed(() => themeFor(this.year()));
 
   protected readonly number = computed(() => this.store.selectedIndex() + 1);
   protected readonly total = computed(() => this.store.memories().length);

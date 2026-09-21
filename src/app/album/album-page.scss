@@ -1,4 +1,5 @@
 @use '../ui/berry-theme' as berry;
+@use '../ui/year-theme' as year;
 
 // Palette de l'album : le bleu et le rouge de la Berrichonne, le blanc du papier, un peu d'argent pour les foils.
 // Toutes les tailles sont en `cqw` (1 % de la largeur de la page) : la page garde ses proportions à toutes les tailles.
@@ -283,6 +284,7 @@
   transition:
     transform 180ms ease,
     box-shadow 180ms ease;
+  @include year.aged-tint;
 
   &:hover,
   &:focus-visible {
@@ -310,6 +312,21 @@
     box-shadow: 0 0.5cqw 0 var(--berry-red-deep);
   }
 
+  // L'année, en haut à droite : son cartouche doré reprend l'accent du thème de l'année.
+  &__year {
+    position: absolute;
+    z-index: 2;
+    top: -2.6cqw;
+    right: -2.4cqw;
+    padding: 0.9cqw 2.2cqw;
+    background: var(--berry-foil-gold);
+    color: var(--berry-azure-deep);
+    font: italic 800 4.2cqw/1 'Barlow Condensed', 'Arial Narrow', sans-serif;
+    letter-spacing: 0.04em;
+    transform: skewX(-10deg);
+    box-shadow: 0 0.5cqw 0 var(--berry-red-deep);
+  }
+
   &__photo {
     position: relative;
     flex: 1 1 0;
@@ -324,7 +341,10 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+      @include year.photo-aged;
     }
+
+    @include year.vignette;
 
     // Reflet blanc qui passe sur la photo quand on survole l'autocollant.
     &::after {
