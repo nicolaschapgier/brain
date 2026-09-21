@@ -1,5 +1,5 @@
 <div class="table" role="dialog" aria-modal="true" aria-label="Album des souvenirs" [style.--flip-ms]="flipMs + 'ms'">
-  <header class="bar">
+  <header class="bar" [attr.inert]="zoomed() ? '' : null">
     <div class="bar__title">
       <span class="bar__logo">Album</span>
       <span class="bar__count" role="status">{{ store.discovered().length }} / {{ store.total() }} souvenirs collés</span>
@@ -10,7 +10,7 @@
     </button>
   </header>
 
-  <main class="stage">
+  <main class="stage" [attr.inert]="zoomed() ? '' : null">
     <div class="book" [class.book--compact]="compact()" [style.--shift]="shift()">
       @if (view().left; as left) {
         <div class="sheet sheet--left">
@@ -43,7 +43,7 @@
     </div>
   </main>
 
-  <footer class="pager">
+  <footer class="pager" [attr.inert]="zoomed() ? '' : null">
     <button mat-icon-button class="pager__button" matTooltip="Page précédente (←)" aria-label="Page précédente" [disabled]="!canPrevious()" (click)="turnPage(-1)">
       <mat-icon>chevron_left</mat-icon>
     </button>
@@ -58,4 +58,8 @@
       <mat-icon>chevron_right</mat-icon>
     </button>
   </footer>
+
+  @if (zoomed(); as memory) {
+    <app-album-zoom [memory]="memory" (closed)="zoomed.set(null)" />
+  }
 </div>

@@ -26,7 +26,7 @@ export class AlbumPage {
   protected readonly store = inject(MemoryStore);
 
   readonly side = input.required<AlbumSide>();
-  /** Émis au clic sur un autocollant collé : l'album ouvre alors la carte du souvenir. */
+  /** Émis au clic sur un autocollant collé : l'album affiche alors le souvenir en grand. */
   readonly open = output<string>();
 
   protected readonly stickers = computed<StickerSide | null>(() => {

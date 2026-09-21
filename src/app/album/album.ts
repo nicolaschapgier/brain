@@ -13,8 +13,10 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { Memory } from '../core/memory.model';
 import { MemoryStore } from '../core/memory.store';
 import { AlbumPage } from './album-page';
+import { AlbumZoom } from './album-zoom';
 import { Turn, buildSides, nextSide, spreadOf, viewOf } from './album-book';
 
 /** Durée d'un tour de page. Elle est transmise au style (`--flip-ms`) : l'animation et le minuteur restent d'accord. */
@@ -29,7 +31,7 @@ const COMPACT_QUERY = '(max-width: 899px)';
  */
 @Component({
   selector: 'app-album',
-  imports: [AlbumPage, MatButtonModule, MatIconModule, MatTooltipModule],
+  imports: [AlbumPage, AlbumZoom, MatButtonModule, MatIconModule, MatTooltipModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { '(document:keydown)': 'onKey($event)' },
   templateUrl: './album.html',
@@ -37,7 +39,7 @@ const COMPACT_QUERY = '(max-width: 899px)';
 })
 export class Album {
   protected readonly store = inject(MemoryStore);
-  /** Émis quand l'album doit se refermer (croix, Échap, ou ouverture d'une carte). */
+  /** Émis quand l'album doit se refermer (croix ou Échap). */
   readonly closed = output<void>();
 
   protected readonly flipMs = FLIP_MS;
@@ -52,6 +54,8 @@ export class Album {
   /** La face courante (voir `spreadOf`) : elle vaut 0 à la couverture. */
   private readonly side = signal(0);
   private readonly turn = signal<Turn | null>(null);
+  /** Le souvenir affiché en grand dans la modale, ou `null`. */
+  protected readonly zoomed = signal<Memory | null>(null);
 
   protected readonly view = computed(() => viewOf(this.sides(), this.side(), this.compact(), this.turn()));
 
@@ -106,13 +110,20 @@ export class Album {
     this.timer = setTimeout(() => this.turn.set(null), FLIP_MS);
   }
 
-  /** Clic sur un autocollant : l'album se ferme et la carte du souvenir s'ouvre dans le cerveau. */
+  /** Clic sur un autocollant : le souvenir s'affiche en grand, en modale, sans quitter l'album. */
   protected openMemory(id: string) {
-    this.store.select(id);
-    this.closed.emit();
+    this.zoomed.set(this.store.memories().find((memory) => memory.id === id) ?? null);
   }
 
   protected onKey(event: KeyboardEvent) {
+    // Modale ouverte : seule Échap agit (elle referme la modale, pas l'album) ; le livre ne se feuillette plus.
+    if (this.zoomed()) {
+      if (event.key === 'Escape') {
+        this.zoomed.set(null);
+        event.preventDefault();
+      }
+      return;
+    }
     if (event.ctrlKey || event.metaKey || event.altKey) return;
     switch (event.key) {
       case 'ArrowRight':

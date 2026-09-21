@@ -81,7 +81,7 @@
                 type="button"
                 class="sticker"
                 [style.--tilt]="tilt(slot.number)"
-                [attr.aria-label]="'Souvenir numéro ' + slot.number + ' : ' + slot.memory.title + '. Ouvrir la carte'"
+                [attr.aria-label]="'Souvenir numéro ' + slot.number + ' : ' + slot.memory.title + '. Agrandir'"
                 (click)="open.emit(slot.memory.id)"
               >
                 <span class="sticker__no">N°{{ slot.number }}</span>

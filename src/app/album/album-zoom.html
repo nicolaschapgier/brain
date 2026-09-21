@@ -1,0 +1,41 @@
+<div class="backdrop" (click)="closed.emit()">
+  <div class="frame" role="dialog" aria-modal="true" [attr.aria-label]="memory().title" (click)="$event.stopPropagation()">
+    <article class="sticker">
+      <div class="face">
+        <header class="top">
+          <span class="number" [attr.aria-label]="'Souvenir numéro ' + number() + ' sur ' + total()">
+            N°<b>{{ number() }}</b><small>/{{ total() }}</small>
+          </span>
+          <span class="crest" aria-hidden="true">⚜</span>
+        </header>
+
+        <figure class="window">
+          @if (memory().image && !brokenImage()) {
+            <img class="photo" [src]="memory().image" [alt]="memory().title" (error)="brokenImage.set(true)" />
+          } @else {
+            <div class="photo photo--empty" aria-hidden="true">⚜</div>
+          }
+        </figure>
+
+        <div class="nameplate">
+          <h2 class="name">{{ memory().title }}</h2>
+        </div>
+
+        @if (memory().date || memory().description) {
+          <div class="sheet">
+            @if (memory().date; as date) {
+              <p class="stat"><span class="label">Date</span> {{ formatDate(date) }}</p>
+            }
+            @if (memory().description) {
+              <p class="description">{{ memory().description }}</p>
+            }
+          </div>
+        }
+      </div>
+    </article>
+
+    <button #closeButton mat-icon-button class="close" matTooltip="Fermer (Échap)" aria-label="Fermer l’image" (click)="closed.emit()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+</div>
