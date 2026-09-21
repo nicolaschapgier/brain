@@ -58,10 +58,10 @@ Réglages de la pellicule (`src/app/ui/scratch-cover/scratch-cover.ts`) : `REVEA
 
 ## L'album
 
-Le bouton en forme de livre (barre en haut à droite) ouvre l'**album des souvenirs**, un album d'autocollants à feuilleter : couverture, page d'accueil avec la jauge de collection, puis les souvenirs par quatre (2 × 2), dans l'ordre du JSON, avec le même numéro que sur leur carte.
+Le bouton en forme de livre (barre en haut à droite) ouvre l'**album des souvenirs**, un album d'autocollants à feuilleter : couverture, page d'accueil avec la jauge de collection, puis les souvenirs **classés par année** : une page par année, de la plus ancienne à la plus récente (les souvenirs sans année à la fin), avec quatre autocollants au maximum par page (une année plus fournie occupe plusieurs pages). Chaque souvenir garde le numéro de sa carte, c'est-à-dire sa place dans le JSON.
 
 - **Souvenir découvert** : son autocollant est collé sur la page (photo, titre, date). Un clic dessus l'affiche en grand dans une **modale**, par-dessus la page de l'album (image entière, titre, date et description) ; elle se ferme avec la croix, un clic à côté ou Échap, et l'album reste ouvert derrière.
-- **Souvenir inconnu** : un emplacement vide pointillé, avec son seul numéro et « À découvrir ». Rien n'est révélé (ni titre, ni image) avant le grattage.
+- **Souvenir inconnu** : un emplacement vide pointillé, avec le logo du club, son seul numéro et « À découvrir ». Rien n'est révélé (ni titre, ni image) avant le grattage.
 - **Tourner les pages** : boutons en bas, flèches ← → du clavier ; Échap ou la croix pour fermer. Sur grand écran le livre s'ouvre en double page (la couverture et le dos se centrent quand il est fermé) ; sur téléphone, une page à la fois. Avec « réduire les animations » activé dans le système, les pages changent sans s'animer.
 - **Couvertures rétro années 2000** : bandes du maillot avec reflet vitré, arcs blancs et trame de points, titre « ALBUM » chromé, pastille « gel » rouge, badge étoilé pour le compteur, étincelles qui scintillent et bandeau holographique « Édition Club des Cerveaux ». Les textes sont dans `album-page.html`, le style dans `album-cover.scss`.
 - **Thème** : le bleu et le rouge de la Berrichonne (rayures verticales du maillot) sur du papier blanc, avec des foils argentés, et les logos des annonceurs au pied des pages, en clin d'œil aux panneaux publicitaires de la pelouse du stade Gaston-Petit.
@@ -93,6 +93,7 @@ src/app/
   album/           album d'autocollants : pagination pure (album-book), pages, livre et annonceurs
   ui/memory-card/  carte du souvenir (Angular Material)
   ui/scratch-cover/ pellicule à gratter des cartes inconnues
+  ui/card-back/    dos des cartes (logo du club) pour l'ouverture en flip
 ```
 
 `brain-scene.ts` et ses voisins sont du TypeScript pur, sans Angular : le composant `BrainViewer` crée la scène, lui passe les souvenirs et relaie la sélection au store.
@@ -121,6 +122,14 @@ Les cartes de souvenir reprennent les couleurs du blason du Berry (azur, or, rou
 - Le style de la carte est dans `src/app/ui/memory-card/`.
 - La date est mise en forme automatiquement si elle est au format `2023-02-11` ; tout autre texte est affiché tel quel.
 - Le pied de carte (« Édition Berry · Châteauroux ») est dans `memory-card.html`.
+
+## Années, vieillissement et ouverture en flip
+
+- **L'année** d'un souvenir est lue dans son champ `date` (`2019-06-15`, ou un texte libre comme `Été 2019`). Elle s'affiche dans un cartouche sur la carte, sur l'autocollant de l'album et dans la modale ; le pied de la carte indique « Édition 2019 · Châteauroux ». Sans année dans la date, le souvenir reste sans année (carte neuve, page « Sans date » à la fin de l'album).
+- **Un seul thème, qui vieillit** : toutes les cartes gardent le thème Berry (azur, or, rouge). Plus le souvenir est ancien, plus sa carte a l'air vieille : l'intensité (`--retro`) va de **1 en 2015 à 0 en 2026**, et règle une teinte sépia, des couleurs moins vives, un dégradé chaud, du grain de pellicule, une photo ternie avec vignette et un papier de fiche jauni. Les bornes (`FIRST_YEAR`, `LAST_YEAR`) sont dans [`src/app/core/year-theme.ts`](src/app/core/year-theme.ts), les effets dans [`src/app/ui/year-theme.scss`](src/app/ui/year-theme.scss).
+- **Ouverture en flip** : la carte d'un neurone et la modale de l'album arrivent **dos visible**, le logo du Club des Cerveaux ([`public/club-des-cerveaux.svg`](public/club-des-cerveaux.svg)), restent une demi-seconde pour qu'on le distingue, puis se retournent. Le déroulé (environ 1,9 s en tout) est réglé dans [`src/app/ui/card-flip.scss`](src/app/ui/card-flip.scss) : durée de l'arrivée, de la pause (`$hold`) et du retournement. Avec « réduire les animations » activé dans le système, la carte apparaît sans se retourner.
+- Le logo est un SVG dessiné à la main : les lettres sont des tracés (pas de police), donc le rendu est identique partout ; les pictogrammes (bob, oiseau, vache, chope, cerveau) sont des dessins simplifiés.
+- **Souvenirs de démonstration** : `public/data/memories.json` contient 12 souvenirs, un par année de 2015 à 2026, pour voir tout le dégradé de vieillissement et les pages de l'album.
 
 ## Pistes pour la suite
 
