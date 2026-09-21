@@ -3,11 +3,35 @@
 
   <defs>
     <!-- Vichy rouge et blanc du bob -->
-    <pattern id="gingham" width="12" height="12" patternUnits="userSpaceOnUse">
-      <rect width="12" height="12" fill="#ffffff" />
-      <rect width="6" height="12" fill="#d8323f" fill-opacity="0.62" />
-      <rect width="12" height="6" fill="#d8323f" fill-opacity="0.62" />
+    <pattern id="gingham" width="8" height="8" patternUnits="userSpaceOnUse">
+      <rect width="8" height="8" fill="#ffffff" />
+      <rect width="4" height="8" fill="#e2202f" fill-opacity="0.78" />
+      <rect width="8" height="4" fill="#e2202f" fill-opacity="0.78" />
     </pattern>
+    <!-- Le bas du bob, dans l'ombre -->
+    <linearGradient id="hat-shade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0.35" stop-color="#4a0008" stop-opacity="0" />
+      <stop offset="1" stop-color="#4a0008" stop-opacity="0.34" />
+    </linearGradient>
+    <!-- La vache : les taches brunes sont rognées au contour du corps -->
+    <clipPath id="cow-body">
+      <path d="M102 132 L128 118 L332 118 L470 124 L548 112 L566 104 L588 136 L622 190 Q628 212 604 220 L548 216 L502 252 L474 266 L452 300 Q360 318 216 304 Q150 300 108 302 Z" />
+    </clipPath>
+    <!-- Un hémisphère du cerveau vu de dessus (l'autre est son reflet) -->
+    <g id="hemisphere">
+      <path d="M-2 -32 C-14 -34 -26 -28 -30 -16 C-34 -6 -33 8 -29 16 C-25 26 -14 33 -2 32 Z" fill="#331d22" />
+      <ellipse cx="-21" cy="-3" rx="5.5" ry="8" fill="#f2707c" fill-opacity="0.32" />
+      <ellipse cx="-7" cy="14" rx="2.4" ry="3.6" fill="#f2707c" fill-opacity="0.32" />
+      <g fill="none" stroke="#f3cfd3" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M-6 -28 q-8 -2 -13 3 q-3 5 2 7 q6 1 8 -4" />
+        <path d="M-10 -17 q-9 -1 -13 4 q-2 6 4 8 q6 1 8 -3" />
+        <path d="M-4 -10 q-5 -2 -8 3 q-1 5 4 6" />
+        <path d="M-27 -3 q-3 6 2 10 q6 3 10 -1 q4 -5 -1 -9" />
+        <path d="M-11 5 q-5 2 -4 7 q2 5 8 3 q4 -3 1 -7" />
+        <path d="M-25 15 q2 6 8 7 q6 0 8 -5 q0 -5 -6 -4" />
+        <path d="M-8 20 q-3 4 1 8 q4 2 6 -2" />
+      </g>
+    </g>
   </defs>
 
   <!-- Disque noir et liseré de points -->
@@ -66,69 +90,63 @@
   </g>
 
   <!-- Cercle intérieur et croix en diagonale -->
-  <circle cx="320" cy="320" r="215" fill="none" stroke="#ffffff" stroke-width="3" />
+  <circle cx="320" cy="320" r="206" fill="none" stroke="#ffffff" stroke-width="3" />
   <g stroke="#ffffff" stroke-width="3" stroke-linecap="round" fill="none">
-    <path d="M366.7 273.3 L469.9 170.1" />
-    <path d="M366.7 366.7 L469.9 469.9" />
-    <path d="M273.3 366.7 L170.1 469.9" />
-    <path d="M273.3 273.3 L170.1 170.1" />
+    <path d="M368.1 271.9 L458.6 181.4" />
+    <path d="M368.1 368.1 L458.6 458.6" />
+    <path d="M271.9 368.1 L181.4 458.6" />
+    <path d="M271.9 271.9 L181.4 181.4" />
   </g>
 
-  <!-- Au centre : le cerveau -->
-  <circle cx="320" cy="320" r="46" fill="#0b0b0c" stroke="#ffffff" stroke-width="4" />
-  <g transform="translate(320 320)" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M-2.5 -28 C-14 -32 -30 -25 -31 -11 C-36 -3 -33 12 -24 17 C-20 27 -9 30 -2.5 26 Z" fill="#eea4ae" />
-    <path d="M2.5 -28 C14 -32 30 -25 31 -11 C36 -3 33 12 24 17 C20 27 9 30 2.5 26 Z" fill="#f4b4bc" />
-    <g fill="none" stroke="#b5606f" stroke-width="2">
-      <path d="M-23 -15 q6 -7 12 0 t10 -2" />
-      <path d="M-27 -3 q7 -6 13 1 t12 -1" />
-      <path d="M-24 10 q7 -6 12 0 t9 0" />
-      <path d="M23 -15 q-6 -7 -12 0 t-10 -2" />
-      <path d="M27 -3 q-7 -6 -13 1 t-12 -1" />
-      <path d="M24 10 q-7 -6 -12 0 t-9 0" />
+  <!-- Au centre : le cerveau, vu de dessus -->
+  <circle cx="320" cy="320" r="43" fill="#0d0d0e" stroke="#ffffff" stroke-width="3.5" />
+  <g transform="translate(320 320)">
+    <use href="#hemisphere" />
+    <use href="#hemisphere" transform="scale(-1 1)" />
+  </g>
+
+  <!-- En haut : le bob à carreaux, avec sa petite étiquette orange -->
+  <g transform="translate(320 178)" stroke-linejoin="round" stroke-linecap="round">
+    <path id="bob" d="M-19 -27 Q5 -34 28 -27 L32 2 Q40 9 44 21 Q26 35 4 34 Q-20 33 -43 14 Q-35 8 -31 1 Z" fill="url(#gingham)" stroke="#7d1621" stroke-width="2" />
+    <path d="M-19 -27 Q5 -34 28 -27 L32 2 Q40 9 44 21 Q26 35 4 34 Q-20 33 -43 14 Q-35 8 -31 1 Z" fill="url(#hat-shade)" />
+    <path d="M-19 -27 Q5 -34 28 -27 Q6 -20 -19 -27 Z" fill="#ffffff" fill-opacity="0.45" />
+    <path d="M-31 1 Q1 12 32 2" fill="none" stroke="#7d1621" stroke-width="1.6" />
+    <rect x="-13" y="-17" width="33" height="9" rx="4.5" fill="#f6a623" />
+    <path d="M-8 -12.5 H15" fill="none" stroke="#b5560a" stroke-width="1.5" stroke-opacity="0.65" stroke-dasharray="2.2 1.3" />
+  </g>
+
+  <!-- À gauche : l'oiseau bleu, à plat ventre, l'œil en croix -->
+  <g transform="translate(173 329) scale(0.19) translate(-397 -269)" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M152 258 Q158 228 210 220 L250 224 L300 278 L205 276 Q165 272 152 258 Z" fill="#4fa3e8" />
+    <path d="M238 218 C262 158 335 118 402 118 C470 118 520 152 545 190 C592 196 642 216 642 258 C642 300 612 320 568 318 C500 316 430 310 330 302 C280 296 246 262 238 218 Z" fill="#3d9be3" />
+    <path d="M292 196 C325 145 465 132 520 186 C470 206 350 212 292 196 Z" fill="#66b4ef" />
+    <path d="M352 224 C325 232 302 285 300 322 C302 372 348 402 386 418 L414 300 L416 224 Z" fill="#4a98dd" />
+    <path d="M392 224 L416 224 L414 300 L386 418 C392 360 396 290 392 224 Z" fill="#62aef0" />
+    <path d="M586 204 L634 154 Q658 172 648 218 Z" fill="#f8c02b" />
+    <ellipse cx="566" cy="194" rx="17" ry="15" fill="#f0876f" />
+    <path d="M559 238 L590 273 M590 238 L559 273" fill="none" stroke="#17325a" stroke-width="9" />
+  </g>
+
+  <!-- À droite : la vache brune et blanche -->
+  <g transform="translate(459 320) scale(0.1927) translate(-352 -275)" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M104 150 Q90 200 92 262" fill="none" stroke="#d8d0c2" stroke-width="9" />
+    <path d="M92 254 V288" fill="none" stroke="#e8b81f" stroke-width="9" />
+    <path d="M118 300 V426 M160 300 V416 M394 300 V408 M432 290 V430" fill="none" stroke="#f6f0e5" stroke-width="24" />
+    <path d="M102 132 L128 118 L332 118 L470 124 L548 112 L566 104 L588 136 L622 190 Q628 212 604 220 L548 216 L502 252 L474 266 L452 300 Q360 318 216 304 Q150 300 108 302 Z" fill="#f6f0e5" />
+    <g clip-path="url(#cow-body)" fill="#8f5b1c">
+      <path d="M100 122 L182 116 L192 150 L172 176 L142 166 L128 202 L110 218 Z" />
+      <path d="M190 128 L322 120 L332 160 L352 216 L342 266 L300 292 L250 282 L214 236 L200 190 Z" />
+      <path d="M414 116 L560 106 L602 140 L628 196 L612 224 L546 220 L500 254 L470 264 L456 216 L428 202 L422 150 Z" />
     </g>
+    <ellipse cx="190" cy="298" rx="24" ry="15" fill="#f0a6a0" />
   </g>
 
-  <!-- En haut : le bob à carreaux -->
-  <g transform="translate(320 148)" stroke="#8f1f2b" stroke-width="2" stroke-linejoin="round">
-    <path d="M-50 12 C-52 -20 -30 -42 0 -42 C30 -42 52 -20 50 12 Z" fill="url(#gingham)" />
-    <path d="M-62 12 Q0 36 62 12 Q58 26 0 32 Q-58 26 -62 12 Z" fill="url(#gingham)" />
-    <rect x="-20" y="-14" width="40" height="11" rx="5" fill="#f08a24" stroke="none" />
-  </g>
-
-  <!-- À gauche : un petit oiseau bleu sur le dos, l'œil en croix -->
-  <g transform="translate(168 322) rotate(-12)" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M-36 6 L-60 -6 L-52 16 Z" fill="#2f74b8" />
-    <ellipse cx="0" cy="4" rx="38" ry="20" fill="#3d8fdc" />
-    <circle cx="34" cy="-2" r="14" fill="#3d8fdc" />
-    <path d="M46 -3 L62 2 L46 8 Z" fill="#f4b73a" />
-    <path d="M-20 5 Q-4 17 14 5" fill="none" stroke="#2f74b8" stroke-width="3" />
-    <path d="M-6 -14 l-3 -15 M8 -15 l4 -14" fill="none" stroke="#f4b73a" stroke-width="3.5" />
-    <path d="M28 -8 l8 8 m0 -8 l-8 8" fill="none" stroke="#123a66" stroke-width="2.6" />
-  </g>
-
-  <!-- À droite : la vache -->
-  <g transform="translate(450 320)" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M-38 18 v24 M-20 18 v24 M14 18 v24 M30 18 v24" fill="none" stroke="#f4efe6" stroke-width="7" />
-    <path d="M-46 -12 Q-58 -2 -54 18" fill="none" stroke="#7b4a2b" stroke-width="3" />
-    <rect x="-46" y="-22" width="86" height="42" rx="11" fill="#f7f2ea" />
-    <path d="M-34 -22 h24 l-4 20 q-10 8 -20 0 z" fill="#7b4a2b" />
-    <path d="M12 -22 h20 q6 0 8 8 v10 q-14 6 -22 -2 z" fill="#7b4a2b" />
-    <path d="M38 -20 L60 -12 V10 H42 L38 -6 Z" fill="#7b4a2b" />
-    <rect x="50" y="4" width="14" height="10" rx="4" fill="#f0c6b2" />
-    <path d="M42 -22 l-4 -10 M52 -18 l6 -10" fill="none" stroke="#f4efe6" stroke-width="3.5" />
-    <circle cx="52" cy="-6" r="2" fill="#0b0b0c" />
-  </g>
-
-  <!-- En bas : la chope -->
-  <g transform="translate(320 448)" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M26 -14 h14 q9 0 9 9 v18 q0 9 -9 9 h-14" fill="none" stroke="#e9a022" stroke-width="7" />
-    <rect x="-26" y="-32" width="52" height="66" rx="7" fill="#f6b52e" stroke="#e08f1a" stroke-width="2.5" />
-    <path d="M-10 -22 v46 M4 -22 v46" stroke="#ffd06a" stroke-width="4" opacity="0.8" />
-    <g fill="#ffffff" stroke="#e6e0d2" stroke-width="1.5">
-      <circle cx="-15" cy="-36" r="9" />
-      <circle cx="0" cy="-41" r="10" />
-      <circle cx="15" cy="-36" r="9" />
-    </g>
+  <!-- En bas : la chope, mousse grise et trois rayures -->
+  <g transform="translate(321 453) scale(0.188) translate(-282 -297)" stroke-linecap="round" stroke-linejoin="round">
+    <path fill="#fdb43b" fill-rule="evenodd" d="M340 175 H425 Q450 175 450 200 V395 Q450 420 425 420 H340 Z M362 222 H408 V374 H362 Z" />
+    <rect x="135" y="215" width="225" height="265" rx="32" fill="#ffca4e" />
+    <path d="M187 265 V440 M247 265 V440 M307 265 V440" fill="none" stroke="#f5a01d" stroke-width="16" />
+    <path d="M138 215 H358 V240 Q330 226 305 242 Q278 256 252 238 Q226 256 200 238 Q176 224 138 240 Z" fill="#f5a21d" stroke="none" />
+    <path d="M150 115 H345 Q375 115 375 145 V190 Q375 224 342 228 Q322 214 300 228 Q276 238 256 222 Q236 238 216 226 Q194 212 174 228 Q120 226 120 190 V145 Q120 115 150 115 Z" fill="#e6ebf3" />
   </g>
 </svg>
