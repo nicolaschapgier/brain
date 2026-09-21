@@ -27,12 +27,14 @@
 .brand {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
+  // Le titre peut passer sur deux lignes plutôt que de pousser les boutons hors de l'écran.
+  min-width: 0;
 }
 
 .logo {
-  font: 700 1.5rem/1 'Orbitron', sans-serif;
-  letter-spacing: 0.32em;
+  font: 700 1.35rem/1.15 'Orbitron', sans-serif;
+  letter-spacing: 0.14em;
   background: linear-gradient(90deg, #5ce1ff, #b18cff 55%, #ff7ad9);
   -webkit-background-clip: text;
   background-clip: text;
@@ -105,7 +107,8 @@
   }
 
   .logo {
-    font-size: 1.15rem;
+    font-size: 0.95rem;
+    letter-spacing: 0.1em;
   }
 
   .tagline,
