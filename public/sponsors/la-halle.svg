@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 270 158" width="100%" height="100%" role="img" aria-label="La Halle aux vêtements">
+  <title>La Halle aux vêtements</title>
+
+  <!-- Cadre blanc, champ bleu en haut, bandeau jaune en bas -->
+  <rect width="270" height="158" fill="#ffffff" />
+  <rect x="6" y="6" width="258" height="104" fill="#1b4a9c" />
+  <rect x="6" y="110" width="258" height="42" fill="#f6c40f" />
+
+  <!-- Le texte a une largeur imposée (textLength) : la mise en page reste la même quelle que soit la police de la machine -->
+  <g fill="#ffffff" font-family="'Times New Roman', Times, Georgia, serif" font-weight="700" text-anchor="middle">
+    <text x="142" y="55" font-size="44" textLength="60" lengthAdjust="spacingAndGlyphs">LA</text>
+    <text x="135" y="103" font-size="66" textLength="238" lengthAdjust="spacingAndGlyphs">HALLE</text>
+  </g>
+  <text x="135" y="140" fill="#d3222d" font-family="'Times New Roman', Times, Georgia, serif" font-weight="700" font-size="25" text-anchor="middle" textLength="226" lengthAdjust="spacing">VÊTEMENTS</text>
+</svg>

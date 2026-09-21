@@ -19,9 +19,9 @@ export interface Sponsor {
 export const SPONSORS: readonly Sponsor[] = [
   { name: 'Pitch', logo: 'sponsors/Logo_Pitch_brioche_Pasquier.png' },
   { name: 'Fenioux', logo: 'sponsors/fenioux.svg' },
-  // Logo blanc (détouré d'une photo du maillot) : il lui faut une plaque bleue.
-  { name: 'Le Seyec', logo: 'sponsors/le-seyec.png', tone: 'blue' },
-  { name: 'La Halle', logo: 'sponsors/la-halle.png' },
+  // Logo blanc, sans fond : il lui faut une plaque bleue.
+  { name: 'Le Seyec', logo: 'sponsors/le-seyec.svg', tone: 'blue' },
+  { name: 'La Halle', logo: 'sponsors/la-halle.svg' },
   { name: 'RTL', logo: 'sponsors/RTL_logo.svg.webp' },
   { name: "Conseil général de l'Indre", logo: 'sponsors/conseil_general.png' },
 ];

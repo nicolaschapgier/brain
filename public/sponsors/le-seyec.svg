@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 270 83" width="100%" height="100%" role="img" aria-label="Le Seyec">
+  <title>Le Seyec</title>
+
+  <!-- Logo blanc, sans fond : il se pose sur une plaque colorée (bleue dans l'album).
+       Le texte a une largeur imposée (textLength) : la mise en page reste la même quelle que soit la police de la machine. -->
+  <g fill="#ffffff">
+    <text x="4" y="58" font-family="'Trebuchet MS', 'Segoe UI', Verdana, Arial, sans-serif" font-weight="700" font-size="54" textLength="192" lengthAdjust="spacingAndGlyphs">Le Seyec</text>
+  </g>
+
+  <!-- Petit personnage qui court (pictogramme simplifié) -->
+  <g fill="none" stroke="#ffffff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" transform="translate(6 0)">
+    <path d="M241 27 L233 46" />                    <!-- buste, penché vers l'avant -->
+    <path d="M241 28 L252 35 L259 27" />            <!-- bras avant -->
+    <path d="M241 28 L229 31 L222 24" />            <!-- bras arrière -->
+    <path d="M233 46 L247 51 L245 66" />            <!-- jambe avant -->
+    <path d="M233 46 L221 57 L208 55" />            <!-- jambe arrière -->
+  </g>
+  <circle cx="254" cy="14" r="7" fill="#ffffff" />
+
+  <!-- Filet sous le logo, légèrement courbe -->
+  <path d="M4 76 Q135 71 266 75" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" />
+</svg>
