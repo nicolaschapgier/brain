@@ -96,7 +96,13 @@
                 }
                 <span class="sticker__photo">
                   @if (hasImage(slot.memory.image)) {
-                    <img [src]="slot.memory.image" alt="" draggable="false" (error)="markBroken(slot.memory.image)" />
+                    <img
+                      [src]="slot.memory.image"
+                      [style.object-position]="objectPosition(slot.memory)"
+                      alt=""
+                      draggable="false"
+                      (error)="markBroken(slot.memory.image)"
+                    />
                   } @else {
                     <span class="sticker__fallback" aria-hidden="true">⚜</span>
                   }

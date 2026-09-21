@@ -24,7 +24,8 @@ Tout est dans [`public/data/memories.json`](public/data/memories.json), un table
   "description": "Trois jours à la montagne…",
   "image": "memories/ski.svg",
   "date": "2023-02-11",
-  "position": [0.7, 0.3, 0.5]
+  "position": [0.7, 0.3, 0.5],
+  "focus": [50, 30]
 }
 ```
 
@@ -36,6 +37,7 @@ Tout est dans [`public/data/memories.json`](public/data/memories.json), un table
 | `date`        | non         | Texte libre affiché sous le titre (`2023-02-11`, `Été 2022`…). |
 | `id`          | non         | Identifiant unique. Généré (`memory-N`) s'il manque ou est en double. |
 | `position`    | non         | `[x, y, z]` entre -1 et 1 : x gauche(-)/droite(+), y bas(-)/haut(+), z arrière(-)/avant(+). Sans ce champ, le neurone est placé automatiquement. |
+| `focus`       | non         | Cadrage de la photo là où elle est recadrée (carte, autocollants de l'album) : `[x, y]` en pourcentage, le point à garder au centre (`[0, 0]` haut gauche, `[100, 100]` bas droite). La photo n'est pas modifiée. Défaut : `[50, 35]`, un peu au-dessus du milieu, là où sont les visages d'une photo en portrait. La modale de l'album montre toujours la photo entière. |
 
 Dépose tes photos dans `public/memories/`.
 

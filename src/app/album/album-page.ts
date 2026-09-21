@@ -1,7 +1,7 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
 import { formatMemoryDate } from '../core/memory-date';
-import { Memory } from '../core/memory.model';
+import { Memory, objectPositionOf } from '../core/memory.model';
 import { MemoryStore } from '../core/memory.store';
 import { themeFor, yearOf } from '../core/year-theme';
 import { AlbumSide, StickerSide } from './album-book';
@@ -66,6 +66,7 @@ export class AlbumPage {
   }
 
   protected yearOf = yearOf;
+  protected objectPosition = objectPositionOf;
 
   protected tilt(number: number): string {
     return `${TILTS[(number - 1) % TILTS.length]}deg`;

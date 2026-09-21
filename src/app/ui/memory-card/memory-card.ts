@@ -4,6 +4,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { formatMemoryDate } from '../../core/memory-date';
+import { objectPositionOf } from '../../core/memory.model';
 import { MemoryStore } from '../../core/memory.store';
 import { themeFor, yearOf } from '../../core/year-theme';
 import { CardBack } from '../card-back/card-back';
@@ -53,6 +54,7 @@ export class MemoryCard {
   private readonly reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   protected readonly formatDate = formatMemoryDate;
+  protected readonly objectPosition = objectPositionOf;
 
   /** Incline l'autocollant vers la souris et déplace le reflet holographique (variables CSS lues par le style). */
   protected tilt(event: PointerEvent) {

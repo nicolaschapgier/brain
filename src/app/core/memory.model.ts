@@ -1,6 +1,12 @@
 /** Position normalisée dans le cerveau : chaque axe va de -1 à 1. */
 export type BrainPosition = readonly [x: number, y: number, z: number];
 
+/** Point de la photo à garder au centre quand elle est recadrée : x, y en pourcentage (0 : gauche / haut, 100 : droite / bas). */
+export type ImageFocus = readonly [x: number, y: number];
+
+/** Sans point de cadrage, un peu au-dessus du milieu : c'est là que sont les visages d'une photo en portrait. */
+export const DEFAULT_FOCUS: ImageFocus = [50, 35];
+
 export interface Memory {
   id: string;
   title: string;
@@ -14,15 +20,34 @@ export interface Memory {
    * z : arrière(-)/avant(+). Sans ce champ, le neurone est placé automatiquement.
    */
   position?: BrainPosition;
+  /**
+   * Cadrage de la photo là où elle est recadrée (carte, autocollant de l'album) : le point à garder au centre,
+   * `[x, y]` en pourcentage. La photo elle-même n'est jamais modifiée. Défaut : `DEFAULT_FOCUS`.
+   */
+  focus?: ImageFocus;
 }
 
-const clamp1 = (n: number) => Math.max(-1, Math.min(1, n));
+const clamp = (n: number, min: number, max: number) => Math.max(min, Math.min(max, n));
+const clamp1 = (n: number) => clamp(n, -1, 1);
 
 function parsePosition(raw: unknown): BrainPosition | undefined {
   if (!Array.isArray(raw) || raw.length !== 3) return undefined;
   const [x, y, z] = raw.map(Number);
   if (![x, y, z].every(Number.isFinite)) return undefined;
   return [clamp1(x), clamp1(y), clamp1(z)];
+}
+
+function parseFocus(raw: unknown): ImageFocus | undefined {
+  if (!Array.isArray(raw) || raw.length !== 2) return undefined;
+  const [x, y] = raw.map(Number);
+  if (![x, y].every(Number.isFinite)) return undefined;
+  return [clamp(x, 0, 100), clamp(y, 0, 100)];
+}
+
+/** Valeur CSS `object-position` du cadrage d'un souvenir. */
+export function objectPositionOf(memory: Pick<Memory, 'focus'>): string {
+  const [x, y] = memory.focus ?? DEFAULT_FOCUS;
+  return `${x}% ${y}%`;
 }
 
 const text = (value: unknown) => (typeof value === 'string' ? value.trim() : '');
@@ -61,6 +86,7 @@ export function parseMemories(raw: unknown): Memory[] {
       image: text(item['image']),
       date: text(item['date']) || undefined,
       position: parsePosition(item['position']),
+      focus: parseFocus(item['focus']),
     });
   });
 

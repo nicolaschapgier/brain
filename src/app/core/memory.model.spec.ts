@@ -1,4 +1,4 @@
-import { parseMemories } from './memory.model';
+import { DEFAULT_FOCUS, objectPositionOf, parseMemories } from './memory.model';
 
 describe('parseMemories', () => {
   it('accepte un tableau ou un objet { memories }', () => {
@@ -30,5 +30,30 @@ describe('parseMemories', () => {
     expect(clamped.position).toEqual([1, -1, 0]);
     expect(wrongLength.position).toBeUndefined();
     expect(notNumbers.position).toBeUndefined();
+  });
+
+  it('valide et borne le cadrage de la photo', () => {
+    const [ok, clamped, wrongLength, notNumbers, missing] = parseMemories([
+      { title: 'a', focus: [20, 70] },
+      { title: 'b', focus: [-10, 250] },
+      { title: 'c', focus: [50] },
+      { title: 'd', focus: ['x', 10] },
+      { title: 'e' },
+    ]);
+    expect(ok.focus).toEqual([20, 70]);
+    expect(clamped.focus).toEqual([0, 100]);
+    expect(wrongLength.focus).toBeUndefined();
+    expect(notNumbers.focus).toBeUndefined();
+    expect(missing.focus).toBeUndefined();
+  });
+});
+
+describe('objectPositionOf', () => {
+  it('utilise le cadrage du souvenir', () => {
+    expect(objectPositionOf({ focus: [20, 70] })).toBe('20% 70%');
+  });
+
+  it('retombe sur le cadrage par défaut sans point de cadrage', () => {
+    expect(objectPositionOf({})).toBe(`${DEFAULT_FOCUS[0]}% ${DEFAULT_FOCUS[1]}%`);
   });
 });
