@@ -1,6 +1,8 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { LocalMemories } from './local-memories';
+import { Memory } from './memory.model';
 import { MemoryStore } from './memory.store';
 
 const MEMORIES = ['a', 'b', 'c', 'd'].map((id) => ({ id, title: `Souvenir ${id}`, description: '', image: '' }));
@@ -20,10 +22,21 @@ function memoryStorage(initial: Record<string, string> = {}): Storage {
   };
 }
 
+/** Stockage des souvenirs ajoutés, en mémoire : l'environnement de test n'a pas d'IndexedDB. */
+function fakeLocal(saved: Memory[] = []) {
+  return {
+    list: vi.fn().mockResolvedValue(saved),
+    add: vi.fn().mockResolvedValue(undefined),
+    clear: vi.fn().mockResolvedValue(undefined),
+  };
+}
+
 /** Crée un store neuf (comme au chargement de la page) et lui fait « recevoir » le JSON des souvenirs. */
-function createStore() {
+function createStore(local = fakeLocal()) {
   TestBed.resetTestingModule();
-  TestBed.configureTestingModule({ providers: [provideHttpClient(), provideHttpClientTesting()] });
+  TestBed.configureTestingModule({
+    providers: [provideHttpClient(), provideHttpClientTesting(), { provide: LocalMemories, useValue: local }],
+  });
   const store = TestBed.inject(MemoryStore);
   TestBed.inject(HttpTestingController).expectOne('data/memories.json').flush(MEMORIES);
   return store;
@@ -101,5 +114,65 @@ describe('MemoryStore : souvenirs connus et inconnus', () => {
     const store = createStore();
     expect(() => store.reveal('a')).not.toThrow();
     expect(store.isDiscovered('a')).toBe(true); // valable pour cette session
+  });
+});
+
+describe('MemoryStore : souvenirs ajoutés depuis l’appli', () => {
+  const draft = { title: 'Nouveau', description: 'Ajouté', image: 'data:image/jpeg;base64,AAAA', date: '2024-05-01', focus: [50, 20] as const };
+
+  beforeEach(() => vi.stubGlobal('localStorage', memoryStorage()));
+  afterEach(() => vi.unstubAllGlobals());
+
+  it('ajoute le souvenir à la fin, le garde sur l’appareil et le rend déjà connu', async () => {
+    const local = fakeLocal();
+    const store = createStore(local);
+
+    const memory = await store.add(draft);
+
+    expect(memory.id).toMatch(/^user-/);
+    expect(store.total()).toBe(5);
+    expect(store.memories().at(-1)).toEqual(memory);
+    expect(local.add).toHaveBeenCalledWith(memory);
+    expect(store.isDiscovered(memory.id)).toBe(true);
+    expect(store.localCount()).toBe(1);
+  });
+
+  it('donne un identifiant différent à chaque souvenir', async () => {
+    const store = createStore();
+    const [a, b] = [await store.add(draft), await store.add(draft)];
+    expect(a.id).not.toBe(b.id);
+  });
+
+  it('n’ajoute rien quand l’enregistrement échoue, et le dit', async () => {
+    const local = fakeLocal();
+    local.add.mockRejectedValue(new Error('quota'));
+    const store = createStore(local);
+
+    await expect(store.add(draft)).rejects.toThrow('quota');
+    expect(store.total()).toBe(4);
+    expect(store.localCount()).toBe(0);
+  });
+
+  it('retrouve, après ceux du JSON, les souvenirs enregistrés lors d’une visite précédente', async () => {
+    const saved: Memory = { id: 'user-old', title: 'Ancien', description: '', image: '' };
+    const store = createStore(fakeLocal([saved]));
+
+    await vi.waitFor(() => expect(store.total()).toBe(5));
+    expect(store.memories().at(-1)?.id).toBe('user-old');
+    expect(store.localCount()).toBe(1);
+  });
+
+  it('supprime seulement les souvenirs ajoutés, et referme celui qui est ouvert', async () => {
+    const local = fakeLocal();
+    const store = createStore(local);
+    const memory = await store.add(draft);
+    store.select(memory.id);
+
+    await store.clearLocal();
+
+    expect(local.clear).toHaveBeenCalled();
+    expect(store.total()).toBe(4);
+    expect(store.localCount()).toBe(0);
+    expect(store.selectedId()).toBeNull();
   });
 });

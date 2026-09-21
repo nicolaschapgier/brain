@@ -1,0 +1,102 @@
+.title {
+  font: 700 1.2rem/1.2 'Orbitron', sans-serif;
+  letter-spacing: 0.1em;
+  background: linear-gradient(90deg, #5ce1ff, #b18cff 55%, #ff7ad9);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+// Le champ de fichier est caché : les boutons l'ouvrent.
+.picker {
+  display: none;
+}
+
+.photo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.choose {
+  height: 120px;
+  border-style: dashed;
+  border-radius: 16px;
+  font-size: 1rem;
+
+  mat-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 32px;
+  }
+}
+
+.change {
+  align-self: center;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  height: 120px;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.when {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  &__label {
+    font-size: 0.85rem;
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  // Trois champs sur une ligne, même sur un téléphone : l'année et le jour sont courts.
+  &__fields {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr) minmax(0, 0.8fr);
+    gap: 8px;
+  }
+
+  &__note {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--mat-sys-on-surface-variant);
+
+    &--error {
+      color: var(--mat-sys-error);
+    }
+  }
+}
+
+.notice {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.clear {
+  align-self: flex-start;
+  --mat-button-text-label-text-color: var(--mat-sys-error);
+}
+
+.error {
+  margin: 0;
+  color: var(--mat-sys-error);
+  font-size: 0.9rem;
+}

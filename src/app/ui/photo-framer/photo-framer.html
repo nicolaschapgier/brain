@@ -1,0 +1,25 @@
+<div
+  #frame
+  class="frame"
+  [class.frame--movable]="movable()"
+  [class.frame--dragging]="dragging()"
+  [style.aspect-ratio]="ratio"
+  [attr.tabindex]="movable() ? 0 : null"
+  role="group"
+  aria-label="Cadrage de la photo sur la carte. Utilise les flèches du clavier pour déplacer le cadrage."
+  (pointerdown)="movable() && onPointerDown($event)"
+  (pointermove)="onPointerMove($event)"
+  (pointerup)="onPointerEnd()"
+  (pointercancel)="onPointerEnd()"
+  (keydown)="onKeydown($event)"
+>
+  <img class="photo" [src]="src()" [style.object-position]="position()" alt="" draggable="false" />
+</div>
+
+<p class="hint">
+  @if (movable()) {
+    Fais glisser la photo pour choisir la partie visible sur la carte.
+  } @else {
+    Cette photo remplit tout le cadre de la carte.
+  }
+</p>

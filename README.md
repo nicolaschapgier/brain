@@ -43,6 +43,20 @@ Dépose tes photos dans `public/memories/`.
 
 Le placement automatique est déterministe (un souvenir garde sa place d'un chargement à l'autre) et espace les neurones. Ajouter un souvenir **à la fin** de la liste ne déplace pas les précédents.
 
+## Ajouter un souvenir depuis l'appli
+
+Le bouton appareil photo de la barre du haut ouvre un formulaire : photo, cadrage, titre, date, description. Le souvenir apparaît à la fin de la liste, son neurone est placé automatiquement, et sa carte s'ouvre.
+
+**Version de test** : le souvenir est enregistré **sur l'appareil** (IndexedDB), personne d'autre ne le voit. Le bouton « Supprimer mes ajouts de test » du formulaire les efface. Le code qui enregistre est isolé dans [`core/local-memories.ts`](src/app/core/local-memories.ts) : c'est ce service que remplacera un envoi à un serveur.
+
+La photo est pensée pour les iPhone ([`core/photo-import.ts`](src/app/core/photo-import.ts)) :
+
+- **Réduite** à 1600 px sur le grand côté et ré-encodée en JPEG : plus légère à envoyer et à afficher dans l'album.
+- **Redressée** d'après l'orientation EXIF, puis débarrassée de toutes les métadonnées, **position GPS comprise**.
+- **HEIC** : Safari le convertit en JPEG à l'envoi ; sinon (Chrome, Firefox), la bibliothèque `heic2any` le convertit dans le navigateur. Elle et `exifr` ne sont chargées qu'à l'ouverture du formulaire.
+- **Date** : trois champs, année (obligatoire), mois et jour (facultatifs). La date de prise de vue lue dans la photo (`exifr`) les pré-remplit, et se corrige. Le résultat s'enregistre en `2023`, `2023-02` ou `2023-02-11`. Les dates qui n'existent pas (31 avril) ou qui sont dans le futur sont refusées.
+- **Cadrage** : on tire la photo dans un cadre à la forme de la carte (ou flèches du clavier) ; le résultat est le champ `focus` du souvenir.
+
 ## Souvenirs découverts
 
 Un souvenir est **inconnu** tant que tu n'as pas gratté sa carte. En cliquant sur son neurone, la carte s'ouvre recouverte d'une pellicule argentée aux fleurs de lys, façon jeu à gratter : gratte-la à la souris ou au doigt. Passé la moitié, le reste disparaît tout seul et le souvenir se dévoile. Il n'existe volontairement aucun moyen de tout révéler d'un clic, et la pellicule ne se gratte qu'à la souris ou au doigt. Fermer la carte sans avoir gratté laisse le souvenir inconnu.

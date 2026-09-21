@@ -1,0 +1,106 @@
+<h2 mat-dialog-title class="title">Ajouter un souvenir</h2>
+
+<mat-dialog-content class="content">
+  <!-- Pas de `capture` : la photothèque reste proposée, pas seulement l'appareil photo. Pas de liste de formats non plus, sinon
+       iOS ne convertit plus les photos HEIC en JPEG à l'envoi. -->
+  <input #picker class="picker" type="file" accept="image/*" (change)="onFileChosen($event)" />
+
+  <section class="photo" aria-label="Photo">
+    @if (readyPhoto(); as ready) {
+      <app-photo-framer [src]="ready.dataUrl" [width]="ready.width" [height]="ready.height" [(focus)]="focus" />
+      <button mat-button type="button" class="change" (click)="picker.click()">
+        <mat-icon>swap_horiz</mat-icon>
+        Changer de photo
+      </button>
+    } @else if (loading()) {
+      <div class="status" role="status">
+        <mat-spinner diameter="32" />
+        <span>Préparation de la photo…</span>
+      </div>
+    } @else {
+      <button mat-stroked-button type="button" class="choose" (click)="picker.click()">
+        <mat-icon>add_photo_alternate</mat-icon>
+        Choisir une photo
+      </button>
+      @if (photoError()) {
+        <p class="error" role="alert">{{ photoError() }}</p>
+      }
+    }
+  </section>
+
+  <form class="fields" [formGroup]="form" (ngSubmit)="submit()" id="memory-form">
+    <mat-form-field appearance="outline">
+      <mat-label>Titre</mat-label>
+      <input matInput formControlName="title" [maxlength]="titleMax" autocomplete="off" required />
+      <mat-hint align="end">{{ form.controls.title.value.length }}/{{ titleMax }}</mat-hint>
+      @if (form.controls.title.hasError('required')) {
+        <mat-error>Donne un titre à ce souvenir.</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="when" role="group" aria-labelledby="when-label">
+      <span id="when-label" class="when__label">Quand ?</span>
+      <div class="when__fields">
+        <mat-form-field appearance="outline" subscriptSizing="dynamic" class="when__year">
+          <mat-label>Année</mat-label>
+          <input matInput type="number" inputmode="numeric" formControlName="year" [min]="earliestYear" [max]="thisYear" required />
+        </mat-form-field>
+        <mat-form-field appearance="outline" subscriptSizing="dynamic" class="when__month">
+          <mat-label>Mois</mat-label>
+          <mat-select formControlName="month">
+            <mat-option [value]="null">—</mat-option>
+            @for (name of months; track name) {
+              <mat-option [value]="$index + 1">{{ name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" subscriptSizing="dynamic" class="when__day">
+          <mat-label>Jour</mat-label>
+          <input matInput type="number" inputmode="numeric" formControlName="day" min="1" max="31" />
+        </mat-form-field>
+      </div>
+      @if (dateError(); as message) {
+        <p class="when__note when__note--error" role="alert">{{ message }}</p>
+      } @else if (dateFromPhoto()) {
+        <p class="when__note">Date lue dans la photo : tu peux la corriger.</p>
+      } @else {
+        <p class="when__note">L’année suffit ; le mois et le jour sont facultatifs. Elle range le souvenir dans l’album.</p>
+      }
+    </div>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Description</mat-label>
+      <textarea matInput formControlName="description" rows="4" [maxlength]="descriptionMax"></textarea>
+      <mat-hint align="end">{{ form.controls.description.value.length }}/{{ descriptionMax }}</mat-hint>
+    </mat-form-field>
+  </form>
+
+  <p class="notice">
+    Version de test : le souvenir est enregistré sur cet appareil uniquement, et personne d’autre ne le verra.
+  </p>
+  @if (localCount() > 0) {
+    <button mat-button type="button" class="clear" (click)="clearLocal()">
+      <mat-icon>delete_outline</mat-icon>
+      @if (confirmingClear()) {
+        Confirmer : supprimer mes {{ localCount() }} ajout{{ localCount() > 1 ? 's' : '' }}
+      } @else {
+        Supprimer mes {{ localCount() }} ajout{{ localCount() > 1 ? 's' : '' }} de test
+      }
+    </button>
+  }
+
+  @if (saveError()) {
+    <p class="error" role="alert">{{ saveError() }}</p>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button type="button" mat-dialog-close>Annuler</button>
+  <button mat-flat-button type="submit" form="memory-form" [disabled]="!canSubmit()">
+    @if (saving()) {
+      Enregistrement…
+    } @else {
+      Ajouter au cerveau
+    }
+  </button>
+</mat-dialog-actions>
