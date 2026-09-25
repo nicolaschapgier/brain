@@ -176,3 +176,28 @@ describe('MemoryStore : souvenirs ajoutés depuis l’appli', () => {
     expect(store.selectedId()).toBeNull();
   });
 });
+
+describe('MemoryStore : modale « album débloqué »', () => {
+  beforeEach(() => vi.stubGlobal('localStorage', memoryStorage()));
+  afterEach(() => vi.unstubAllGlobals());
+
+  it('n’a pas été vue au départ', () => {
+    expect(createStore().albumUnlockSeen()).toBe(false);
+  });
+
+  it('retient qu’elle a été vue, d’une visite à l’autre', () => {
+    createStore().markAlbumUnlockSeen();
+    expect(createStore().albumUnlockSeen()).toBe(true);
+  });
+
+  it('fonctionne quand le stockage du navigateur est bloqué', () => {
+    const blocked = () => {
+      throw new Error('bloqué');
+    };
+    vi.stubGlobal('localStorage', { getItem: blocked, setItem: blocked });
+
+    const store = createStore();
+    expect(() => store.markAlbumUnlockSeen()).not.toThrow();
+    expect(store.albumUnlockSeen()).toBe(true); // valable pour cette session
+  });
+});

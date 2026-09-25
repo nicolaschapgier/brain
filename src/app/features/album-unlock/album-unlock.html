@@ -1,0 +1,16 @@
+<mat-dialog-content class="content">
+  <mat-icon class="icon">auto_awesome</mat-icon>
+  <h2 mat-dialog-title class="title">Nouvelle fonctionnalité débloquée !</h2>
+  <p class="text">
+    Tu as gratté ta première carte : l'album Panini des souvenirs t'est désormais ouvert. Retrouves-y les cartes déjà
+    découvertes, rangées par année, et regarde-le se remplir au fil de tes trouvailles.
+  </p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Plus tard</button>
+  <button mat-flat-button [mat-dialog-close]="true">
+    <mat-icon>menu_book</mat-icon>
+    Voir l'album
+  </button>
+</mat-dialog-actions>

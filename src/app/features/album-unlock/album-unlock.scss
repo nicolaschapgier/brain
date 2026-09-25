@@ -1,0 +1,30 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding-top: 8px;
+  text-align: center;
+}
+
+.icon {
+  width: 40px;
+  height: 40px;
+  font-size: 40px;
+  color: #ffd76a;
+}
+
+.title {
+  margin: 0;
+  font: 700 1.1rem/1.3 'Orbitron', sans-serif;
+  letter-spacing: 0.06em;
+  background: linear-gradient(90deg, #5ce1ff, #b18cff 55%, #ff7ad9);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.text {
+  margin: 0;
+  color: var(--mat-sys-on-surface-variant);
+}

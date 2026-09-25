@@ -10,9 +10,11 @@
     <button mat-icon-button matTooltip="Ajouter un souvenir" aria-label="Ajouter un souvenir" (click)="openMemoryForm()">
       <mat-icon>add_a_photo</mat-icon>
     </button>
-    <button mat-icon-button matTooltip="Album des souvenirs" aria-label="Album des souvenirs" (click)="openAlbum()">
-      <mat-icon>menu_book</mat-icon>
-    </button>
+    @if (hasDiscoveries()) {
+      <button mat-icon-button matTooltip="Album des souvenirs" aria-label="Album des souvenirs" (click)="openAlbum()">
+        <mat-icon>menu_book</mat-icon>
+      </button>
+    }
     <button mat-icon-button matTooltip="Vue d'ensemble" aria-label="Vue d'ensemble" (click)="viewer.resetView()">
       <mat-icon>center_focus_strong</mat-icon>
     </button>

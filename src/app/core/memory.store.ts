@@ -10,6 +10,10 @@ export type NewMemory = Omit<Memory, 'id' | 'position'>;
 
 /** Clé du `localStorage` où sont gardés les identifiants des souvenirs déjà ouverts. */
 const DISCOVERED_KEY = 'brain.discovered';
+/** Clé du `localStorage` qui retient si la modale « album débloqué » a déjà été montrée. */
+const ALBUM_UNLOCK_SEEN_KEY = 'brain.albumUnlockSeen';
+/** Nombre de cartes à gratter avant de proposer l'album, la première fois. */
+export const ALBUM_UNLOCK_THRESHOLD = 5;
 
 @Injectable({ providedIn: 'root' })
 export class MemoryStore {
@@ -23,6 +27,8 @@ export class MemoryStore {
   readonly discoveredIds = signal<ReadonlySet<string>>(this.restoreDiscovered());
   /** Identifiants des souvenirs ajoutés depuis l'appli (versus ceux du JSON). */
   readonly localIds = signal<ReadonlySet<string>>(new Set());
+  /** Vrai une fois que la modale « album débloqué » a été montrée (elle ne l'est qu'une fois). */
+  readonly albumUnlockSeen = signal(this.restoreAlbumUnlockSeen());
 
   readonly selected = computed(() => this.memories().find((m) => m.id === this.selectedId()) ?? null);
   /** Position du souvenir sélectionné dans la liste (-1 si aucun). */
@@ -103,6 +109,18 @@ export class MemoryStore {
     }
   }
 
+  /** Retient que la modale « album débloqué » a été montrée : elle ne réapparaîtra pas aux visites suivantes. */
+  markAlbumUnlockSeen() {
+    this.albumUnlockSeen.set(true);
+    try {
+      // `localStorage` ne stocke que du texte : 'true', pas le booléen lui-même, ni un nombre qu'on pourrait
+      // confondre avec ALBUM_UNLOCK_THRESHOLD (c'est cette confusion qui avait cassé la comparaison).
+      localStorage.setItem(ALBUM_UNLOCK_SEEN_KEY, 'true');
+    } catch {
+      // Stockage indisponible : la modale pourra réapparaître à la prochaine visite, sans conséquence grave.
+    }
+  }
+
   /** Ajoute, après ceux du JSON, les souvenirs enregistrés sur l'appareil lors d'une visite précédente. */
   private async restoreLocal() {
     const saved = await this.local.list();
@@ -120,6 +138,14 @@ export class MemoryStore {
       return new Set(Array.isArray(saved) ? saved.filter((id): id is string => typeof id === 'string') : []);
     } catch {
       return new Set();
+    }
+  }
+
+  private restoreAlbumUnlockSeen(): boolean {
+    try {
+      return localStorage.getItem(ALBUM_UNLOCK_SEEN_KEY) === 'true';
+    } catch {
+      return false;
     }
   }
 }
