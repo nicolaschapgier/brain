@@ -1,0 +1,14 @@
+// `width`/`height: 100%` sont nécessaires : sans eux, l'hôte ne prend que la taille de son contenu (le canvas), qui
+// lui-même se base sur 100% de l'hôte — un cercle vide qui laisse le canvas à sa taille par défaut (300×150),
+// dessiné puis étiré dans la boîte réelle par le CSS, d'où le cadrage faussé (vêtement coupé en haut).
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}

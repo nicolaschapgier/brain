@@ -1,0 +1,201 @@
+:host {
+  position: fixed;
+  z-index: 6;
+  inset: 0;
+  display: block;
+  animation: stage-in 320ms ease both;
+}
+
+.stage {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  color: #fff;
+  background:
+    radial-gradient(70% 45% at 50% 0%, rgba(124, 77, 255, 0.32), transparent 70%),
+    linear-gradient(180deg, #060915, #02030c 55%);
+}
+
+// --- Barre du haut --------------------------------------------------------------------------------------------------
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 24px;
+  backdrop-filter: blur(10px);
+  background: rgba(2, 3, 12, 0.55);
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  &__back {
+    margin-right: 6px;
+  }
+
+  &__logo {
+    font: 800 1.4rem/1 Orbitron, sans-serif;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: linear-gradient(120deg, #b388ff, #84ffff);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  &__count {
+    opacity: 0.65;
+    font-size: 0.85rem;
+  }
+}
+
+// --- États (chargement, erreur, vide) --------------------------------------------------------------------------------
+
+.status {
+  display: grid;
+  place-items: center;
+  gap: 12px;
+  padding: 20vh 24px;
+  text-align: center;
+  opacity: 0.85;
+}
+
+// --- Le rayon de tenues : chacune reste épinglée à l'écran pendant qu'on la fait défiler ------------------------------
+
+.rack {
+  padding-bottom: 10vh;
+}
+
+.outfit {
+  position: relative;
+  // La hauteur au-delà de 100vh, c'est la distance de scroll pendant laquelle la tenue reste épinglée (voir `ScrollPin`) :
+  // plus il y en a, plus la rotation et les révélations ont de place pour s'étaler.
+  height: 240vh;
+
+  &__stage {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 36px;
+    overflow: hidden;
+    // Même fond sur toutes les tenues : le passage de l'une à l'autre (l'épinglage qui lâche pile quand le suivant
+    // commence) reste invisible, sans qu'il soit besoin d'un fondu.
+    background: linear-gradient(180deg, #060915, #02030c 55%);
+  }
+
+  // Pas de cadre ni de fond : le vêtement (vue 3D, voir `GarmentViewer`) flotte directement dans la page, et tourne
+  // à 360° lui-même — ce n'est plus une photo qu'on incline en CSS.
+  &__photo {
+    width: min(64vw, 460px);
+    aspect-ratio: 6 / 5;
+  }
+
+  &__caption {
+    max-width: 480px;
+    text-align: center;
+  }
+
+  // Titre, date puis texte apparaissent l'un après l'autre à mesure qu'on avance dans l'épinglage (façon Apple).
+  &__reveal {
+    opacity: var(--r, 0);
+    transform: translateY(calc((1 - var(--r, 0)) * 22px));
+  }
+
+  &__reveal--1 {
+    --r: clamp(0, calc((var(--p, 0) - 0.08) / 0.18), 1);
+  }
+
+  &__reveal--2 {
+    --r: clamp(0, calc((var(--p, 0) - 0.3) / 0.18), 1);
+  }
+
+  &__reveal--3 {
+    --r: clamp(0, calc((var(--p, 0) - 0.5) / 0.24), 1);
+  }
+
+  h2 {
+    margin: 0 0 8px;
+    font: 700 2rem/1.15 Orbitron, sans-serif;
+  }
+
+  // Opacité au repos (une fois révélé) plus faible que le titre : combinée à --r, pas à la place de --r, sinon elle
+  // écraserait la révélation (même spécificité que `.outfit__reveal`, elle gagnerait juste par l'ordre du fichier).
+  &__date {
+    margin: 0 0 12px;
+    opacity: calc(var(--r, 0) * 0.6);
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  &__text {
+    margin: 0 auto;
+    max-width: 44ch;
+    opacity: calc(var(--r, 0) * 0.85);
+    line-height: 1.6;
+  }
+}
+
+@media (max-width: 760px) {
+  .outfit {
+    height: 200vh;
+
+    &__photo {
+      width: min(78vw, 320px);
+    }
+
+    &__caption {
+      max-width: 340px;
+      padding: 0 24px;
+    }
+  }
+}
+
+// Mouvement réduit : `ScrollPin` ne tourne pas, `--p` reste absent (donc 0) — la tenue resterait invisible et
+// figée sans cette dérogation : on désépingle tout et on affiche chaque tenue au fil normal de la page.
+@media (prefers-reduced-motion: reduce) {
+  .outfit {
+    height: auto;
+    padding: 8vh 24px;
+
+    &__stage {
+      position: static;
+      height: auto;
+      opacity: 1;
+    }
+
+    // `--r` reste indéfini (JS non lancé) : `&__date`/`&__text` ont leur propre opacité basée dessus (voir plus haut),
+    // donc `&__reveal` seule ne suffit pas à les rendre visibles ici.
+    &__reveal {
+      opacity: 1;
+      transform: none;
+    }
+
+    &__date {
+      opacity: 0.6;
+    }
+
+    &__text {
+      opacity: 0.85;
+    }
+  }
+}
+
+@keyframes stage-in {
+  from {
+    opacity: 0;
+    transform: scale(1.02);
+  }
+}

@@ -1,0 +1,23 @@
+[
+  {
+    "id": "maillot-orange",
+    "title": "Maillot orange",
+    "date": "2018",
+    "description": "La tenue historique, portée lors du premier tournoi. Encore un peu de mal à s'accorder sur l'orthographe du nom de l'équipe.",
+    "image": "outfits/maillot-orange.svg"
+  },
+  {
+    "id": "survet-bleu",
+    "title": "Survêtement bleu nuit",
+    "date": "2021",
+    "description": "Le premier vrai kit avec floquage : un peu large sur les manches, mais personne n'a osé le dire.",
+    "image": "outfits/survet-bleu.svg"
+  },
+  {
+    "id": "maillot-gold",
+    "title": "Maillot doré",
+    "date": "2023",
+    "description": "Édition anniversaire, sortie une seule fois sur le terrain avant de finir encadrée dans le local.",
+    "image": "outfits/maillot-gold.svg"
+  }
+]

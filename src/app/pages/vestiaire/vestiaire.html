@@ -1,0 +1,57 @@
+<div class="stage">
+  <header class="bar">
+    <div class="bar__title">
+      <a mat-icon-button routerLink="/" class="bar__back" matTooltip="Retour au cerveau (Échap)" aria-label="Retour au cerveau">
+        <mat-icon>arrow_back</mat-icon>
+      </a>
+      <span class="bar__logo">Vestiaire</span>
+      @if (store.status() === 'ready') {
+        <span class="bar__count" role="status">
+          {{ store.outfits().length }} tenue{{ store.outfits().length > 1 ? 's' : '' }}
+        </span>
+      }
+    </div>
+  </header>
+
+  @switch (store.status()) {
+    @case ('loading') {
+      <div class="status" role="status">
+        <p>Chargement des tenues…</p>
+      </div>
+    }
+    @case ('error') {
+      <div class="status" role="alert">
+        <p>Impossible de charger <code>public/data/outfits.json</code>.</p>
+        <button mat-stroked-button (click)="store.load()">Réessayer</button>
+      </div>
+    }
+    @default {
+      @if (!store.outfits().length) {
+        <div class="status">
+          <p>Aucune tenue pour l'instant. Ajoute-en dans <code>public/data/outfits.json</code>.</p>
+        </div>
+      } @else {
+        <main class="rack">
+          @for (outfit of store.outfits(); track outfit.id) {
+            <article class="outfit" appScrollPin #pin="scrollPin">
+              <div class="outfit__stage">
+                <div class="outfit__photo" role="img" [attr.aria-label]="outfit.title">
+                  <app-garment-viewer [image]="outfit.image" [progress]="pin.p" />
+                </div>
+                <div class="outfit__caption">
+                  <h2 class="outfit__reveal outfit__reveal--1">{{ outfit.title }}</h2>
+                  @if (outfit.date) {
+                    <p class="outfit__date outfit__reveal outfit__reveal--2">{{ outfit.date }}</p>
+                  }
+                  @if (outfit.description) {
+                    <p class="outfit__text outfit__reveal outfit__reveal--3">{{ outfit.description }}</p>
+                  }
+                </div>
+              </div>
+            </article>
+          }
+        </main>
+      }
+    }
+  }
+</div>
