@@ -7,10 +7,10 @@ Ce document suit l'avancement du projet. Je le mets à jour au fur et à mesure 
 - **Cerveau 3D** — page d'accueil : les souvenirs sous forme de neurones dans un cerveau en 3D (THREE.JS).
 - **Panini** — album photo façon album Panini.
 
-## 🚧 En cours (codé, pas encore commité / validé)
+## 🚧 En cours
 
-- **Vestiaire** — page dédiée (`/vestiaire`) listant les tenues de l'équipe, vue 3D du vêtement qui tourne à 360° au scroll (effet façon site Apple). Fonctionnel, en attente de validation et de commit.
-- **Liaison Supabase** — branche `supabase` créée, travail démarré.
+- **Vestiaire** (branche `feat/vestiaire`, pas encore fusionnée dans `main`) — page dédiée (`/vestiaire`) listant les tenues de l'équipe, vue 3D du vêtement qui tourne à 360° au scroll (effet façon site Apple). Codé et commité sur la branche, mais pas terminé : des modifications sont encore prévues.
+- **Formation Supabase** (branche `feat/supabase`, vide pour l'instant) — suivie en autonomie avec le plan. L'appli n'est pas encore connectée : aucun code Supabase dans le projet.
 
 ## 🗺️ À faire
 
