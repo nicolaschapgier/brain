@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Home } from '@pages/home/home';
+import { RouterOutlet } from '@angular/router';
 
-/** La racine de l'application : elle ne fait qu'afficher la page d'accueil (pas de routeur pour l'instant). */
+/** La racine de l'application : un routeur entre les pages (le cerveau, le vestiaire…). */
 @Component({
   selector: 'app-root',
-  imports: [Home],
+  imports: [RouterOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<app-home />',
+  template: '<router-outlet />',
 })
 export class App {}

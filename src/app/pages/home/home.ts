@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { RouterLink } from '@angular/router';
 import { ALBUM_UNLOCK_THRESHOLD, MemoryStore } from '@core/memory.store';
 import { BrainViewer } from '@features/brain/brain-viewer/brain-viewer';
 import { MemoryCard } from '@features/memory-card/memory-card';
@@ -17,6 +18,7 @@ import { Album } from '@pages/album/album';
     MatIconModule,
     MatProgressSpinnerModule,
     MatTooltipModule,
+    RouterLink,
     Album,
     BrainViewer,
     MemoryCard,

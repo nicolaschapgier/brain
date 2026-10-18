@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, Signal, afterNextRender, inject, input, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, Signal, afterNextRender, inject, input, viewChild } from '@angular/core';
 import { GarmentScene } from '../scene/garment-scene';
 
 /**
