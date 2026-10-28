@@ -1,0 +1,81 @@
+name: Deploy Angular to GitHub Pages
+
+on:
+  # Déploie après chaque push sur main.
+  push:
+    branches: ["main"]
+
+  # Permet aussi un lancement manuel depuis l'onglet Actions.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Évite de publier plusieurs versions en même temps.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Récupère les fichiers du dépôt.
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Installe Node.js et met en cache les téléchargements npm.
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      # Récupère les informations de publication GitHub Pages.
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v5
+
+      # Installe les versions exactes du package-lock.json.
+      - name: Install dependencies
+        run: npm ci
+
+      # Adapte automatiquement le base-href à l'adresse du site.
+      - name: Build Angular
+        run: >
+          npx ng build
+          --configuration production
+          --base-href "${{ steps.pages.outputs.base_path }}/"
+
+      # Cherche le dossier contenant le index.html compilé.
+      # Prend en charge les sorties habituelles :
+      # dist/nom-du-projet/browser/ ou dist/nom-du-projet/.
+      - name: Find build output
+        id: build-output
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [ ! -d dist ]; then
+            echo "::error::Le dossier dist n'existe pas. Vérifie outputPath dans angular.json."
+            exit 1
+          fi
+
+          # Les builders Angular récents utilisent un dossier browser.
+          mapfile -t index_files < <(
+            find dist -type f -path '*/browser/index.html'
+          )
+
+          # Sinon, cherche une sortie directement dans dist
+          # ou dans dist/nom-du-projet.
+          if [ "${#index_files[@]}" -eq 0 ]; then
+            mapfile -t index_files < <(
+              find dist -maxdepth 2 -type f -name index.html \
+                -not -path 'dist/server/*'
+            )
+          fi
+
+          # Arrête
