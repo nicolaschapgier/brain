@@ -51,8 +51,6 @@ jobs:
           --base-href "${{ steps.pages.outputs.base_path }}/"
 
       # Cherche le dossier contenant le index.html compilé.
-      # Prend en charge les sorties habituelles :
-      # dist/nom-du-projet/browser/ ou dist/nom-du-projet/.
       - name: Find build output
         id: build-output
         shell: bash
@@ -60,7 +58,7 @@ jobs:
           set -euo pipefail
 
           if [ ! -d dist ]; then
-            echo "::error::Le dossier dist n'existe pas. Vérifie outputPath dans angular.json."
+            echo "::error::Le dossier dist n'existe pas. Vérifie les options de build."
             exit 1
           fi
 
@@ -69,8 +67,7 @@ jobs:
             find dist -type f -path '*/browser/index.html'
           )
 
-          # Sinon, cherche une sortie directement dans dist
-          # ou dans dist/nom-du-projet.
+          # Sinon, cherche une sortie directement dans dist ou dans dist/nom-du-projet.
           if [ "${#index_files[@]}" -eq 0 ]; then
             mapfile -t index_files < <(
               find dist -maxdepth 2 -type f -name index.html \
@@ -78,4 +75,32 @@ jobs:
             )
           fi
 
-          # Arrête
+          # Arrête le workflow plutôt que de publier un dossier ambigu.
+          if [ "${#index_files[@]}" -ne 1 ]; then
+            echo "::error::Impossible d'identifier un seul index.html compilé."
+            printf '%s\n' "${index_files[@]}"
+            exit 1
+          fi
+
+          output_dir="$(dirname "${index_files[0]}")"
+          echo "Dossier a publier : $output_dir"
+          echo "path=$output_dir" >> "$GITHUB_OUTPUT"
+
+      # Transmet uniquement les fichiers compilés à GitHub Pages.
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ steps.build-output.outputs.path }}
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
